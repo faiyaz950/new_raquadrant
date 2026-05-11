@@ -1,0 +1,46 @@
+{
+  "placeholderImages": [
+    {
+      "id": "hero-home",
+      "description": "Expansive view of solar panels on a modern house rooftop under a clear blue sky.",
+      "imageUrl": "https://images.unsplash.com/photo-1655300256335-beef51a914fe?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwzfHxzb2xhciUyMHBhbmVscyUyMHJvb2Z8ZW58MHx8fHwxNzY4OTY5MjE1fDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "solar panels roof"
+    },
+    {
+      "id": "about-home",
+      "description": "A team of engineers in hard hats discussing plans next to a solar panel installation.",
+      "imageUrl": "https://images.unsplash.com/photo-1742112125567-3e8967bad60f?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw3fHxlbmdpbmVlcnMlMjBkaXNjdXNzaW9ufGVufDB8fHx8MTc2OTAyNTcyMnww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "engineers discussion"
+    },
+    {
+      "id": "about-hero",
+      "description": "A vast solar farm with rows of panels stretching towards the horizon at sunset.",
+      "imageUrl": "https://images.unsplash.com/photo-1686074972605-91990852408b?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw1fHxzb2xhciUyMGZhcm0lMjBzdW5zZXR8ZW58MHx8fHwxNzY5MDI1NzIzfDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "solar farm sunset"
+    },
+    {
+      "id": "service-rooftop",
+      "description": "Close-up of a residential rooftop with newly installed solar panels.",
+      "imageUrl": "https://images.unsplash.com/photo-1564151436289-8fc3f8ea6326?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxMHx8cm9vZnRvcCUyMHNvbGFyfGVufDB8fHx8MTc2OTAyNTcyMnww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "rooftop solar"
+    },
+    {
+      "id": "service-commercial",
+      "description": "Large-scale solar panel installation on a commercial building.",
+      "imageUrl": "https://images.unsplash.com/photo-1579564115933-1659f1345437?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxjb21tZXJjaWFsJTIwc29sYXJ8ZW58MHx8fHwxNzY5MDM0ODU3fDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "commercial solar"
+    },
+    {
+      "id": "service-pump",
+      "description": "A solar water pump in a green agricultural field, with water flowing into an irrigation channel.",
+      "imageUrl": "https://images.unsplash.com/photo-1768719952028-a180fe4583c4?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxMHx8c29sYXIlMjBwdW1wfGVufDB8fHx8MTc2OTAyNTcyM3ww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "solar pump"
+    },
+    {
+      "id": "service-lighting",
+      "description": "A modern solar-powered street light illuminating a park pathway at dusk.",
+      "imageUrl": "https://images.unsplash.com/photo-1689271942501-ec9f3c1980bf?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw4fHxzb2xhciUyMGxpZ2h0fGVufDB8fHx8MTc2OTAyNTcyNHww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "solar light"
+    }
+  ]
+}

@@ -1,0 +1,1060 @@
+'use client';
+import React, { useState, useEffect, useMemo } from 'react';
+import { CheckCircle2, FileText, HardHat, LayoutPanelTop, ShieldCheck, Truck, Sun, Zap, TrendingUp, Award, ArrowRight, Sparkles, Clock, Star, Users, BarChart3, Shield, Leaf, Battery } from 'lucide-react';
+import { useServices, useScopeOfWork, useExecutionProcess, useServicesHeroSlides, useServicesHeroContent } from '@/hooks/use-site-content';
+import { getIcon } from '@/lib/icon-map';
+
+const FALLBACK_SERVICES = [
+  { id: "residential", idKey: "residential", title: "Residential Rooftop Solar", description: "Transform your home into a clean energy powerhouse. Slash bills by up to 90%.", features: ["Custom-engineered designs", "Premium Tier-1 panels with 25+ year warranty", "Smart monitoring & full subsidy assistance"], stats: ["90% Bill Cut", "25+ Years", "Full Subsidy", "3-5 Year ROI"], capacity: "1kW to 10kW", roi: "20-25% returns", gradient: "from-orange-400 via-amber-400 to-yellow-400", icon: <Sun className="h-6 w-6" />, iconName: "Sun", image: "https://images.unsplash.com/photo-1509391366360-2e959784a276?w=800&auto=format&fit=crop" },
+  { id: "commercial", idKey: "commercial", title: "Commercial & Industrial Solar", description: "Power your business sustainably. High-capacity systems with exceptional ROI and tax benefits.", features: ["10kW to 1MW+ systems for all businesses", "Flexible OPEX/CAPEX financing models", "Performance guarantees & tax benefits"], stats: ["70-100% Offset", "3-4 Year ROI", "Tax Benefits", "Zero Downtime"], capacity: "10kW to 1MW+", roi: "25-30% returns", gradient: "from-yellow-400 via-orange-400 to-amber-500", icon: <BarChart3 className="h-6 w-6" />, iconName: "BarChart3", image: "https://images.unsplash.com/photo-1508514177221-188b1cf16e9d?w=800&auto=format&fit=crop" },
+  { id: "infrastructure", idKey: "infrastructure", title: "Solar Pumps & Street Lights", description: "Off-grid solutions for agriculture and public safety with up to 90% subsidy support.", features: ["Solar pumps (1-25 HP) for farming", "90% subsidy under PM-KUSUM scheme", "Smart street lights with auto operation"], stats: ["Off-Grid Ready", "90% Subsidy", "Remote Areas", "5+ Years Life"], capacity: "1-25 HP pumps", roi: "Immediate savings", gradient: "from-amber-300 via-orange-400 to-yellow-500", icon: <Zap className="h-6 w-6" />, iconName: "Zap", image: "https://images.unsplash.com/photo-1497440001374-f26997328c1b?w=800&auto=format&fit=crop" },
+];
+
+const FALLBACK_SCOPE = [
+  { phase: "Technical Selection & Design", icon: <LayoutPanelTop className="h-6 w-6" />, iconName: "LayoutPanelTop", content: "Comprehensive technical selection and system design with premium Tier-1 solar panels from globally recognized manufacturers.", details: ["PVsyst simulation", "3D roof modeling", "Load calculations", "Energy forecasting"], color: "orange", image: "https://images.unsplash.com/photo-1581094271901-8022df4466f9?w=600&auto=format&fit=crop" },
+  { phase: "Government Liaison & Approvals", icon: <FileText className="h-6 w-6" />, iconName: "FileText", content: "We handle all bureaucratic complexities including subsidy applications under PM Surya Ghar Muft Bijli Yojana.", details: ["PM Surya Ghar subsidy", "PM-KUSUM facilitation", "Net metering", "DISCOM coordination"], color: "amber", image: "https://images.unsplash.com/photo-1450101499163-c8848c66ca85?w=600&auto=format&fit=crop" },
+  { phase: "Procurement & Logistics", icon: <Truck className="h-6 w-6" />, iconName: "Truck", content: "Strong partnerships with leading manufacturers ensure competitive prices without compromising quality.", details: ["Manufacturer partnerships", "Quality inspection", "BIS & MNRE compliance", "Material traceability"], color: "yellow", image: "https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?w=600&auto=format&fit=crop" },
+  { phase: "Professional Installation", icon: <HardHat className="h-6 w-6" />, iconName: "HardHat", content: "MNRE-certified technicians and electrical engineers execute installation with top priority on safety.", details: ["MNRE-certified team", "Safety protocols", "IS 3043 earthing", "Grid synchronization"], color: "orange", image: "https://images.unsplash.com/photo-1621905251918-48416bd8575a?w=600&auto=format&fit=crop" },
+  { phase: "After-Sales Support", icon: <ShieldCheck className="h-6 w-6" />, iconName: "ShieldCheck", content: "Committed to your system's optimal performance for decades with 24/7 monitoring and support.", details: ["24/7 cloud monitoring", "Automatic alerts", "Bi-annual maintenance", "48-hour response"], color: "amber", image: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=600&auto=format&fit=crop" },
+];
+
+const FALLBACK_EXECUTION = [
+  { name: "Site Assessment", description: "Detailed on-site surveys to evaluate roof structure, orientation, and electrical infrastructure.", icon: <Sun className="h-6 w-6" />, iconName: "Sun", duration: "1-2 days", color: "from-orange-400 to-amber-500" },
+  { name: "Feasibility Study", description: "Comprehensive technical and financial reports with solar irradiation analysis and ROI calculations.", icon: <TrendingUp className="h-6 w-6" />, iconName: "TrendingUp", duration: "3-5 days", color: "from-amber-400 to-yellow-500" },
+  { name: "Engineering & Design", description: "Detailed technical plans with diagrams, layouts, 3D visualizations, and complete documentation.", icon: <LayoutPanelTop className="h-6 w-6" />, iconName: "LayoutPanelTop", duration: "1 week", color: "from-yellow-400 to-orange-500" },
+  { name: "Procurement", description: "Sourcing equipment through verified vendors with proper certifications and quality checks.", icon: <Truck className="h-6 w-6" />, iconName: "Truck", duration: "1-2 weeks", color: "from-orange-400 to-amber-400" },
+  { name: "Installation", description: "MNRE-certified installers execute complete installation with comprehensive testing.", icon: <HardHat className="h-6 w-6" />, iconName: "HardHat", duration: "3-10 days", color: "from-amber-400 to-orange-500" },
+  { name: "Support & Maintenance", description: "Continuous support through cloud monitoring, preventive maintenance, and warranty management.", icon: <Zap className="h-6 w-6" />, iconName: "Zap", duration: "Lifetime", color: "from-yellow-400 to-amber-500" },
+];
+
+const FALLBACK_HERO_IMAGES = [
+  "https://images.unsplash.com/photo-1509391366360-2e959784a276?w=1920&auto=format&fit=crop",
+  "https://images.unsplash.com/photo-1497440001374-f26997328c1b?w=1920&auto=format&fit=crop",
+  "https://images.unsplash.com/photo-1559302504-64aae6ca6b6d?w=1920&auto=format&fit=crop",
+  "https://images.unsplash.com/photo-1473341304170-971dccb5ac1e?w=1920&auto=format&fit=crop",
+];
+
+const FALLBACK_HERO_CONTENT = {
+  badge: "End-to-End Premium Solar Solutions",
+  titleLine1: "Our Services &",
+  titleLine2: "Solutions",
+  subtitle: "Complete Solar Excellence from Concept to Commissioning",
+};
+
+export default function ServicesPage() {
+  const servicesFromDb = useServices();
+  const scopeFromDb = useScopeOfWork();
+  const executionFromDb = useExecutionProcess();
+  const heroSlidesFromDb = useServicesHeroSlides();
+  const heroContentFromDb = useServicesHeroContent();
+
+  const services = useMemo(() => {
+    if (servicesFromDb.data?.length) {
+      return servicesFromDb.data.map((s) => ({ ...s, icon: getIcon(s.iconName, 'h-6 w-6') }));
+    }
+    return FALLBACK_SERVICES;
+  }, [servicesFromDb.data]);
+
+  const scopeOfWork = useMemo(() => {
+    if (scopeFromDb.data?.length) {
+      return scopeFromDb.data.map((s) => ({ ...s, icon: getIcon(s.iconName, 'h-6 w-6') }));
+    }
+    return FALLBACK_SCOPE;
+  }, [scopeFromDb.data]);
+
+  const executionProcess = useMemo(() => {
+    if (executionFromDb.data?.length) {
+      return executionFromDb.data.map((s) => ({ ...s, icon: getIcon(s.iconName, 'h-6 w-6') }));
+    }
+    return FALLBACK_EXECUTION;
+  }, [executionFromDb.data]);
+
+  const heroImages = useMemo(() =>
+    heroSlidesFromDb.data?.length
+      ? heroSlidesFromDb.data.map((s) => s.image)
+      : FALLBACK_HERO_IMAGES,
+    [heroSlidesFromDb.data]);
+
+  const heroContent = useMemo(() =>
+    heroContentFromDb.data ?? FALLBACK_HERO_CONTENT,
+    [heroContentFromDb.data]);
+
+  const [expandedScope, setExpandedScope] = useState(0);
+  const [hoveredService, setHoveredService] = useState(null);
+  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+  const [isVisible, setIsVisible] = useState(false);
+  const [heroSlideIndex, setHeroSlideIndex] = useState(0);
+
+  useEffect(() => {
+    setIsVisible(true);
+    const handleMouseMove = (e: MouseEvent) => {
+      setMousePosition({ x: e.clientX, y: e.clientY });
+    };
+    window.addEventListener('mousemove', handleMouseMove);
+    return () => window.removeEventListener('mousemove', handleMouseMove);
+  }, []);
+
+  useEffect(() => {
+    const len = heroImages.length || 1;
+    const interval = setInterval(() => {
+      setHeroSlideIndex((prev) => (prev + 1) % len);
+    }, 5000);
+    return () => clearInterval(interval);
+  }, [heroImages.length]);
+  
+  return (
+    <div className="flex flex-col bg-gradient-to-br from-white via-orange-50/30 to-yellow-50/30 overflow-hidden">
+      <style jsx global>{`
+        @keyframes float {
+          0%, 100% { transform: translateY(0px) rotate(0deg); }
+          50% { transform: translateY(-25px) rotate(3deg); }
+        }
+        @keyframes floatSlow {
+          0%, 100% { transform: translateY(0px) translateX(0px); }
+          50% { transform: translateY(-15px) translateX(10px); }
+        }
+        @keyframes shimmer {
+          0% { background-position: -1000px 0; }
+          100% { background-position: 1000px 0; }
+        }
+        @keyframes glow {
+          0%, 100% { box-shadow: 0 0 30px rgba(251, 146, 60, 0.4), 0 0 60px rgba(251, 146, 60, 0.2); }
+          50% { box-shadow: 0 0 50px rgba(251, 146, 60, 0.6), 0 0 80px rgba(251, 146, 60, 0.3); }
+        }
+        @keyframes slideInUp {
+          from { opacity: 0; transform: translateY(50px); }
+          to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes slideInDown {
+          from { opacity: 0; transform: translateY(-50px); }
+          to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes slideInLeft {
+          from { opacity: 0; transform: translateX(-50px); }
+          to { opacity: 1; transform: translateX(0); }
+        }
+        @keyframes slideInRight {
+          from { opacity: 0; transform: translateX(50px); }
+          to { opacity: 1; transform: translateX(0); }
+        }
+        @keyframes scaleIn {
+          from { opacity: 0; transform: scale(0.8); }
+          to { opacity: 1; transform: scale(1); }
+        }
+        @keyframes pulse {
+          0%, 100% { transform: scale(1); opacity: 1; }
+          50% { transform: scale(1.05); opacity: 0.8; }
+        }
+        @keyframes rotate {
+          from { transform: rotate(0deg); }
+          to { transform: rotate(360deg); }
+        }
+        @keyframes wave {
+          0%, 100% { transform: translateX(0) translateY(0); }
+          25% { transform: translateX(10px) translateY(-10px); }
+          50% { transform: translateX(0) translateY(-20px); }
+          75% { transform: translateX(-10px) translateY(-10px); }
+        }
+        @keyframes gradient {
+          0%, 100% { background-position: 0% 50%; }
+          50% { background-position: 100% 50%; }
+        }
+        @keyframes fadeIn {
+          from { opacity: 0; }
+          to { opacity: 1; }
+        }
+        @keyframes slideUp {
+          from { transform: translateY(20px); opacity: 0; }
+          to { transform: translateY(0); opacity: 1; }
+        }
+        
+        .animate-float { animation: float 6s ease-in-out infinite; }
+        .animate-floatSlow { animation: floatSlow 8s ease-in-out infinite; }
+        .animate-shimmer { 
+          animation: shimmer 3s linear infinite;
+          background: linear-gradient(90deg, transparent, rgba(255,255,255,0.8), transparent);
+          background-size: 1000px 100%;
+        }
+        .animate-glow { animation: glow 3s ease-in-out infinite; }
+        .animate-slideInUp { animation: slideInUp 0.8s ease-out forwards; }
+        .animate-slideInDown { animation: slideInDown 0.8s ease-out forwards; }
+        .animate-slideInLeft { animation: slideInLeft 0.8s ease-out forwards; }
+        .animate-slideInRight { animation: slideInRight 0.8s ease-out forwards; }
+        .animate-scaleIn { animation: scaleIn 0.6s ease-out forwards; }
+        .animate-pulse { animation: pulse 2s ease-in-out infinite; }
+        .animate-rotate { animation: rotate 20s linear infinite; }
+        .animate-wave { animation: wave 4s ease-in-out infinite; }
+        .animate-gradient { animation: gradient 8s ease infinite; background-size: 200% 200%; }
+        .animate-fadeIn { animation: fadeIn 1s ease-out forwards; }
+        .animate-slideUp { animation: slideUp 0.6s ease-out forwards; }
+        
+        .perspective-1000 { perspective: 1000px; }
+        .preserve-3d { transform-style: preserve-3d; }
+        .backface-hidden { backface-visibility: hidden; }
+        
+        .glass-effect {
+          background: rgba(255, 255, 255, 0.7);
+          backdrop-filter: blur(10px);
+          -webkit-backdrop-filter: blur(10px);
+          border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+        
+        .text-gradient {
+          background: linear-gradient(135deg, #fb923c, #fbbf24, #fb923c);
+          background-size: 200% 200%;
+          -webkit-background-clip: text;
+          -webkit-text-fill-color: transparent;
+          background-clip: text;
+        }
+
+        .hover-lift {
+          transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .hover-lift:hover {
+          transform: translateY(-10px);
+        }
+
+        .group:hover .group-hover-scale {
+          transform: scale(1.1);
+        }
+
+        .gradient-border {
+          position: relative;
+          background: white;
+        }
+        .gradient-border::before {
+          content: '';
+          position: absolute;
+          inset: 0;
+          border-radius: inherit;
+          padding: 2px;
+          background: linear-gradient(135deg, #fb923c, #fbbf24, #fb923c);
+          -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+          -webkit-mask-composite: xor;
+          mask-composite: exclude;
+        }
+      `}</style>
+
+      {/* Hero Section - Ultra Premium */}
+      <section className="relative min-h-[85vh] flex items-center justify-center overflow-hidden">
+        {/* Background Image Slider - Solar related */}
+        <div className="absolute inset-0">
+          {heroImages.map((src, i) => (
+            <div
+              key={src}
+              className={`absolute inset-0 transition-opacity duration-300 ease-out ${
+                i === heroSlideIndex ? "opacity-100 z-[1]" : "opacity-0 z-0"
+              }`}
+              aria-hidden={i !== heroSlideIndex}
+            >
+              <img
+                src={src}
+                alt=""
+                className="w-full h-full object-cover"
+                fetchPriority={i === 0 ? "high" : "low"}
+              />
+            </div>
+          ))}
+          <div className="absolute inset-0 z-[2] bg-gradient-to-br from-orange-900/50 via-amber-900/45 to-yellow-900/40"></div>
+          <div className="absolute inset-0 z-[2] bg-gradient-to-b from-transparent via-orange-50/10 to-white/80"></div>
+        </div>
+        {/* Slider dots */}
+        <div className="absolute bottom-8 left-1/2 z-20 flex -translate-x-1/2 gap-2">
+          {heroImages.map((_, i) => (
+            <button
+              key={i}
+              type="button"
+              aria-label={`Slide ${i + 1}`}
+              onClick={() => setHeroSlideIndex(i)}
+              className={`h-2 rounded-full transition-all duration-300 ${
+                i === heroSlideIndex
+                  ? "w-8 bg-white shadow-lg"
+                  : "w-2 bg-white/50 hover:bg-white/70"
+              }`}
+            />
+          ))}
+        </div>
+        
+        {/* Animated Gradient Background */}
+        <div className="absolute inset-0 bg-gradient-to-br from-orange-50/30 via-amber-50/30 to-yellow-50/30"></div>
+        
+        {/* Dynamic Floating Orbs */}
+        <div className="absolute inset-0 overflow-hidden">
+          <div className="absolute top-20 left-10 w-96 h-96 bg-gradient-to-br from-orange-300/40 to-amber-300/40 rounded-full mix-blend-multiply filter blur-3xl animate-float"></div>
+          <div className="absolute top-40 right-20 w-[500px] h-[500px] bg-gradient-to-br from-yellow-300/40 to-orange-400/40 rounded-full mix-blend-multiply filter blur-3xl animate-floatSlow" style={{animationDelay: '2s'}}></div>
+          <div className="absolute -bottom-20 left-1/2 w-[450px] h-[450px] bg-gradient-to-br from-amber-200/40 to-yellow-300/40 rounded-full mix-blend-multiply filter blur-3xl animate-float" style={{animationDelay: '4s'}}></div>
+          <div className="absolute top-1/2 right-1/4 w-72 h-72 bg-gradient-to-br from-orange-200/30 to-yellow-200/30 rounded-full mix-blend-multiply filter blur-3xl animate-floatSlow" style={{animationDelay: '3s'}}></div>
+        </div>
+
+        {/* Animated Grid Pattern */}
+        <div className="absolute inset-0 opacity-[0.03]" style={{
+          backgroundImage: `linear-gradient(#fb923c 1px, transparent 1px), linear-gradient(90deg, #fb923c 1px, transparent 1px)`,
+          backgroundSize: '50px 50px'
+        }}></div>
+
+        {/* Radial Gradient Overlay */}
+        <div className="absolute inset-0 bg-gradient-radial from-transparent via-white/5 to-white/20"></div>
+
+        <div className="container mx-auto px-4 text-center relative z-10 py-20">
+          {/* Top Badge */}
+          <div className={`inline-flex items-center gap-2 px-5 py-2.5 glass-effect rounded-full shadow-xl mb-6 ${isVisible ? 'animate-slideInDown' : 'opacity-0'} hover:scale-105 transition-transform duration-300`}>
+            <div className="relative">
+              <Sparkles className="h-4 w-4 text-orange-500 animate-pulse" />
+              <div className="absolute inset-0 animate-ping">
+                <Sparkles className="h-4 w-4 text-orange-400 opacity-75" />
+              </div>
+            </div>
+            <span className="font-headline text-xs font-bold bg-gradient-to-r from-orange-600 via-amber-600 to-yellow-600 bg-clip-text text-transparent">
+              {heroContent.badge}
+            </span>
+            <Star className="h-4 w-4 text-yellow-500 animate-pulse" />
+          </div>
+          
+          {/* Main Heading */}
+          <h1 className={`font-headline text-4xl md:text-5xl lg:text-6xl font-black mb-5 leading-tight ${isVisible ? 'animate-scaleIn' : 'opacity-0'}`} style={{animationDelay: '0.2s'}}>
+            <div className="relative inline-block">
+              <span className="absolute inset-0 blur-2xl bg-gradient-to-r from-orange-400 via-amber-400 to-yellow-400 opacity-50 animate-pulse"></span>
+              <span className="relative bg-gradient-to-r from-white via-orange-50 to-amber-50 bg-clip-text text-transparent animate-gradient drop-shadow-2xl">
+                {heroContent.titleLine1}
+              </span>
+            </div>
+            <br />
+            <div className="relative inline-block mt-2">
+              <span className="absolute inset-0 blur-2xl bg-gradient-to-r from-yellow-400 via-orange-400 to-amber-400 opacity-50 animate-pulse"></span>
+              <span className="relative bg-gradient-to-r from-amber-50 via-white to-yellow-50 bg-clip-text text-transparent animate-gradient drop-shadow-2xl" style={{animationDelay: '1s'}}>
+                {heroContent.titleLine2}
+              </span>
+            </div>
+          </h1>
+          
+          {/* Subheading */}
+          <p className={`font-headline mt-5 max-w-2xl mx-auto text-base md:text-lg text-white leading-relaxed font-medium ${isVisible ? 'animate-slideInUp' : 'opacity-0'} drop-shadow-lg`} style={{animationDelay: '0.4s'}}>
+            {heroContent.subtitle}
+          </p>
+
+          {/* Feature Pills */}
+          <div className={`mt-6 flex flex-wrap gap-2 justify-center ${isVisible ? 'animate-fadeIn' : 'opacity-0'}`} style={{animationDelay: '0.6s'}}>
+            {[
+              { icon: <Shield className="h-3.5 w-3.5" />, text: "25+ Year Warranty" },
+              { icon: <Leaf className="h-3.5 w-3.5" />, text: "90% Bill Reduction" },
+              { icon: <Award className="h-3.5 w-3.5" />, text: "MNRE Certified" },
+              { icon: <Battery className="h-3.5 w-3.5" />, text: "24/7 Monitoring" }
+            ].map((item, i) => (
+              <div key={i} className="glass-effect px-4 py-2 rounded-full flex items-center gap-1.5 shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-300 border border-orange-200/50">
+                <div className="text-orange-600">{item.icon}</div>
+                <span className="font-headline text-xs font-semibold text-gray-700">{item.text}</span>
+              </div>
+            ))}
+          </div>
+
+          {/* CTA Buttons */}
+          <div className={`mt-8 flex flex-wrap gap-4 justify-center ${isVisible ? 'animate-slideInUp' : 'opacity-0'}`} style={{animationDelay: '0.8s'}}>
+            <button className="group relative px-8 py-3.5 bg-gradient-to-r from-orange-500 via-amber-500 to-yellow-500 text-white rounded-full font-headline font-bold text-sm shadow-xl hover:shadow-orange-500/50 transform hover:scale-110 transition-all duration-500 overflow-hidden">
+              <div className="absolute inset-0 bg-gradient-to-r from-yellow-500 via-orange-500 to-amber-500 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+              <div className="absolute inset-0 animate-shimmer"></div>
+              <span className="relative flex items-center gap-2">
+                Get Started Today
+                <ArrowRight className="h-4 w-4 group-hover:translate-x-2 transition-transform duration-300" />
+              </span>
+            </button>
+            <button className="group px-8 py-3.5 glass-effect text-orange-600 rounded-full font-headline font-bold text-sm shadow-xl hover:shadow-xl transform hover:scale-110 transition-all duration-500 border-2 border-orange-300/50 hover:border-orange-500">
+              <span className="flex items-center gap-2">
+                Explore Solutions
+                <Sparkles className="h-4 w-4 group-hover:rotate-180 transition-transform duration-500" />
+              </span>
+            </button>
+          </div>
+
+          {/* Stats Bar - dark background */}
+          <div className={`mt-12 grid grid-cols-2 md:grid-cols-4 gap-4 max-w-4xl mx-auto ${isVisible ? 'animate-fadeIn' : 'opacity-0'}`} style={{animationDelay: '1s'}}>
+            {[
+              { value: "500+", label: "Projects", icon: <BarChart3 className="h-6 w-6" /> },
+              { value: "1000+", label: "Happy Clients", icon: <Users className="h-6 w-6" /> },
+              { value: "50MW+", label: "Installed", icon: <Zap className="h-6 w-6" /> },
+              { value: "10+", label: "Years Exp", icon: <Award className="h-6 w-6" /> }
+            ].map((stat, i) => (
+              <div key={i} className="rounded-2xl p-4 shadow-xl hover:shadow-2xl transform hover:scale-105 transition-all duration-300 border border-gray-600/50 hover:border-orange-500/50 hover-lift group bg-gray-900/95 backdrop-blur-md">
+                <div className="text-amber-400 mb-2 inline-block group-hover:scale-110 transition-transform duration-300">
+                  {stat.icon}
+                </div>
+                <div className="font-headline text-2xl font-black text-white mb-0.5">
+                  {stat.value}
+                </div>
+                <div className="font-headline text-xs font-semibold text-gray-300">
+                  {stat.label}
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Scroll Indicator */}
+        <div className="absolute bottom-6 left-1/2 transform -translate-x-1/2 animate-bounce">
+          <div className="w-6 h-9 border-2 border-orange-400 rounded-full flex justify-center">
+            <div className="w-1 h-2 bg-orange-500 rounded-full mt-1.5 animate-pulse"></div>
+          </div>
+        </div>
+      </section>
+
+      {/* Expertise Section */}
+      <section className="py-16 bg-white relative overflow-hidden">
+        {/* Background Pattern */}
+        <div className="absolute inset-0 opacity-[0.02]">
+          <div className="absolute inset-0" style={{
+            backgroundImage: `radial-gradient(circle, #fb923c 1px, transparent 1px)`,
+            backgroundSize: '30px 30px'
+          }}></div>
+        </div>
+
+        <div className="container mx-auto px-4 relative z-10">
+          <div className="max-w-4xl mx-auto text-center">
+            <div className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-orange-50 to-amber-50 rounded-full mb-5 shadow-lg border border-orange-200/50 animate-slideInDown">
+              <Award className="h-4 w-4 text-orange-500 animate-pulse" />
+              <span className="font-headline text-xs font-bold text-orange-600">Our Expertise</span>
+            </div>
+            
+            <h2 className="font-headline text-3xl md:text-4xl font-black mb-5 animate-slideInUp">
+              <span className="text-gradient animate-gradient">
+                Comprehensive Service Portfolio
+              </span>
+            </h2>
+            
+            <div className="relative w-24 h-1 bg-gradient-to-r from-orange-400 via-amber-400 to-yellow-400 mx-auto mb-6 rounded-full animate-scaleIn overflow-hidden">
+              <div className="absolute inset-0 animate-shimmer"></div>
+            </div>
+            
+            <p className="font-headline text-sm md:text-base text-gray-600 leading-relaxed max-w-3xl mx-auto animate-slideInUp" style={{animationDelay: '0.2s'}}>
+              RaQuadrant Energy specializes in 
+              <span className="font-black text-transparent bg-clip-text bg-gradient-to-r from-orange-600 to-amber-600"> Turnkey Rooftop Solar Installation </span>
+              — complete, hassle-free solar solutions across 
+              <span className="font-bold text-gray-800"> Eastern UP, Bihar, Jharkhand, Odisha, West Bengal, Assam</span>, and expanding nationwide.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      {/* Services Cards - Ultra Premium */}
+      <section className="py-16 bg-gradient-to-b from-white via-orange-50/30 to-amber-50/30 relative overflow-hidden">
+        {/* Decorative Elements */}
+        <div className="absolute top-20 right-10 w-64 h-64 bg-gradient-to-br from-orange-200/30 to-amber-200/30 rounded-full blur-3xl animate-floatSlow"></div>
+        <div className="absolute bottom-20 left-10 w-80 h-80 bg-gradient-to-br from-yellow-200/30 to-orange-200/30 rounded-full blur-3xl animate-float"></div>
+
+        <div className="container mx-auto px-4 relative z-10">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            {services.map((service, index) => (
+              <div 
+                key={service.id}
+                className="group relative animate-slideInUp hover-lift"
+                style={{animationDelay: `${index * 0.2}s`}}
+                onMouseEnter={() => setHoveredService(service.id)}
+                onMouseLeave={() => setHoveredService(null)}
+              >
+                {/* Card Container */}
+                <div className="relative h-full bg-white rounded-2xl shadow-xl hover:shadow-orange-500/20 transition-all duration-700 overflow-hidden border border-orange-100/50">
+                  {/* Background Image */}
+                  <div className="absolute inset-0 opacity-0 group-hover:opacity-10 transition-opacity duration-700">
+                    <img 
+                      src={service.image} 
+                      alt={service.title}
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+                  
+                  {/* Animated Background Gradient */}
+                  <div className={`absolute inset-0 bg-gradient-to-br ${service.gradient} opacity-0 group-hover:opacity-5 transition-opacity duration-700`}></div>
+                  
+                  {/* Shimmer Effect */}
+                  <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-700">
+                    <div className="animate-shimmer absolute inset-0"></div>
+                  </div>
+
+                  {/* Glow Effect */}
+                  <div className="absolute -inset-1 bg-gradient-to-r from-orange-400 via-amber-400 to-yellow-400 rounded-2xl opacity-0 group-hover:opacity-20 blur-xl transition-opacity duration-700"></div>
+
+                  <div className="relative p-6">
+                    {/* Floating Icon */}
+                    <div className="relative mb-5">
+                      <div className={`inline-flex p-4 rounded-2xl bg-gradient-to-br ${service.gradient} shadow-xl transform group-hover:scale-110 group-hover:rotate-6 transition-all duration-700`}>
+                        <div className="text-white group-hover-scale transition-transform duration-500">
+                          {service.icon}
+                        </div>
+                      </div>
+                      {/* Pulse Ring */}
+                      <div className={`absolute inset-0 rounded-2xl bg-gradient-to-br ${service.gradient} opacity-20 group-hover:animate-ping`}></div>
+                    </div>
+
+                    {/* Title */}
+                    <h3 className="font-headline text-xl font-black text-gray-900 mb-3 group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-orange-600 group-hover:to-amber-600 transition-all duration-300">
+                      {service.title}
+                    </h3>
+
+                    {/* Tags */}
+                    <div className="flex flex-wrap gap-2 mb-4">
+                      <span className="font-headline px-3 py-1.5 bg-gradient-to-r from-orange-50 to-amber-50 text-orange-700 rounded-full text-xs font-bold border border-orange-200 shadow-sm hover:shadow-md transition-shadow duration-300">
+                        {service.capacity}
+                      </span>
+                      <span className="font-headline px-3 py-1.5 bg-gradient-to-r from-amber-50 to-yellow-50 text-amber-700 rounded-full text-xs font-bold border border-amber-200 shadow-sm hover:shadow-md transition-shadow duration-300">
+                        {service.roi}
+                      </span>
+                    </div>
+
+                    {/* Description */}
+                    <p className="font-headline text-gray-600 mb-5 leading-relaxed text-sm">
+                      {service.description}
+                    </p>
+
+                    {/* Features */}
+                    <div className="space-y-2.5 mb-5">
+                      {service.features.map((feature, i) => (
+                        <div 
+                          key={i} 
+                          className="flex items-start gap-3 transform translate-x-0 group-hover:translate-x-2 transition-transform duration-500 opacity-0 animate-slideInLeft"
+                          style={{
+                            animationDelay: `${(index * 0.2) + (i * 0.1)}s`,
+                            animationFillMode: 'forwards'
+                          }}
+                        >
+                          <div className="flex-shrink-0 mt-0.5">
+                            <div className="p-1 bg-gradient-to-br from-orange-400 to-amber-500 rounded-md">
+                              <CheckCircle2 className="h-3.5 w-3.5 text-white" />
+                            </div>
+                          </div>
+                          <span className="font-headline text-xs text-gray-700 leading-relaxed">{feature}</span>
+                        </div>
+                      ))}
+                    </div>
+
+                    {/* Stats Grid */}
+                    <div className="grid grid-cols-2 gap-2 pt-5 border-t-2 border-gradient-to-r from-orange-100 via-amber-100 to-yellow-100">
+                      {service.stats.map((stat, i) => (
+                        <div 
+                          key={i} 
+                          className="relative group/stat p-3 bg-gradient-to-br from-orange-50/50 to-amber-50/50 rounded-xl transform hover:scale-105 transition-all duration-300 border border-orange-100/50 hover:border-orange-300 hover:shadow-lg"
+                        >
+                          <div className="absolute inset-0 bg-gradient-to-br from-orange-400 to-amber-400 rounded-xl opacity-0 group-hover/stat:opacity-10 transition-opacity duration-300"></div>
+                          <div className="relative flex items-center gap-1.5">
+                            <Award className="h-4 w-4 text-orange-500 flex-shrink-0" />
+                            <span className="font-headline text-[10px] text-gray-800 font-bold leading-tight">{stat}</span>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+
+                    {/* Hover Arrow */}
+                    <div className="absolute bottom-5 right-5 opacity-0 group-hover:opacity-100 transform translate-x-8 group-hover:translate-x-0 transition-all duration-500">
+                      <div className="p-2 bg-gradient-to-br from-orange-500 to-amber-500 rounded-xl shadow-lg">
+                        <ArrowRight className="h-4 w-4 text-white" />
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Bottom Accent */}
+                  <div className={`absolute bottom-0 left-0 right-0 h-1.5 bg-gradient-to-r ${service.gradient} transform scale-x-0 group-hover:scale-x-100 transition-transform duration-700 origin-left`}></div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Scope of Work - Premium Accordion */}
+      <section className="py-16 bg-white relative overflow-hidden">
+        {/* Background Elements */}
+        <div className="absolute inset-0">
+          <div className="absolute top-0 left-1/4 w-96 h-96 bg-gradient-to-br from-orange-100/40 to-amber-100/40 rounded-full blur-3xl animate-floatSlow"></div>
+          <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-gradient-to-br from-yellow-100/40 to-orange-100/40 rounded-full blur-3xl animate-float"></div>
+        </div>
+
+        <div className="container mx-auto px-4 relative z-10">
+          <div className="text-center mb-12">
+            <div className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-orange-50 to-amber-50 rounded-full mb-5 shadow-lg border border-orange-200/50 animate-slideInDown">
+              <Sparkles className="h-4 w-4 text-orange-500 animate-pulse" />
+              <span className="font-headline text-xs font-bold text-orange-600">Complete Process</span>
+            </div>
+            
+            <h2 className="font-headline text-3xl md:text-4xl font-black mb-5 animate-slideInUp">
+              <span className="text-gradient animate-gradient">
+                Complete Scope of Work
+              </span>
+            </h2>
+            
+            <div className="relative w-24 h-1 bg-gradient-to-r from-orange-400 via-amber-400 to-yellow-400 mx-auto mb-4 rounded-full animate-scaleIn overflow-hidden">
+              <div className="absolute inset-0 animate-shimmer"></div>
+            </div>
+            
+            <p className="font-headline text-base text-gray-600 font-semibold animate-slideInUp" style={{animationDelay: '0.2s'}}>
+              We Handle Everything
+            </p>
+          </div>
+
+          <div className="max-w-6xl mx-auto space-y-4">
+            {scopeOfWork.map((item, index) => {
+              const isExpanded = expandedScope === index;
+              const colorMap = {
+                orange: 'from-orange-400 to-amber-500',
+                amber: 'from-amber-400 to-yellow-500',
+                yellow: 'from-yellow-400 to-orange-400'
+              };
+              
+              return (
+                <div 
+                  key={index}
+                  className="group relative animate-slideInUp"
+                  style={{animationDelay: `${index * 0.1}s`}}
+                >
+                  <div className={`relative bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-500 overflow-hidden border-2 ${isExpanded ? 'border-orange-300' : 'border-orange-100'}`}>
+                    {/* Glow Effect */}
+                    {isExpanded && (
+                      <div className="absolute -inset-1 bg-gradient-to-r from-orange-400 via-amber-400 to-yellow-400 rounded-2xl opacity-20 blur-xl animate-pulse"></div>
+                    )}
+
+                    <button
+                      onClick={() => setExpandedScope(isExpanded ? -1 : index)}
+                      className="relative w-full px-6 py-5 flex items-center justify-between text-left group/btn hover:bg-gradient-to-r hover:from-orange-50/50 hover:to-amber-50/50 transition-all duration-500"
+                    >
+                      <div className="flex items-center gap-4 flex-1">
+                        {/* Icon with Animation */}
+                        <div className={`relative p-3 rounded-xl bg-gradient-to-br ${colorMap[item.color]} text-white shadow-lg transform transition-all duration-700 ${isExpanded ? 'rotate-12 scale-110' : 'group-hover/btn:scale-110 group-hover/btn:rotate-6'}`}>
+                          <div className="relative z-10">{item.icon}</div>
+                          {isExpanded && (
+                            <div className="absolute inset-0 rounded-xl bg-white/30 animate-ping"></div>
+                          )}
+                        </div>
+                        
+                        <div className="flex-1">
+                          <div className="flex items-center gap-2 mb-1">
+                            <span className={`font-headline px-3 py-1 bg-gradient-to-r ${colorMap[item.color]} text-white rounded-full text-xs font-bold shadow-lg`}>
+                              Phase {index + 1}
+                            </span>
+                            {isExpanded && (
+                              <div className="flex gap-1">
+                                {[...Array(3)].map((_, i) => (
+                                  <div key={i} className="w-1.5 h-1.5 bg-orange-400 rounded-full animate-pulse" style={{animationDelay: `${i * 0.2}s`}}></div>
+                                ))}
+                              </div>
+                            )}
+                          </div>
+                          <span className={`font-headline text-lg md:text-xl font-black transition-all duration-300 ${isExpanded ? 'text-transparent bg-clip-text bg-gradient-to-r from-orange-600 to-amber-600' : 'text-gray-900 group-hover/btn:text-orange-600'}`}>
+                            {item.phase}
+                          </span>
+                        </div>
+                      </div>
+                      
+                      {/* Expand Icon */}
+                      <div className={`transform transition-all duration-700 ${isExpanded ? 'rotate-180 scale-110' : 'group-hover/btn:scale-110'} p-2.5 bg-gradient-to-br from-orange-100 to-amber-100 rounded-xl`}>
+                        <svg className={`w-5 h-5 transition-colors duration-300 ${isExpanded ? 'text-orange-600' : 'text-orange-500'}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M19 9l-7 7-7-7" />
+                        </svg>
+                      </div>
+                    </button>
+                    
+                    {/* Expandable Content */}
+                    <div 
+                      className={`overflow-hidden transition-all duration-700 ${isExpanded ? 'max-h-[600px] opacity-100' : 'max-h-0 opacity-0'}`}
+                    >
+                      <div className="px-6 pb-6 bg-gradient-to-br from-orange-50/30 via-amber-50/30 to-yellow-50/30">
+                        <p className="font-headline text-sm text-gray-700 leading-relaxed mb-4 animate-slideInUp">
+                          {item.content}
+                        </p>
+                        
+                        {/* Image Preview */}
+                        <div className="mb-4 rounded-xl overflow-hidden shadow-lg animate-scaleIn border border-orange-200/50">
+                          <img 
+                            src={item.image} 
+                            alt={item.phase}
+                            className="w-full h-32 object-cover transform hover:scale-110 transition-transform duration-700"
+                          />
+                        </div>
+                        
+                        {/* Details Card */}
+                        <div className="glass-effect rounded-xl p-5 shadow-lg border border-orange-200/50 animate-scaleIn">
+                          <h4 className="font-headline font-black text-base text-gray-900 mb-4 flex items-center gap-2">
+                            <div className="p-1.5 bg-gradient-to-br from-orange-400 to-amber-500 rounded-md">
+                              <CheckCircle2 className="h-4 w-4 text-white" />
+                            </div>
+                            What We Cover:
+                          </h4>
+                          <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+                            {item.details.map((detail, i) => (
+                              <div 
+                                key={i} 
+                                className="group/detail flex items-center gap-3 p-3 bg-white rounded-lg hover:bg-gradient-to-r hover:from-orange-50 hover:to-amber-50 transform hover:translate-x-2 transition-all duration-300 border border-orange-100/50 hover:border-orange-300 hover:shadow-lg"
+                              >
+                                <div className={`w-2 h-2 bg-gradient-to-br ${colorMap[item.color]} rounded-full flex-shrink-0 group-hover/detail:scale-125 transition-transform duration-300`}></div>
+                                <span className="font-headline text-xs font-semibold text-gray-700 group-hover/detail:text-orange-700 transition-colors duration-300">
+                                  {detail}
+                                </span>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Bottom Accent Line */}
+                    <div className={`absolute bottom-0 left-0 right-0 h-1.5 bg-gradient-to-r ${colorMap[item.color]} transform transition-all duration-700 ${isExpanded ? 'scale-x-100' : 'scale-x-0'} origin-left`}></div>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      </section>
+
+      {/* Execution Process - Premium Timeline */}
+      <section className="py-16 bg-gradient-to-b from-white via-orange-50/30 to-amber-50/30 relative overflow-hidden">
+        {/* Decorative Background */}
+        <div className="absolute inset-0">
+          <div className="absolute top-1/4 right-20 w-72 h-72 bg-gradient-to-br from-orange-200/30 to-amber-200/30 rounded-full blur-3xl animate-float"></div>
+          <div className="absolute bottom-1/4 left-20 w-96 h-96 bg-gradient-to-br from-yellow-200/30 to-orange-200/30 rounded-full blur-3xl animate-floatSlow"></div>
+        </div>
+
+        <div className="container mx-auto px-4 relative z-10">
+          <div className="text-center mb-12">
+            <div className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-orange-50 to-amber-50 rounded-full mb-5 shadow-lg border border-orange-200/50 animate-slideInDown">
+              <Clock className="h-4 w-4 text-orange-500 animate-pulse" />
+              <span className="font-headline text-xs font-bold text-orange-600">Our Process</span>
+            </div>
+            
+            <h2 className="font-headline text-3xl md:text-4xl font-black mb-5 animate-slideInUp">
+              <span className="text-gradient animate-gradient">
+                Execution Process
+              </span>
+            </h2>
+            
+            <div className="relative w-24 h-1 bg-gradient-to-r from-orange-400 via-amber-400 to-yellow-400 mx-auto mb-4 rounded-full animate-scaleIn overflow-hidden">
+              <div className="absolute inset-0 animate-shimmer"></div>
+            </div>
+            
+            <p className="font-headline text-base text-gray-600 font-semibold animate-slideInUp" style={{animationDelay: '0.2s'}}>
+              The 6-Step Methodology
+            </p>
+          </div>
+
+          <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+            {executionProcess.map((step, index) => (
+              <div 
+                key={step.name}
+                className="group relative animate-slideInUp perspective-1000"
+                style={{animationDelay: `${index * 0.15}s`}}
+              >
+                <div className="relative h-full preserve-3d">
+                  <div className="relative bg-white rounded-2xl p-6 shadow-xl hover:shadow-orange-500/20 transition-all duration-700 transform hover:-translate-y-2 hover:scale-105 border-2 border-orange-100/50 hover:border-orange-300 overflow-hidden group-hover:shadow-xl">
+                    {/* Animated Background */}
+                    <div className={`absolute inset-0 bg-gradient-to-br ${step.color} opacity-0 group-hover:opacity-10 transition-opacity duration-700`}></div>
+                    
+                    {/* Shimmer Effect */}
+                    <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-700">
+                      <div className="animate-shimmer absolute inset-0"></div>
+                    </div>
+
+                    {/* Glow Effect */}
+                    <div className={`absolute -inset-1 bg-gradient-to-br ${step.color} rounded-3xl opacity-0 group-hover:opacity-30 blur-2xl transition-opacity duration-700`}></div>
+                    
+                    {/* Step Number Badge - 3D Effect */}
+                    <div className="absolute -top-3 -right-3 w-14 h-14 perspective-1000">
+                      <div className={`w-full h-full bg-gradient-to-br ${step.color} rounded-xl flex items-center justify-center text-white font-headline font-black text-xl shadow-xl transform rotate-12 group-hover:rotate-0 group-hover:scale-125 transition-all duration-700 preserve-3d`}>
+                        <span className="relative z-10">{index + 1}</span>
+                        <div className="absolute inset-0 bg-white/20 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                      </div>
+                    </div>
+
+                    {/* Icon Container */}
+                    <div className="relative mb-5">
+                      <div className={`inline-flex p-4 bg-gradient-to-br ${step.color} rounded-2xl text-white shadow-xl transform group-hover:scale-110 group-hover:rotate-6 transition-all duration-700 relative z-10`}>
+                        {step.icon}
+                      </div>
+                      {/* Pulse Rings */}
+                      <div className={`absolute inset-0 rounded-2xl bg-gradient-to-br ${step.color} opacity-20 group-hover:animate-ping`}></div>
+                      <div className={`absolute inset-0 rounded-2xl bg-gradient-to-br ${step.color} opacity-10 animate-pulse`}></div>
+                    </div>
+
+                    {/* Title */}
+                    <h3 className="font-headline text-lg font-black text-gray-900 mb-3 group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-orange-600 group-hover:to-amber-600 transition-all duration-500 relative z-10">
+                      {step.name}
+                    </h3>
+
+                    {/* Description */}
+                    <p className="font-headline text-sm text-gray-600 leading-relaxed mb-5 flex-grow relative z-10">
+                      {step.description}
+                    </p>
+
+                    {/* Duration Badge */}
+                    <div className="relative z-10 mt-auto pt-4 border-t-2 border-gradient-to-r from-orange-100 to-amber-100">
+                      <div className="flex items-center gap-2">
+                        <div className={`p-2 bg-gradient-to-br ${step.color} rounded-xl transform group-hover:scale-110 group-hover:rotate-6 transition-all duration-500 shadow-lg`}>
+                          <Clock className="w-4 h-4 text-white" />
+                        </div>
+                        <div>
+                          <div className="font-headline text-[10px] text-gray-500 font-semibold mb-0.5">Timeline</div>
+                          <div className="font-headline font-black text-sm bg-gradient-to-r from-orange-600 to-amber-600 bg-clip-text text-transparent">
+                            {step.duration}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Decorative Corner Element */}
+                    <div className={`absolute bottom-0 right-0 w-32 h-32 bg-gradient-to-br ${step.color} rounded-tl-full opacity-10 transform translate-x-16 translate-y-16 group-hover:translate-x-0 group-hover:translate-y-0 transition-transform duration-700`}></div>
+                    
+                    {/* Top Corner Accent */}
+                    <div className={`absolute top-0 left-0 w-24 h-24 bg-gradient-to-br ${step.color} rounded-br-full opacity-5 transform -translate-x-12 -translate-y-12 group-hover:translate-x-0 group-hover:translate-y-0 transition-transform duration-700`}></div>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* CTA Section - Ultra Premium */}
+      <section className="relative py-20 overflow-hidden">
+        {/* Animated Gradient Background */}
+        <div className="absolute inset-0 bg-gradient-to-br from-orange-600 via-amber-500 to-yellow-600 animate-gradient"></div>
+        
+        {/* Overlay Pattern */}
+        <div className="absolute inset-0 opacity-10">
+          <div className="absolute inset-0" style={{
+            backgroundImage: `radial-gradient(circle, white 1px, transparent 1px)`,
+            backgroundSize: '40px 40px'
+          }}></div>
+        </div>
+
+        {/* Animated Orbs */}
+        <div className="absolute inset-0 overflow-hidden">
+          <div className="absolute top-0 left-0 w-[600px] h-[600px] bg-white/20 rounded-full mix-blend-overlay filter blur-3xl animate-float"></div>
+          <div className="absolute bottom-0 right-0 w-[700px] h-[700px] bg-white/20 rounded-full mix-blend-overlay filter blur-3xl animate-floatSlow" style={{animationDelay: '2s'}}></div>
+          <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-white/10 rounded-full mix-blend-overlay filter blur-3xl animate-float" style={{animationDelay: '4s'}}></div>
+        </div>
+
+        <div className="container mx-auto px-4 text-center relative z-10">
+          {/* Animated Icon */}
+          <div className="inline-flex p-5 glass-effect rounded-full mb-8 animate-float shadow-xl border-2 border-white/30">
+            <Award className="h-12 w-12 text-white animate-pulse" />
+          </div>
+          
+          {/* Main Heading */}
+          <h2 className="font-headline text-3xl md:text-4xl lg:text-5xl font-black text-white mb-5 leading-tight animate-slideInUp">
+            Ready to Go Solar?
+          </h2>
+          
+          {/* Subheading */}
+          <p className="font-headline text-base md:text-lg text-white/90 max-w-2xl mx-auto mb-4 leading-relaxed font-medium animate-slideInUp" style={{animationDelay: '0.2s'}}>
+            Join thousands of satisfied customers who have made the switch to clean, renewable energy
+          </p>
+
+          {/* Feature Pills */}
+          <div className="flex flex-wrap gap-2 justify-center mb-8 animate-fadeIn" style={{animationDelay: '0.4s'}}>
+            {[
+              { icon: <Shield className="h-4 w-4" />, text: "100% Safe & Secure" },
+              { icon: <Award className="h-4 w-4" />, text: "MNRE Certified" },
+              { icon: <Users className="h-4 w-4" />, text: "Expert Team" }
+            ].map((item, i) => (
+              <div key={i} className="glass-effect px-4 py-2 rounded-full flex items-center gap-2 shadow-lg border border-white/30 hover:scale-105 transition-transform duration-300">
+                <div className="text-white">{item.icon}</div>
+                <span className="font-headline text-white text-xs font-bold">{item.text}</span>
+              </div>
+            ))}
+          </div>
+
+          {/* CTA Buttons */}
+          <div className="flex flex-wrap gap-4 justify-center mb-12 animate-slideInUp" style={{animationDelay: '0.6s'}}>
+            <button className="group relative px-8 py-4 bg-white text-orange-600 rounded-full font-headline font-black text-sm shadow-xl hover:shadow-white/50 transform hover:scale-110 transition-all duration-500 overflow-hidden">
+              <div className="absolute inset-0 bg-gradient-to-r from-orange-100 to-amber-100 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+              <span className="relative flex items-center gap-2">
+                Get Your Free Consultation
+                <ArrowRight className="h-5 w-5 group-hover:translate-x-2 transition-transform duration-300" />
+              </span>
+            </button>
+            <button className="group px-8 py-4 glass-effect border-2 border-white/50 text-white rounded-full font-headline font-black text-sm shadow-xl hover:bg-white hover:text-orange-600 transform hover:scale-110 transition-all duration-500">
+              <span className="flex items-center gap-2">
+                View Our Projects
+                <Sparkles className="h-5 w-5 group-hover:rotate-180 transition-transform duration-500" />
+              </span>
+            </button>
+          </div>
+
+          {/* Stats Grid - Enhanced */}
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-4xl mx-auto animate-fadeIn" style={{animationDelay: '0.8s'}}>
+            {[
+              { label: "Projects Completed", value: "500+", icon: <BarChart3 className="h-7 w-7" /> },
+              { label: "Happy Customers", value: "1000+", icon: <Users className="h-7 w-7" /> },
+              { label: "MW Installed", value: "50+", icon: <Zap className="h-7 w-7" /> },
+              { label: "Years Experience", value: "10+", icon: <Award className="h-7 w-7" /> }
+            ].map((stat, i) => (
+              <div key={i} className="group text-center transform hover:scale-110 transition-all duration-500">
+                <div className="glass-effect rounded-2xl p-5 shadow-xl border border-white/30 hover:border-white/50 hover:shadow-white/20 transition-all duration-500">
+                  <div className="text-white mb-2 inline-block transform group-hover:scale-110 group-hover:rotate-6 transition-all duration-500">
+                    {stat.icon}
+                  </div>
+                  <div className="font-headline text-2xl md:text-3xl font-black text-white mb-1 group-hover:scale-110 transition-transform duration-300">
+                    {stat.value}
+                  </div>
+                  <div className="font-headline text-xs font-bold text-white/90 uppercase tracking-wider">
+                    {stat.label}
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Bottom Wave */}
+        <div className="absolute bottom-0 left-0 right-0">
+          <svg className="w-full h-24 text-white" viewBox="0 0 1200 120" preserveAspectRatio="none">
+            <path d="M321.39,56.44c58-10.79,114.16-30.13,172-41.86,82.39-16.72,168.19-17.73,250.45-.39C823.78,31,906.67,72,985.66,92.83c70.05,18.48,146.53,26.09,214.34,3V0H0V27.35A600.21,600.21,0,0,0,321.39,56.44Z" fill="currentColor"></path>
+          </svg>
+        </div>
+      </section>
+
+      {/* Trust Indicators Bar */}
+      <section className="py-8 bg-white border-t border-orange-100">
+        <div className="container mx-auto px-4">
+          <div className="flex flex-wrap items-center justify-center gap-6 opacity-60">
+            {['MNRE Certified', 'ISO Certified', 'Make in India', 'Govt. Approved', '24/7 Support'].map((text, i) => (
+              <div key={i} className="flex items-center gap-2 group cursor-pointer">
+                <div className="w-1.5 h-1.5 bg-orange-500 rounded-full group-hover:scale-150 transition-transform duration-300"></div>
+                <span className="font-headline text-xs font-bold text-gray-600 group-hover:text-orange-600 transition-colors duration-300">
+                  {text}
+                </span>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Featured Projects Gallery */}
+      <section className="py-16 bg-gradient-to-b from-white to-orange-50/30 relative overflow-hidden">
+        {/* Background Elements */}
+        <div className="absolute inset-0">
+          <div className="absolute top-20 right-20 w-96 h-96 bg-gradient-to-br from-orange-200/20 to-amber-200/20 rounded-full blur-3xl animate-float"></div>
+        </div>
+
+        <div className="container mx-auto px-4 relative z-10">
+          <div className="text-center mb-12">
+            <div className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-orange-50 to-amber-50 rounded-full mb-5 shadow-lg border border-orange-200/50 animate-slideInDown">
+              <Star className="h-4 w-4 text-orange-500 animate-pulse" />
+              <span className="font-headline text-xs font-bold text-orange-600">Our Work</span>
+            </div>
+            
+            <h2 className="font-headline text-3xl md:text-4xl font-black mb-5 animate-slideInUp">
+              <span className="text-gradient animate-gradient">
+                Featured Projects
+              </span>
+            </h2>
+            
+            <div className="relative w-24 h-1 bg-gradient-to-r from-orange-400 via-amber-400 to-yellow-400 mx-auto mb-4 rounded-full animate-scaleIn overflow-hidden">
+              <div className="absolute inset-0 animate-shimmer"></div>
+            </div>
+          </div>
+
+          {/* Gallery Grid */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 max-w-5xl mx-auto">
+            {[
+              { 
+                image: "https://images.unsplash.com/photo-1509391366360-2e959784a276?w=600&auto=format&fit=crop",
+                title: "Residential Installation",
+                location: "Lucknow, UP",
+                capacity: "5kW System"
+              },
+              { 
+                image: "https://images.unsplash.com/photo-1508514177221-188b1cf16e9d?w=600&auto=format&fit=crop",
+                title: "Commercial Project",
+                location: "Patna, Bihar",
+                capacity: "100kW System"
+              },
+              { 
+                image: "https://images.unsplash.com/photo-1559302504-64aae6ca6b6d?w=600&auto=format&fit=crop",
+                title: "Industrial Rooftop",
+                location: "Ranchi, Jharkhand",
+                capacity: "500kW System"
+              },
+              { 
+                image: "https://images.unsplash.com/photo-1497440001374-f26997328c1b?w=600&auto=format&fit=crop",
+                title: "Solar Street Lights",
+                location: "Bhubaneswar, Odisha",
+                capacity: "50W Units"
+              },
+              { 
+                image: "https://images.unsplash.com/photo-1473341304170-971dccb5ac1e?w=600&auto=format&fit=crop",
+                title: "Agricultural Pump",
+                location: "West Bengal",
+                capacity: "10HP System"
+              },
+              { 
+                image: "https://images.unsplash.com/photo-1466611653911-95081537e5b7?w=600&auto=format&fit=crop",
+                title: "Grid-Tied System",
+                location: "Guwahati, Assam",
+                capacity: "25kW System"
+              }
+            ].map((project, i) => (
+              <div 
+                key={i} 
+                className="group relative animate-slideInUp hover-lift"
+                style={{animationDelay: `${i * 0.1}s`}}
+              >
+                <div className="relative rounded-2xl overflow-hidden shadow-xl hover:shadow-orange-500/30 transition-all duration-500 border-2 border-orange-100/50 hover:border-orange-300">
+                  {/* Image */}
+                  <div className="relative h-48 overflow-hidden">
+                    <img 
+                      src={project.image} 
+                      alt={project.title}
+                      className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700"
+                    />
+                    {/* Gradient Overlay */}
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                  </div>
+                  
+                  {/* Content */}
+                  <div className="absolute bottom-0 left-0 right-0 p-4 transform translate-y-10 group-hover:translate-y-0 transition-transform duration-500">
+                    <h3 className="font-headline text-lg font-black text-white mb-1 drop-shadow-lg">
+                      {project.title}
+                    </h3>
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-1.5 text-orange-300">
+                        <div className="w-1.5 h-1.5 bg-orange-400 rounded-full animate-pulse"></div>
+                        <span className="font-headline text-xs font-semibold">{project.location}</span>
+                      </div>
+                      <span className="font-headline px-3 py-1.5 bg-gradient-to-r from-orange-500 to-amber-500 text-white rounded-full text-[10px] font-bold shadow-lg">
+                        {project.capacity}
+                      </span>
+                    </div>
+                  </div>
+
+                  {/* Corner Accent */}
+                  <div className="absolute top-3 right-3 p-2 bg-white/90 backdrop-blur-sm rounded-xl shadow-lg opacity-0 group-hover:opacity-100 transform translate-x-4 group-hover:translate-x-0 transition-all duration-500">
+                    <Award className="h-4 w-4 text-orange-500" />
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {/* View All Button */}
+          <div className="text-center mt-10 animate-fadeIn" style={{animationDelay: '0.8s'}}>
+            <button className="group px-8 py-3 bg-gradient-to-r from-orange-500 via-amber-500 to-yellow-500 text-white rounded-full font-headline font-bold text-sm shadow-xl hover:shadow-orange-500/50 transform hover:scale-110 transition-all duration-500 inline-flex items-center gap-2">
+              View All Projects
+              <ArrowRight className="h-4 w-4 group-hover:translate-x-2 transition-transform duration-300" />
+            </button>
+          </div>
+        </div>
+      </section>
+
+      {/* Trust Indicators Bar - hidden */}
+      <section className="py-8 bg-white border-t border-orange-100 hidden">
+        <div className="container mx-auto px-4">
+          <div className="flex flex-wrap items-center justify-center gap-6 opacity-60">
+            {['MNRE Certified', 'ISO Certified', 'Make in India', 'Govt. Approved', '24/7 Support'].map((text, i) => (
+              <div key={i} className="flex items-center gap-2 group cursor-pointer">
+                <div className="w-1.5 h-1.5 bg-orange-500 rounded-full group-hover:scale-150 transition-transform duration-300"></div>
+                <span className="font-headline text-xs font-bold text-gray-600 group-hover:text-orange-600 transition-colors duration-300">
+                  {text}
+                </span>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+    </div>
+  );
+}
