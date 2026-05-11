@@ -527,13 +527,17 @@ function HomeEditDialog({
       Object.entries(item).forEach(([k, v]) => {
         if (k !== 'id' && (typeof v === 'string' || typeof v === 'number')) f[k] = v;
       });
+      // Arrays aren't handled by the generic mapper above.
+      if (Array.isArray(item.highlights)) {
+        f.highlights = item.highlights.filter((x) => typeof x === 'string').join('\n');
+      }
       setForm(f);
     } else {
       if (dialog.tab === 'hero')         setForm({ image: '', title: '', subtitle: '', description: '', order: 0 });
       if (dialog.tab === 'intro')        setForm({ iconName: 'Zap', title: '', description: '', paragraph: '', image: '', order: 0 });
       if (dialog.tab === 'testimonials') setForm({ quote: '', name: '', role: '', location: '', rating: 5, order: 0 });
       if (dialog.tab === 'partners')     setForm({ iconName: 'Award', title: '', description: '', order: 0 });
-      if (dialog.tab === 'projects')     setForm({ image: '', title: '', location: '', capacity: '', type: '', order: 0 });
+      if (dialog.tab === 'projects')     setForm({ image: '', title: '', location: '', capacity: '', type: '', description: '', highlights: '', order: 0 });
     }
   }, [dialog.open, dialog.tab, dialog.item]);
 
@@ -549,7 +553,16 @@ function HomeEditDialog({
     try {
       const item = dialog.item as { id?: string } | undefined;
       const order = typeof form.order === 'number' ? form.order : parseInt(String(form.order), 10) || 0;
-      const data = toFirestore({ ...form, order } as Record<string, unknown>);
+      const dataBase: Record<string, unknown> = { ...form, order };
+      if (dialog.tab === 'projects') {
+        const raw = String(form.highlights ?? '');
+        const highlights = raw
+          .split('\n')
+          .map((s) => s.trim())
+          .filter(Boolean);
+        dataBase.highlights = highlights.length ? highlights : undefined;
+      }
+      const data = toFirestore(dataBase);
 
       const collectionMap: Record<TabKey, string> = {
         hero: COLLECTIONS.HERO_SLIDES,
@@ -663,6 +676,12 @@ function HomeEditDialog({
                   <option value="Residential">Residential</option>
                   <option value="Infrastructure">Infrastructure</option>
                 </select>
+              </FieldWrap>
+              <FieldWrap label="Popup Description">
+                <Textarea className="bg-slate-700 border-slate-600" value={field('description')} onChange={set('description')} rows={3} placeholder="Short paragraph shown in the project popup…" />
+              </FieldWrap>
+              <FieldWrap label="Popup Highlights (one per line)">
+                <Textarea className="bg-slate-700 border-slate-600" value={field('highlights')} onChange={set('highlights')} rows={4} placeholder={"e.g.\nTurnkey EPC delivery\n25-year performance warranty\nRemote monitoring included"} />
               </FieldWrap>
               <FieldWrap label="Order (lower = first)"><Input type="number" className="bg-slate-700 border-slate-600 w-24" value={field('order')} onChange={set('order')} /></FieldWrap>
             </>

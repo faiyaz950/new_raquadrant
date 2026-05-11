@@ -63,6 +63,9 @@ export interface FeaturedProject {
   location: string;
   capacity: string;
   type: string;
+  // Popup / details (optional; used in home-page modal)
+  description?: string;
+  highlights?: string[];
   order?: number;
 }
 

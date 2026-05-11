@@ -3,11 +3,19 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog';
 import { ArrowRight, Award, Building2, CheckSquare, BrainCircuit, Globe, Handshake, HomeIcon, Lightbulb, Droplets, ShieldCheck, Users, Zap, Sun, Leaf, Battery, TrendingUp, Star, ChevronRight, ChevronLeft, Play, Sparkles, CircleDot, Quote } from 'lucide-react';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
 import { useState, useEffect, useRef, useMemo } from 'react';
 import { useHeroSlides, useIntroPoints, useTestimonials, usePartners, useFeaturedProjects } from '@/hooks/use-site-content';
 import { getIcon } from '@/lib/icon-map';
+import type { FeaturedProject } from '@/lib/firestore-types';
 
 const heroImage = PlaceHolderImages.find(img => img.id === 'hero-home');
 const aboutImage = PlaceHolderImages.find(img => img.id === 'about-home');
@@ -89,6 +97,8 @@ export default function HomePage() {
 
   const [currentSlide, setCurrentSlide] = useState(0);
   const [isVisible, setIsVisible] = useState(false);
+  const [projectDialogOpen, setProjectDialogOpen] = useState(false);
+  const [selectedProject, setSelectedProject] = useState<FeaturedProject | null>(null);
   const introScrollRef = useRef<HTMLDivElement>(null);
   const introReveal = useScrollReveal(0.08);
   const servicesReveal = useScrollReveal(0.06);
@@ -966,10 +976,16 @@ export default function HomePage() {
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6 max-w-6xl mx-auto">
             {featuredProjects.map((project, i) => (
-              <div 
-                key={i}
-                className="group relative animate-slideInUp hover-lift"
-                style={{animationDelay: `${i * 0.1}s`}}
+              <button
+                key={(project as FeaturedProject).id ?? `${project.title}-${i}`}
+                type="button"
+                className="group relative animate-slideInUp hover-lift text-left"
+                style={{ animationDelay: `${i * 0.1}s` }}
+                onClick={() => {
+                  setSelectedProject(project as FeaturedProject);
+                  setProjectDialogOpen(true);
+                }}
+                aria-label={`View details for ${project.title}`}
               >
                 <div className="relative rounded-2xl sm:rounded-3xl overflow-hidden shadow-2xl card-shine">
                   <div className="relative overflow-hidden">
@@ -1010,18 +1026,106 @@ export default function HomePage() {
                     </div>
                   </div>
                 </div>
-              </div>
+              </button>
             ))}
           </div>
 
-          <div className="text-center mt-8 sm:mt-10">
-            <Button asChild className="bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 text-white font-bold px-6 py-5 sm:px-8 sm:py-5 text-base sm:text-lg rounded-full shadow-xl group hover:scale-105 transition-all">
-              <Link href="/projects" className="flex items-center gap-2">
-                View All Projects
-                <ChevronRight className="h-5 w-5 group-hover:translate-x-2 transition-transform" />
-              </Link>
-            </Button>
-          </div>
+          <Dialog
+            open={projectDialogOpen}
+            onOpenChange={(open) => {
+              setProjectDialogOpen(open);
+              if (!open) setSelectedProject(null);
+            }}
+          >
+            <DialogContent className="max-w-2xl p-0 overflow-hidden">
+              {selectedProject ? (
+                <div>
+                  <div className="relative">
+                    <img
+                      src={selectedProject.image}
+                      alt={selectedProject.title}
+                      className="w-full h-56 sm:h-72 object-cover"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/25 to-transparent" />
+                    <div className="absolute bottom-0 left-0 right-0 p-5 sm:p-6">
+                      <div className="mb-2 flex items-center gap-2">
+                        <span className="px-3 py-1 bg-gradient-to-r from-orange-500 to-amber-500 text-white rounded-full text-xs font-bold shadow-lg">
+                          {selectedProject.type}
+                        </span>
+                        <span className="text-orange-100/90 text-xs font-semibold">Project details</span>
+                      </div>
+                      <h3 className="font-headline text-xl sm:text-2xl font-black text-white">
+                        {selectedProject.title}
+                      </h3>
+                    </div>
+                  </div>
+
+                  <div className="p-5 sm:p-6">
+                    <DialogHeader>
+                      <DialogTitle className="sr-only">Project details</DialogTitle>
+                      <DialogDescription className="sr-only">
+                        Details for the selected featured project.
+                      </DialogDescription>
+                    </DialogHeader>
+
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 mt-1">
+                      <div className="rounded-xl border border-slate-200 bg-white p-4">
+                        <div className="text-xs font-semibold text-slate-500 mb-1 flex items-center gap-1">
+                          <CircleDot className="h-3.5 w-3.5 text-orange-500" />
+                          Location
+                        </div>
+                        <div className="text-sm sm:text-base font-bold text-slate-900">
+                          {selectedProject.location}
+                        </div>
+                      </div>
+                      <div className="rounded-xl border border-slate-200 bg-white p-4">
+                        <div className="text-xs font-semibold text-slate-500 mb-1">
+                          Capacity
+                        </div>
+                        <div className="text-sm sm:text-base font-bold text-slate-900">
+                          {selectedProject.capacity}
+                        </div>
+                      </div>
+                    </div>
+
+                    {(selectedProject.description?.trim() || selectedProject.highlights?.length) && (
+                      <div className="mt-4 rounded-xl border border-slate-200 bg-white p-4">
+                        {selectedProject.description?.trim() && (
+                          <p className="text-sm sm:text-base text-slate-700 leading-relaxed">
+                            {selectedProject.description}
+                          </p>
+                        )}
+                        {selectedProject.highlights?.length ? (
+                          <ul className={`mt-3 space-y-2 ${selectedProject.description?.trim() ? '' : 'mt-0'}`}>
+                            {selectedProject.highlights.slice(0, 6).map((h, idx) => (
+                              <li key={idx} className="text-sm text-slate-700 flex items-start gap-2">
+                                <span className="mt-1.5 inline-block h-2 w-2 rounded-full bg-orange-500 shrink-0" />
+                                <span>{h}</span>
+                              </li>
+                            ))}
+                          </ul>
+                        ) : null}
+                      </div>
+                    )}
+
+                    <div className="mt-5 flex flex-col sm:flex-row gap-3">
+                      <Button asChild className="w-full sm:w-auto bg-orange-600 hover:bg-orange-500 text-white font-bold">
+                        <Link href="/contact">Get a quote</Link>
+                      </Button>
+                      <Button
+                        type="button"
+                        variant="outline"
+                        className="w-full sm:w-auto border-slate-300 text-slate-700"
+                        onClick={() => setProjectDialogOpen(false)}
+                      >
+                        Close
+                      </Button>
+                    </div>
+                  </div>
+                </div>
+              ) : null}
+            </DialogContent>
+          </Dialog>
         </div>
       </section>
 
