@@ -2,8 +2,9 @@ rules_version = '2';
 service firebase.storage {
   match /b/{bucket}/o {
     function isCmsPathName(name) {
+      // Must match uploadImage(..., folder) in admin: home, about, services.
       return name.matches(
-        '^(hero-slides|about-hero-slides|intro-images|testimonials|partners|project-images)/.+'
+        '^(hero-slides|about-hero-slides|intro-images|testimonials|partners|project-images|services-hero-slides|service-images|scope-images|leadership-photos)/.+'
       );
     }
 
