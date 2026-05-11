@@ -86,6 +86,62 @@ Phir browser mein **http://localhost:3000/admin** kholo → Login page pe **Fire
 
 ---
 
+## Step 7: Storage (images) + rules deploy karo
+
+Admin panel se image upload ke liye **Storage enable** hona chahiye aur **`storage.rules`** Firebase par publish honi chahiye.
+
+### 7a — Storage “Get started”
+
+1. Firebase Console → **Build** → **Storage** → **Get started** (agar pehle nahi kiya).
+2. Default bucket / region choose karo.
+
+### 7b — Rules kahan se update hoti hain (important)
+
+**Vercel / Netlify / koi bhi host sirf Next.js app deploy karta hai.**  
+Firebase **Storage rules** alag jagah rehti hain — inhe **Firebase** par hi publish karna padta hai:
+
+**Option A — Terminal (recommended)**  
+Project root se (jahan `firebase.json` hai):
+
+```bash
+firebase login
+firebase use YOUR_PROJECT_ID
+firebase deploy --only storage
+```
+
+**Option B — Firebase Console**  
+1. [Firebase Console](https://console.firebase.google.com) → apna project → **Build** → **Storage** → **Rules** tab.  
+2. Repo ki file **`storage.rules`** ka poora content copy karke yahan paste karo → **Publish**.
+
+Agar rules publish nahi kiye to production (Vercel) par bhi error aayega: *Storage rejected this upload (rules)*.
+
+Firestore rules ke liye:
+
+```bash
+firebase deploy --only firestore:rules
+```
+
+---
+
+## Step 8: Vercel par deploy (env + Auth domain)
+
+1. **Vercel** → project → **Settings** → **Environment Variables**  
+   Wahi 6 values daalo jo `.env.local` mein hain (`NEXT_PUBLIC_FIREBASE_*`).  
+   **Wahi Firebase project** hona chahiye jahan tumne Storage + rules setup kiye hon.
+
+2. **Authorized domains** (login ke liye zaroori):  
+   Firebase Console → **Authentication** → **Settings** → **Authorized domains**  
+   Yahan add karo:
+   - `localhost` (dev ke liye pehle se hota hai)
+   - **`your-app.vercel.app`** (Vercel preview/production URL)
+   - Agar custom domain use karte ho to wo bhi
+
+3. Env change ke baad Vercel par **Redeploy** karo taaki nayi values build mein aayein.
+
+4. **Rules future mein:** har baar `storage.rules` / `firestore.rules` change karne ke baad dubara **`firebase deploy --only storage`** (ya Console se Publish) chalao. Optional: GitHub Actions se automate karne ke liye repo secret **`FIREBASE_TOKEN`** (`firebase login:ci` se) banao aur workflow mein `firebase deploy --only storage,firestore:rules` chalao (GitHub token ko **`workflow`** scope chahiye agar `.github/workflows/` commit karna ho).
+
+---
+
 ## Checklist
 
 - [ ] Firebase project bana liya
@@ -94,6 +150,8 @@ Phir browser mein **http://localhost:3000/admin** kholo → Login page pe **Fire
 - [ ] Authentication → Email/Password enable kiya
 - [ ] Authentication → Users se ek admin user add kiya
 - [ ] Firestore Database create kiya
+- [ ] Storage enable + `firebase deploy --only storage` (ya Console → Rules paste)
+- [ ] Vercel par 6 env vars + Auth mein `*.vercel.app` authorized domain
 - [ ] `npm run dev` restart kiya
 - [ ] `/admin` pe login try kiya
 

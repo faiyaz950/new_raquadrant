@@ -111,7 +111,7 @@ export async function uploadImage(
           reject(
             new Error(
               signedIn
-                ? 'Storage rejected this upload (rules). Confirm rules are deployed: run `firebase deploy --only storage` from the project, or paste storage.rules into Firebase Console → Storage → Rules. Allowed folders: hero-slides, about-hero-slides, intro-images, testimonials, partners, project-images.'
+                ? 'Storage rejected this upload (Firebase rules). Vercel/hosting only deploys the website — rules live in Firebase. Run `firebase deploy --only storage` from the repo, or Firebase Console → Storage → Rules → paste `storage.rules` → Publish. Same project as your NEXT_PUBLIC_FIREBASE_* env vars. Allowed folders: hero-slides, about-hero-slides, intro-images, testimonials, partners, project-images.'
                 : 'Sign in to Admin first (Storage writes require an authenticated user), then try the upload again.'
             )
           );
