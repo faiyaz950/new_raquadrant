@@ -650,42 +650,68 @@ export default function ServicesPage() {
                     
                     {/* Expandable Content */}
                     <div 
-                      className={`overflow-hidden transition-all duration-700 ${isExpanded ? 'max-h-[600px] opacity-100' : 'max-h-0 opacity-0'}`}
+                      className={`overflow-hidden transition-all duration-700 ${isExpanded ? 'max-h-[900px] opacity-100' : 'max-h-0 opacity-0'}`}
                     >
                       <div className="px-6 pb-6 bg-gradient-to-br from-orange-50/30 via-amber-50/30 to-yellow-50/30">
-                        <p className="font-headline text-sm text-gray-700 leading-relaxed mb-4 animate-slideInUp">
-                          {item.content}
-                        </p>
-                        
-                        {/* Image Preview */}
-                        <div className="mb-4 rounded-xl overflow-hidden shadow-lg animate-scaleIn border border-orange-200/50">
-                          <img 
-                            src={item.image} 
-                            alt={item.phase}
-                            className="w-full h-32 object-cover transform hover:scale-110 transition-transform duration-700"
-                          />
-                        </div>
-                        
-                        {/* Details Card */}
-                        <div className="glass-effect rounded-xl p-5 shadow-lg border border-orange-200/50 animate-scaleIn">
-                          <h4 className="font-headline font-black text-base text-gray-900 mb-4 flex items-center gap-2">
-                            <div className="p-1.5 bg-gradient-to-br from-orange-400 to-amber-500 rounded-md">
-                              <CheckCircle2 className="h-4 w-4 text-white" />
-                            </div>
-                            What We Cover:
-                          </h4>
-                          <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
-                            {item.details.map((detail, i) => (
-                              <div 
-                                key={i} 
-                                className="group/detail flex items-center gap-3 p-3 bg-white rounded-lg hover:bg-gradient-to-r hover:from-orange-50 hover:to-amber-50 transform hover:translate-x-2 transition-all duration-300 border border-orange-100/50 hover:border-orange-300 hover:shadow-lg"
-                              >
-                                <div className={`w-2 h-2 bg-gradient-to-br ${colorMap[item.color]} rounded-full flex-shrink-0 group-hover/detail:scale-125 transition-transform duration-300`}></div>
-                                <span className="font-headline text-xs font-semibold text-gray-700 group-hover/detail:text-orange-700 transition-colors duration-300">
-                                  {detail}
-                                </span>
+                        <div className="grid grid-cols-1 lg:grid-cols-12 gap-5">
+                          {/* Copy */}
+                          <div className="lg:col-span-7">
+                            <p className="font-headline text-sm md:text-base text-gray-700 leading-relaxed mb-4 animate-slideInUp">
+                              {item.content}
+                            </p>
+
+                            {/* Details Card */}
+                            <div className="glass-effect rounded-2xl p-5 shadow-lg border border-orange-200/50 animate-scaleIn">
+                              <h4 className="font-headline font-black text-base text-gray-900 mb-4 flex items-center gap-2">
+                                <div className="p-1.5 bg-gradient-to-br from-orange-400 to-amber-500 rounded-md shadow-sm">
+                                  <CheckCircle2 className="h-4 w-4 text-white" />
+                                </div>
+                                What We Cover
+                              </h4>
+                              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                                {item.details.map((detail, i) => (
+                                  <div
+                                    key={i}
+                                    className="group/detail flex items-center gap-3 p-3 bg-white/80 rounded-xl hover:bg-gradient-to-r hover:from-orange-50 hover:to-amber-50 transform hover:-translate-y-0.5 transition-all duration-300 border border-orange-100/70 hover:border-orange-300 hover:shadow-lg"
+                                  >
+                                    <div className={`w-2 h-2 bg-gradient-to-br ${colorMap[item.color]} rounded-full flex-shrink-0 group-hover/detail:scale-125 transition-transform duration-300`} />
+                                    <span className="font-headline text-xs sm:text-sm font-semibold text-gray-700 group-hover/detail:text-orange-700 transition-colors duration-300">
+                                      {detail}
+                                    </span>
+                                  </div>
+                                ))}
                               </div>
-                            ))}
+                            </div>
+                          </div>
+
+                          {/* Image */}
+                          <div className="lg:col-span-5">
+                            <div className="relative rounded-2xl overflow-hidden shadow-xl border border-orange-200/60 bg-white animate-scaleIn">
+                              {/* Premium frame */}
+                              <div className="absolute inset-0 pointer-events-none">
+                                <div className={`absolute -inset-1 bg-gradient-to-br ${colorMap[item.color]} opacity-20 blur-2xl`} />
+                                <div className="absolute inset-0 bg-gradient-to-t from-black/25 via-black/0 to-black/0" />
+                              </div>
+                              <div className="relative aspect-[16/10] sm:aspect-[16/9]">
+                                <img
+                                  src={item.image}
+                                  alt={item.phase}
+                                  className="absolute inset-0 h-full w-full object-cover transform group-hover:scale-[1.03] transition-transform duration-700"
+                                  loading="lazy"
+                                />
+                              </div>
+                              <div className="relative p-4 bg-white/90 backdrop-blur">
+                                <div className="flex items-center justify-between gap-3">
+                                  <div className="min-w-0">
+                                    <div className="text-[11px] font-bold text-orange-600">Phase {index + 1}</div>
+                                    <div className="truncate font-headline text-sm font-black text-gray-900">{item.phase}</div>
+                                  </div>
+                                  <div className={`shrink-0 h-9 w-9 rounded-xl bg-gradient-to-br ${colorMap[item.color]} text-white flex items-center justify-center shadow-lg`}>
+                                    {item.icon}
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
                           </div>
                         </div>
                       </div>
