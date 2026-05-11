@@ -31,7 +31,10 @@ function getFirebase(): { app: FirebaseApp; auth: Auth; db: Firestore; storage: 
     const app = getApps().length ? (getApps()[0] as FirebaseApp) : initializeApp(firebaseConfig);
     const auth = getAuth(app);
     const db = getFirestore(app);
-    const storage = getStorage(app);
+    // Bind Storage to the same bucket as .env (avoids wrong default when multiple buckets exist).
+    const bucket = firebaseConfig.storageBucket!.trim();
+    const bucketUrl = bucket.startsWith('gs://') ? bucket : `gs://${bucket}`;
+    const storage = getStorage(app, bucketUrl);
     return { app, auth, db, storage };
   } catch {
     return null;

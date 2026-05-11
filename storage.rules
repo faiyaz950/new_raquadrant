@@ -1,22 +1,30 @@
 rules_version = '2';
 service firebase.storage {
   match /b/{bucket}/o {
-    // Admin uploads: paths must match src/lib/storage.ts + admin pages (uploadImage folder arg).
-    // Public read so site can show images via download URLs; writes require signed-in user.
-    match /{folder}/{allPaths=**} {
-      allow read: if true;
+    function isCmsPathName(name) {
+      return name.matches(
+        '^(hero-slides|about-hero-slides|intro-images|testimonials|partners|project-images)/.+'
+      );
+    }
+
+    // Full object path (e.g. about-hero-slides/173_file.jpg).
+    function isCmsImagePath() {
+      return isCmsPathName(request.resource.name);
+    }
+
+    function isImageContentType() {
+      // Some clients omit contentType or send octet-stream even for images from canvas/Blob.
+      return request.resource.contentType == null
+        || request.resource.contentType.matches('image/.*')
+        || request.resource.contentType == 'application/octet-stream';
+    }
+
+    match /{allPaths=**} {
+      allow read: if isCmsPathName(resource.name);
       allow write: if request.auth != null
-        && folder in [
-          'hero-slides',
-          'about-hero-slides',
-          'intro-images',
-          'testimonials',
-          'partners',
-          'project-images'
-        ]
+        && isCmsImagePath()
         && request.resource.size < 5 * 1024 * 1024
-        // Accept any image/* (browser / canvas may vary slightly, e.g. image/pjpeg)
-        && request.resource.contentType.matches('image/.*');
+        && isImageContentType();
     }
   }
 }
