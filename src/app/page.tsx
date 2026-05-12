@@ -829,12 +829,6 @@ export default function HomePage() {
                           <ArrowRight className="h-5 w-5 group-hover/btn:translate-x-2 transition-transform" />
                         </Link>
                       </Button>
-                      <Button asChild variant="outline" className="border-2 border-orange-300 text-orange-700 hover:bg-orange-50 font-bold px-8 py-6 rounded-full shadow-lg group/btn transition-all hover:scale-105">
-                        <Link href="/services" className="flex items-center gap-2">
-                          Learn More
-                          <ChevronRight className="h-5 w-5 group-hover/btn:translate-x-1 transition-transform" />
-                        </Link>
-                      </Button>
                     </div>
                   </div>
                 </div>
@@ -1005,7 +999,7 @@ export default function HomePage() {
                     <div className="flex flex-wrap gap-3">
                       <Button asChild className="bg-gradient-to-r from-orange-500 to-yellow-500 hover:from-orange-600 hover:to-yellow-600 text-white font-bold px-8 py-6 rounded-full shadow-xl hover:shadow-yellow-500/40 group/btn transition-all hover:scale-105">
                         <Link href="/contact" className="flex items-center gap-2">
-                          Learn More
+                          Get Started
                           <ArrowRight className="h-5 w-5 group-hover/btn:translate-x-2 transition-transform" />
                         </Link>
                       </Button>
@@ -1113,11 +1107,6 @@ export default function HomePage() {
                         {point.paragraph}
                       </p>
                       
-                      {/* Hover Indicator */}
-                      <div className="mt-4 flex items-center gap-2 text-orange-600 font-semibold text-sm opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                        <span>Learn More</span>
-                        <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
-                      </div>
                       
                       <div className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-orange-400 to-amber-500 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left rounded-b-2xl" />
                     </div>
