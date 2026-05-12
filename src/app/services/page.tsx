@@ -833,254 +833,89 @@ export default function ServicesPage() {
         </div>
       </section>
 
-      {/* CTA Section - Ultra Premium */}
-      <section className="relative py-20 overflow-hidden">
-        {/* Animated Gradient Background */}
-        <div className="absolute inset-0 bg-gradient-to-br from-orange-600 via-amber-500 to-yellow-600 animate-gradient"></div>
-        
-        {/* Overlay Pattern */}
-        <div className="absolute inset-0 opacity-10">
-          <div className="absolute inset-0" style={{
-            backgroundImage: `radial-gradient(circle, white 1px, transparent 1px)`,
-            backgroundSize: '40px 40px'
-          }}></div>
-        </div>
-
-        {/* Animated Orbs */}
-        <div className="absolute inset-0 overflow-hidden">
-          <div className="absolute top-0 left-0 w-[600px] h-[600px] bg-white/20 rounded-full mix-blend-overlay filter blur-3xl animate-float"></div>
-          <div className="absolute bottom-0 right-0 w-[700px] h-[700px] bg-white/20 rounded-full mix-blend-overlay filter blur-3xl animate-floatSlow" style={{animationDelay: '2s'}}></div>
-          <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-white/10 rounded-full mix-blend-overlay filter blur-3xl animate-float" style={{animationDelay: '4s'}}></div>
-        </div>
+      {/* CTA Section */}
+      <section className="relative py-20 overflow-hidden bg-[#0a0f1e]">
+        {/* Subtle glow blobs */}
+        <div className="absolute -top-32 -left-32 w-[500px] h-[500px] bg-emerald-500/10 rounded-full blur-3xl pointer-events-none" />
+        <div className="absolute -bottom-32 -right-32 w-[500px] h-[500px] bg-teal-400/10 rounded-full blur-3xl pointer-events-none" />
+        {/* Dot grid */}
+        <div className="absolute inset-0 opacity-[0.035]" style={{
+          backgroundImage: `radial-gradient(circle at 2px 2px, white 1.5px, transparent 0)`,
+          backgroundSize: '36px 36px'
+        }} />
 
         <div className="container mx-auto px-4 text-center relative z-10">
-          {/* Animated Icon */}
-          <div className="inline-flex p-5 glass-effect rounded-full mb-8 animate-float shadow-xl border-2 border-white/30">
-            <Award className="h-12 w-12 text-white animate-pulse" />
+          {/* Icon */}
+          <div className="inline-flex p-4 rounded-2xl mb-7 bg-gradient-to-br from-emerald-500 to-teal-500 shadow-lg shadow-emerald-500/30">
+            <Zap className="h-10 w-10 text-white" />
           </div>
-          
-          {/* Main Heading */}
-          <h2 className="font-headline text-3xl md:text-4xl lg:text-5xl font-black text-white mb-5 leading-tight animate-slideInUp">
-            Ready to Go Solar?
+
+          {/* Heading */}
+          <h2 className="font-headline text-3xl md:text-4xl lg:text-5xl font-black text-white mb-4 leading-tight">
+            Ready to Go <span className="text-emerald-400">Solar?</span>
           </h2>
-          
+
           {/* Subheading */}
-          <p className="font-headline text-base md:text-lg text-white/90 max-w-2xl mx-auto mb-4 leading-relaxed font-medium animate-slideInUp" style={{animationDelay: '0.2s'}}>
+          <p className="font-headline text-base md:text-lg text-white/60 max-w-2xl mx-auto mb-8 leading-relaxed font-medium">
             Join thousands of satisfied customers who have made the switch to clean, renewable energy
           </p>
 
           {/* Feature Pills */}
-          <div className="flex flex-wrap gap-2 justify-center mb-8 animate-fadeIn" style={{animationDelay: '0.4s'}}>
+          <div className="flex flex-wrap gap-3 justify-center mb-10">
             {[
               { icon: <Shield className="h-4 w-4" />, text: "100% Safe & Secure" },
               { icon: <Award className="h-4 w-4" />, text: "MNRE Certified" },
               { icon: <Users className="h-4 w-4" />, text: "Expert Team" }
             ].map((item, i) => (
-              <div key={i} className="glass-effect px-4 py-2 rounded-full flex items-center gap-2 shadow-lg border border-white/30 hover:scale-105 transition-transform duration-300">
-                <div className="text-white">{item.icon}</div>
-                <span className="font-headline text-white text-xs font-bold">{item.text}</span>
+              <div key={i} className="flex items-center gap-2 px-4 py-2 rounded-full border border-white/10 bg-white/5 backdrop-blur-sm hover:border-emerald-500/40 hover:bg-emerald-500/5 transition-all duration-300">
+                <div className="text-emerald-400">{item.icon}</div>
+                <span className="font-headline text-white/80 text-xs font-bold">{item.text}</span>
               </div>
             ))}
           </div>
 
           {/* CTA Buttons */}
-          <div className="flex flex-wrap gap-4 justify-center mb-12 animate-slideInUp" style={{animationDelay: '0.6s'}}>
-            <button className="group relative px-8 py-4 bg-white text-orange-600 rounded-full font-headline font-black text-sm shadow-xl hover:shadow-white/50 transform hover:scale-110 transition-all duration-500 overflow-hidden">
-              <div className="absolute inset-0 bg-gradient-to-r from-orange-100 to-amber-100 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-              <span className="relative flex items-center gap-2">
-                Get Your Free Consultation
-                <ArrowRight className="h-5 w-5 group-hover:translate-x-2 transition-transform duration-300" />
-              </span>
-            </button>
-            <button className="group px-8 py-4 glass-effect border-2 border-white/50 text-white rounded-full font-headline font-black text-sm shadow-xl hover:bg-white hover:text-orange-600 transform hover:scale-110 transition-all duration-500">
-              <span className="flex items-center gap-2">
-                View Our Projects
-                <Sparkles className="h-5 w-5 group-hover:rotate-180 transition-transform duration-500" />
-              </span>
-            </button>
+          <div className="flex flex-wrap gap-4 justify-center mb-14">
+            <a
+              href="/contact"
+              className="group relative inline-flex items-center gap-2 px-8 py-4 bg-gradient-to-r from-emerald-500 to-teal-500 text-white rounded-full font-headline font-black text-sm shadow-xl shadow-emerald-500/30 hover:shadow-emerald-500/50 hover:scale-105 transition-all duration-300"
+            >
+              Get Your Free Consultation
+              <ArrowRight className="h-5 w-5 group-hover:translate-x-1 transition-transform duration-300" />
+            </a>
+            <a
+              href="/about"
+              className="group inline-flex items-center gap-2 px-8 py-4 rounded-full font-headline font-black text-sm border border-white/20 text-white bg-white/5 backdrop-blur-sm hover:bg-white/10 hover:border-white/40 hover:scale-105 transition-all duration-300"
+            >
+              View Our Projects
+              <Sparkles className="h-5 w-5 group-hover:rotate-12 transition-transform duration-300" />
+            </a>
           </div>
 
-          {/* Stats Grid - Enhanced */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-4xl mx-auto animate-fadeIn" style={{animationDelay: '0.8s'}}>
+          {/* Stats Grid */}
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-4xl mx-auto">
             {[
-              { label: "Projects Completed", value: "500+", icon: <BarChart3 className="h-7 w-7" /> },
-              { label: "Happy Customers", value: "1000+", icon: <Users className="h-7 w-7" /> },
-              { label: "MW Installed", value: "50+", icon: <Zap className="h-7 w-7" /> },
-              { label: "Years Experience", value: "10+", icon: <Award className="h-7 w-7" /> }
+              { label: "Projects Completed", value: "500+", icon: <BarChart3 className="h-6 w-6" /> },
+              { label: "Happy Customers", value: "1000+", icon: <Users className="h-6 w-6" /> },
+              { label: "MW Installed", value: "50+", icon: <Zap className="h-6 w-6" /> },
+              { label: "Years Experience", value: "10+", icon: <Award className="h-6 w-6" /> }
             ].map((stat, i) => (
-              <div key={i} className="group text-center transform hover:scale-110 transition-all duration-500">
-                <div className="glass-effect rounded-2xl p-5 shadow-xl border border-white/30 hover:border-white/50 hover:shadow-white/20 transition-all duration-500">
-                  <div className="text-white mb-2 inline-block transform group-hover:scale-110 group-hover:rotate-6 transition-all duration-500">
-                    {stat.icon}
-                  </div>
-                  <div className="font-headline text-2xl md:text-3xl font-black text-white mb-1 group-hover:scale-110 transition-transform duration-300">
-                    {stat.value}
-                  </div>
-                  <div className="font-headline text-xs font-bold text-white/90 uppercase tracking-wider">
-                    {stat.label}
-                  </div>
+              <div key={i} className="group rounded-2xl p-5 border border-white/10 bg-white/5 backdrop-blur-sm hover:border-emerald-500/30 hover:bg-emerald-500/5 transition-all duration-300 text-center">
+                <div className="text-emerald-400 mb-2 inline-block group-hover:scale-110 transition-transform duration-300">
+                  {stat.icon}
+                </div>
+                <div className="font-headline text-2xl md:text-3xl font-black text-white mb-1">
+                  {stat.value}
+                </div>
+                <div className="font-headline text-xs font-semibold text-white/50 uppercase tracking-wider">
+                  {stat.label}
                 </div>
               </div>
             ))}
           </div>
         </div>
-
-        {/* Bottom Wave */}
-        <div className="absolute bottom-0 left-0 right-0">
-          <svg className="w-full h-24 text-white" viewBox="0 0 1200 120" preserveAspectRatio="none">
-            <path d="M321.39,56.44c58-10.79,114.16-30.13,172-41.86,82.39-16.72,168.19-17.73,250.45-.39C823.78,31,906.67,72,985.66,92.83c70.05,18.48,146.53,26.09,214.34,3V0H0V27.35A600.21,600.21,0,0,0,321.39,56.44Z" fill="currentColor"></path>
-          </svg>
-        </div>
       </section>
 
-      {/* Trust Indicators Bar */}
-      <section className="py-8 bg-white border-t border-orange-100">
-        <div className="container mx-auto px-4">
-          <div className="flex flex-wrap items-center justify-center gap-6 opacity-60">
-            {['MNRE Certified', 'ISO Certified', 'Make in India', 'Govt. Approved', '24/7 Support'].map((text, i) => (
-              <div key={i} className="flex items-center gap-2 group cursor-pointer">
-                <div className="w-1.5 h-1.5 bg-orange-500 rounded-full group-hover:scale-150 transition-transform duration-300"></div>
-                <span className="font-headline text-xs font-bold text-gray-600 group-hover:text-orange-600 transition-colors duration-300">
-                  {text}
-                </span>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Featured Projects Gallery */}
-      <section className="py-16 bg-gradient-to-b from-white to-orange-50/30 relative overflow-hidden">
-        {/* Background Elements */}
-        <div className="absolute inset-0">
-          <div className="absolute top-20 right-20 w-96 h-96 bg-gradient-to-br from-orange-200/20 to-amber-200/20 rounded-full blur-3xl animate-float"></div>
-        </div>
-
-        <div className="container mx-auto px-4 relative z-10">
-          <div className="text-center mb-12">
-            <div className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-orange-50 to-amber-50 rounded-full mb-5 shadow-lg border border-orange-200/50 animate-slideInDown">
-              <Star className="h-4 w-4 text-orange-500 animate-pulse" />
-              <span className="font-headline text-xs font-bold text-orange-600">Our Work</span>
-            </div>
-            
-            <h2 className="font-headline text-3xl md:text-4xl font-black mb-5 animate-slideInUp">
-              <span className="text-gradient animate-gradient">
-                Featured Projects
-              </span>
-            </h2>
-            
-            <div className="relative w-24 h-1 bg-gradient-to-r from-orange-400 via-amber-400 to-yellow-400 mx-auto mb-4 rounded-full animate-scaleIn overflow-hidden">
-              <div className="absolute inset-0 animate-shimmer"></div>
-            </div>
-          </div>
-
-          {/* Gallery Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 max-w-5xl mx-auto">
-            {[
-              { 
-                image: "https://images.unsplash.com/photo-1509391366360-2e959784a276?w=600&auto=format&fit=crop",
-                title: "Residential Installation",
-                location: "Lucknow, UP",
-                capacity: "5kW System"
-              },
-              { 
-                image: "https://images.unsplash.com/photo-1508514177221-188b1cf16e9d?w=600&auto=format&fit=crop",
-                title: "Commercial Project",
-                location: "Patna, Bihar",
-                capacity: "100kW System"
-              },
-              { 
-                image: "https://images.unsplash.com/photo-1559302504-64aae6ca6b6d?w=600&auto=format&fit=crop",
-                title: "Industrial Rooftop",
-                location: "Ranchi, Jharkhand",
-                capacity: "500kW System"
-              },
-              { 
-                image: "https://images.unsplash.com/photo-1497440001374-f26997328c1b?w=600&auto=format&fit=crop",
-                title: "Solar Street Lights",
-                location: "Bhubaneswar, Odisha",
-                capacity: "50W Units"
-              },
-              { 
-                image: "https://images.unsplash.com/photo-1473341304170-971dccb5ac1e?w=600&auto=format&fit=crop",
-                title: "Agricultural Pump",
-                location: "West Bengal",
-                capacity: "10HP System"
-              },
-              { 
-                image: "https://images.unsplash.com/photo-1466611653911-95081537e5b7?w=600&auto=format&fit=crop",
-                title: "Grid-Tied System",
-                location: "Guwahati, Assam",
-                capacity: "25kW System"
-              }
-            ].map((project, i) => (
-              <div 
-                key={i} 
-                className="group relative animate-slideInUp hover-lift"
-                style={{animationDelay: `${i * 0.1}s`}}
-              >
-                <div className="relative rounded-2xl overflow-hidden shadow-xl hover:shadow-orange-500/30 transition-all duration-500 border-2 border-orange-100/50 hover:border-orange-300">
-                  {/* Image */}
-                  <div className="relative h-48 overflow-hidden">
-                    <img 
-                      src={project.image} 
-                      alt={project.title}
-                      className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700"
-                    />
-                    {/* Gradient Overlay */}
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-                  </div>
-                  
-                  {/* Content */}
-                  <div className="absolute bottom-0 left-0 right-0 p-4 transform translate-y-10 group-hover:translate-y-0 transition-transform duration-500">
-                    <h3 className="font-headline text-lg font-black text-white mb-1 drop-shadow-lg">
-                      {project.title}
-                    </h3>
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-1.5 text-orange-300">
-                        <div className="w-1.5 h-1.5 bg-orange-400 rounded-full animate-pulse"></div>
-                        <span className="font-headline text-xs font-semibold">{project.location}</span>
-                      </div>
-                      <span className="font-headline px-3 py-1.5 bg-gradient-to-r from-orange-500 to-amber-500 text-white rounded-full text-[10px] font-bold shadow-lg">
-                        {project.capacity}
-                      </span>
-                    </div>
-                  </div>
-
-                  {/* Corner Accent */}
-                  <div className="absolute top-3 right-3 p-2 bg-white/90 backdrop-blur-sm rounded-xl shadow-lg opacity-0 group-hover:opacity-100 transform translate-x-4 group-hover:translate-x-0 transition-all duration-500">
-                    <Award className="h-4 w-4 text-orange-500" />
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-
-          {/* View All Button */}
-          <div className="text-center mt-10 animate-fadeIn" style={{animationDelay: '0.8s'}}>
-            <button className="group px-8 py-3 bg-gradient-to-r from-orange-500 via-amber-500 to-yellow-500 text-white rounded-full font-headline font-bold text-sm shadow-xl hover:shadow-orange-500/50 transform hover:scale-110 transition-all duration-500 inline-flex items-center gap-2">
-              View All Projects
-              <ArrowRight className="h-4 w-4 group-hover:translate-x-2 transition-transform duration-300" />
-            </button>
-          </div>
-        </div>
-      </section>
-
-      {/* Trust Indicators Bar - hidden */}
-      <section className="py-8 bg-white border-t border-orange-100 hidden">
-        <div className="container mx-auto px-4">
-          <div className="flex flex-wrap items-center justify-center gap-6 opacity-60">
-            {['MNRE Certified', 'ISO Certified', 'Make in India', 'Govt. Approved', '24/7 Support'].map((text, i) => (
-              <div key={i} className="flex items-center gap-2 group cursor-pointer">
-                <div className="w-1.5 h-1.5 bg-orange-500 rounded-full group-hover:scale-150 transition-transform duration-300"></div>
-                <span className="font-headline text-xs font-bold text-gray-600 group-hover:text-orange-600 transition-colors duration-300">
-                  {text}
-                </span>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
     </div>
   );
 }

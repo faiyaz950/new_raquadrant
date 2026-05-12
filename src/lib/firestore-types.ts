@@ -17,6 +17,7 @@ export const COLLECTIONS = {
   EXECUTION_PROCESS: 'executionProcess',
   CONTACT_SUBMISSIONS: 'contactSubmissions',
   PROVEN_PROJECTS: 'provenProjects',
+  BLOG_POSTS: 'blogPosts',
 } as const;
 
 // Document types (stored in Firestore)
@@ -166,6 +167,20 @@ export interface ProvenProject {
   locationHighlight: string;
   description: string;
   highlightLabel: string;
+  order?: number;
+}
+
+export interface BlogPost {
+  id?: string;
+  title: string;
+  slug: string;
+  excerpt: string;
+  content: string;
+  image: string;
+  category: string; // 'News' | 'Blog' | 'Press Release'
+  author: string;
+  publishedAt: string; // ISO
+  featured?: boolean;
   order?: number;
 }
 

@@ -20,6 +20,7 @@ import type {
   ScopeOfWorkItem,
   ExecutionProcessItem,
   ProvenProject,
+  BlogPost,
 } from '@/lib/firestore-types';
 
 function useFirestoreCollection<T>(collectionName: string | null) {
@@ -134,6 +135,10 @@ export function useExecutionProcess() {
 
 export function useProvenProjects() {
   return useFirestoreCollection<ProvenProject>(COLLECTIONS.PROVEN_PROJECTS);
+}
+
+export function useBlogPosts() {
+  return useFirestoreCollection<BlogPost>(COLLECTIONS.BLOG_POSTS);
 }
 
 // Contact submissions: fetch unordered and sort by createdAt desc in component

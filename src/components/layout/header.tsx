@@ -14,6 +14,7 @@ const navItems = [
   { href: "/", label: "Home" },
   { href: "/about", label: "Who We Are" },
   { href: "/services", label: "What We Do" },
+  { href: "/media", label: "Media" },
   { href: "/contact", label: "Contact Us" },
 ];
 

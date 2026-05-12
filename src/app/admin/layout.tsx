@@ -14,9 +14,8 @@ import {
   MessageSquare,
   LogOut,
   Loader2,
-  FileText,
-  Target,
   Zap,
+  Newspaper,
 } from 'lucide-react';
 
 const nav = [
@@ -24,6 +23,7 @@ const nav = [
   { href: '/admin/home', label: 'Home Page', icon: Home },
   { href: '/admin/about', label: 'About Page', icon: Users },
   { href: '/admin/services', label: 'Services Page', icon: Wrench },
+  { href: '/admin/media', label: 'Media & Blog', icon: Newspaper },
   { href: '/admin/contacts', label: 'Contact Submissions', icon: MessageSquare },
 ];
 
