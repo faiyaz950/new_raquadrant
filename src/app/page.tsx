@@ -526,108 +526,192 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Enhanced Introduction Section */}
-      <section ref={introReveal.ref} className={`py-14 sm:py-16 lg:py-20 bg-gradient-to-b from-white via-orange-50/20 to-white relative overflow-hidden scroll-reveal ${introReveal.isInView ? 'in-view' : ''}`}>
-        <div className="absolute inset-0 bg-grid opacity-[0.04]" style={{ backgroundSize: '40px 40px' }} />
-        <div className="absolute top-0 right-0 w-[500px] sm:w-[600px] h-[500px] sm:h-[600px] bg-gradient-to-br from-orange-100/25 to-yellow-100/25 rounded-full blur-3xl animate-float" />
-        <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-amber-100/20 rounded-full blur-3xl animate-float" style={{animationDelay: '2s'}} />
+      {/* Enhanced Featured Projects */}
+      <section ref={featuredReveal.ref} className={`py-12 sm:py-16 lg:py-20 relative overflow-hidden scroll-reveal ${featuredReveal.isInView ? 'in-view' : ''}`}>
+        {/* Animated GIF Background */}
+        <div className="absolute inset-0">
+          <img
+            src="/featurebg.gif"
+            alt=""
+            className="absolute inset-0 w-full h-full object-cover"
+            aria-hidden
+          />
+          <div className="absolute inset-0 bg-white/75 backdrop-blur-[1px]" />
+        </div>
+        <div className="absolute inset-0 bg-grid opacity-20 pointer-events-none" />
         
-        {/* Decorative Elements */}
-        <div className="absolute top-20 left-10 w-20 h-20 border-4 border-orange-200/30 rounded-full animate-rotate-slow" />
-        <div className="absolute bottom-20 right-10 w-32 h-32 border-4 border-amber-200/30 rounded-full animate-rotate-slow" style={{animationDelay: '1s'}} />
-        
-        <div className="container mx-auto px-4 sm:px-6 lg:px-10 xl:px-12 relative z-10 max-w-[96rem]">
-          <div className="text-center mb-12 sm:mb-14 max-w-3xl mx-auto">
-            <div className="inline-flex items-center gap-2 px-5 py-2.5 bg-white/90 backdrop-blur-sm rounded-full mb-5 border border-orange-200 shadow-md hover:shadow-lg transition-shadow">
-              <Leaf className="h-5 w-5 text-orange-500 animate-bounce-soft" />
-              <span className="text-sm font-bold text-orange-600">Our Mission</span>
-              <CircleDot className="h-4 w-4 text-orange-400 animate-pulse" />
+        <div className="container mx-auto px-4 sm:px-6 relative z-10 max-w-6xl">
+          <div className="text-center mb-10 sm:mb-12">
+            <div className="inline-flex items-center gap-2 px-4 py-1.5 sm:px-5 sm:py-2 bg-gradient-to-r from-orange-50 to-amber-50 rounded-full mb-4 sm:mb-5 border border-orange-200 shadow-md hover:shadow-lg transition-shadow">
+              <Star className="h-4 w-4 sm:h-5 sm:w-5 text-orange-500 animate-pulse" />
+              <span className="text-xs sm:text-sm font-bold text-orange-600">Success Stories</span>
+              <Sparkles className="h-3 w-3 sm:h-4 sm:w-4 text-amber-500 animate-sparkle" />
             </div>
             
             <h2 className="font-headline text-3xl sm:text-4xl md:text-5xl font-black mb-4 sm:mb-5">
               <span className="font-headline text-gradient animate-gradient">
-                Empowering Communities with
+                Featured Projects
               </span>
-              <br />
-              <span className="font-headline text-gray-900">Clean Energy Solutions</span>
             </h2>
             
-            <div className="relative w-28 sm:w-36 h-2 mx-auto rounded-full mb-5 overflow-hidden">
-              <div className="absolute inset-0 bg-gradient-to-r from-orange-400 via-amber-400 to-yellow-400 animate-slide-reveal" />
+            <div className="relative w-24 sm:w-32 h-1.5 sm:h-2 mx-auto rounded-full overflow-hidden">
+              <div className="absolute inset-0 bg-gradient-to-r from-orange-400 via-amber-400 to-yellow-400" />
               <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/50 to-transparent animate-shimmer" />
             </div>
-            
-            <p className="text-base sm:text-lg text-gray-600 leading-relaxed">
-              Building a sustainable legacy for future generations through innovative solar technology
-            </p>
           </div>
 
-          {/* Enhanced Horizontal Cards */}
-          <div
-            ref={introScrollRef}
-            className="overflow-x-auto overflow-y-hidden -mx-4 px-4 sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8 scroll-smooth [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
-          >
-            <div className="flex gap-5 sm:gap-6 lg:gap-8 min-w-max">
-              {introPoints.map((point, idx) => (
-                <div
-                  key={point.title}
-                  data-intro-card
-                  className="group relative flex-shrink-0 w-[300px] sm:w-[340px] lg:w-[380px]"
-                >
-                  <div className="relative h-full bg-white rounded-2xl sm:rounded-3xl overflow-hidden border-2 border-orange-100 shadow-lg hover:shadow-[0_24px_48px_-12px_rgba(249,115,22,0.2)] hover:border-orange-200/80 transition-all duration-500 flex flex-col card-shine">
-                    {/* Decorative Corner */}
-                    <div className="absolute top-0 right-0 w-20 h-20 bg-gradient-to-bl from-orange-100/50 to-transparent rounded-bl-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6 max-w-6xl mx-auto">
+            {featuredProjects.map((project, i) => (
+              <button
+                key={(project as FeaturedProject).id ?? `${project.title}-${i}`}
+                type="button"
+                className="group relative animate-slideInUp hover-lift text-left"
+                style={{ animationDelay: `${i * 0.1}s` }}
+                onClick={() => {
+                  setSelectedProject(project as FeaturedProject);
+                  setProjectDialogOpen(true);
+                }}
+                aria-label={`View details for ${project.title}`}
+              >
+                <div className="relative rounded-2xl sm:rounded-3xl overflow-hidden shadow-2xl card-shine">
+                  <div className="relative overflow-hidden">
+                    <img 
+                      src={project.image}
+                      alt={project.title}
+                      className="w-full h-56 sm:h-64 lg:h-72 object-cover transform group-hover:scale-110 transition-transform duration-700"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent" />
                     
-                    {/* Image with Overlay */}
-                    <div className="relative w-full h-44 sm:h-52 lg:h-56 flex-shrink-0 overflow-hidden">
-                      <img
-                        src={point.image}
-                        alt=""
-                        className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-                      />
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent" />
-                      
-                      {/* Floating Icon */}
-                      <div className="absolute top-4 left-4 z-10 animate-float" style={{animationDelay: `${idx * 0.2}s`}}>
-                        <div className="relative">
-                          <div className="absolute inset-0 bg-orange-500/30 rounded-2xl blur-lg animate-pulse" />
-                          <div className="relative flex items-center justify-center w-12 h-12 sm:w-14 sm:h-14 rounded-xl sm:rounded-2xl bg-white/95 backdrop-blur-sm shadow-lg text-orange-600 group-hover:rotate-12 transition-transform duration-500">
-                            {point.icon}
-                          </div>
-                        </div>
-                      </div>
-
-                      {/* Number Badge */}
-                      <div className="absolute bottom-3 right-3 w-10 h-10 glass-effect rounded-full flex items-center justify-center font-black text-orange-600 border border-orange-200">
-                        {idx + 1}
-                      </div>
+                    {/* Decorative Corner */}
+                    <div className="absolute top-0 right-0 w-20 h-20 bg-gradient-to-bl from-white/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                  </div>
+                  
+                  <div className="absolute bottom-0 left-0 right-0 p-4 sm:p-5">
+                    <div className="mb-2 sm:mb-2.5 flex items-center gap-2">
+                      <span className="px-3 py-1 sm:px-3.5 sm:py-1.5 bg-gradient-to-r from-orange-500 to-amber-500 text-white rounded-full text-[10px] sm:text-xs font-bold shadow-lg">
+                        {project.type}
+                      </span>
+                      <div className="w-1.5 h-1.5 bg-orange-400 rounded-full animate-pulse" />
                     </div>
+                    <h3 className="font-headline text-lg sm:text-xl font-black text-white mb-1.5 sm:mb-2 group-hover:text-orange-300 transition-colors">
+                      {project.title}
+                    </h3>
+                    <div className="flex items-center justify-between text-orange-200 text-xs sm:text-sm">
+                      <span className="font-semibold flex items-center gap-1">
+                        <CircleDot className="h-3 w-3" />
+                        {project.location}
+                      </span>
+                      <span className="font-bold px-2 py-1 bg-white/10 rounded-full backdrop-blur-sm">{project.capacity}</span>
+                    </div>
+                  </div>
 
-                    {/* Content */}
-                    <div className="relative flex-1 p-5 sm:p-6 lg:p-7 flex flex-col min-h-0">
-                      <h3 className="font-headline text-xl sm:text-2xl font-bold text-gray-900 mb-3 group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-orange-600 group-hover:to-amber-600 transition-all duration-300">
-                        {point.title}
-                      </h3>
-                      <p className="text-sm sm:text-base text-gray-600 leading-relaxed mb-3 font-medium">
-                        {point.description}
-                      </p>
-                      <p className="text-xs sm:text-sm text-gray-600 leading-relaxed flex-1">
-                        {point.paragraph}
-                      </p>
-                      
-                      {/* Hover Indicator */}
-                      <div className="mt-4 flex items-center gap-2 text-orange-600 font-semibold text-sm opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                        <span>Learn More</span>
-                        <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
-                      </div>
-                      
-                      <div className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-orange-400 to-amber-500 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left rounded-b-2xl" />
+                  {/* Hover Arrow */}
+                  <div className="absolute top-3 right-3 sm:top-4 sm:right-4 opacity-0 group-hover:opacity-100 transition-all duration-300 transform group-hover:rotate-45">
+                    <div className="p-2 sm:p-2.5 glass-effect rounded-full border border-white/30">
+                      <ArrowRight className="h-5 w-5 sm:h-6 sm:w-6 text-orange-500" />
                     </div>
                   </div>
                 </div>
-              ))}
-            </div>
+              </button>
+            ))}
           </div>
+
+          <Dialog
+            open={projectDialogOpen}
+            onOpenChange={(open) => {
+              setProjectDialogOpen(open);
+              if (!open) setSelectedProject(null);
+            }}
+          >
+            <DialogContent className="max-w-2xl p-0 overflow-hidden">
+              {selectedProject ? (
+                <div>
+                  <div className="relative">
+                    <img
+                      src={selectedProject.image}
+                      alt={selectedProject.title}
+                      className="w-full h-56 sm:h-72 object-cover"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/25 to-transparent" />
+                    <div className="absolute bottom-0 left-0 right-0 p-5 sm:p-6">
+                      <div className="mb-2 flex items-center gap-2">
+                        <span className="px-3 py-1 bg-gradient-to-r from-orange-500 to-amber-500 text-white rounded-full text-xs font-bold shadow-lg">
+                          {selectedProject.type}
+                        </span>
+                        <span className="text-orange-100/90 text-xs font-semibold">Project details</span>
+                      </div>
+                      <h3 className="font-headline text-xl sm:text-2xl font-black text-white">
+                        {selectedProject.title}
+                      </h3>
+                    </div>
+                  </div>
+
+                  <div className="p-5 sm:p-6">
+                    <DialogHeader>
+                      <DialogTitle className="sr-only">Project details</DialogTitle>
+                      <DialogDescription className="sr-only">
+                        Details for the selected featured project.
+                      </DialogDescription>
+                    </DialogHeader>
+
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 mt-1">
+                      <div className="rounded-xl border border-slate-200 bg-white p-4">
+                        <div className="text-xs font-semibold text-slate-500 mb-1 flex items-center gap-1">
+                          <CircleDot className="h-3.5 w-3.5 text-orange-500" />
+                          Location
+                        </div>
+                        <div className="text-sm sm:text-base font-bold text-slate-900">
+                          {selectedProject.location}
+                        </div>
+                      </div>
+                      <div className="rounded-xl border border-slate-200 bg-white p-4">
+                        <div className="text-xs font-semibold text-slate-500 mb-1">
+                          Capacity
+                        </div>
+                        <div className="text-sm sm:text-base font-bold text-slate-900">
+                          {selectedProject.capacity}
+                        </div>
+                      </div>
+                    </div>
+
+                    {(selectedProject.description?.trim() || selectedProject.highlights?.length) && (
+                      <div className="mt-4 rounded-xl border border-slate-200 bg-white p-4">
+                        {selectedProject.description?.trim() && (
+                          <p className="text-sm sm:text-base text-slate-700 leading-relaxed">
+                            {selectedProject.description}
+                          </p>
+                        )}
+                        {selectedProject.highlights?.length ? (
+                          <ul className={`mt-3 space-y-2 ${selectedProject.description?.trim() ? '' : 'mt-0'}`}>
+                            {selectedProject.highlights.slice(0, 6).map((h, idx) => (
+                              <li key={idx} className="text-sm text-slate-700 flex items-start gap-2">
+                                <span className="mt-1.5 inline-block h-2 w-2 rounded-full bg-orange-500 shrink-0" />
+                                <span>{h}</span>
+                              </li>
+                            ))}
+                          </ul>
+                        ) : null}
+                      </div>
+                    )}
+
+                    <div className="mt-5 flex flex-col sm:flex-row gap-3">
+                      <Button asChild className="w-full sm:w-auto bg-orange-600 hover:bg-orange-500 text-white font-bold">
+                        <Link href="/contact">Get a quote</Link>
+                      </Button>
+                      <Button
+                        type="button"
+                        variant="outline"
+                        className="w-full sm:w-auto border-slate-300 text-slate-700"
+                        onClick={() => setProjectDialogOpen(false)}
+                      >
+                        Close
+                      </Button>
+                    </div>
+                  </div>
+                </div>
+              ) : null}
+            </DialogContent>
+          </Dialog>
         </div>
       </section>
 
@@ -940,192 +1024,108 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Enhanced Featured Projects */}
-      <section ref={featuredReveal.ref} className={`py-12 sm:py-16 lg:py-20 relative overflow-hidden scroll-reveal ${featuredReveal.isInView ? 'in-view' : ''}`}>
-        {/* Animated GIF Background */}
-        <div className="absolute inset-0">
-          <img
-            src="/featurebg.gif"
-            alt=""
-            className="absolute inset-0 w-full h-full object-cover"
-            aria-hidden
-          />
-          <div className="absolute inset-0 bg-white/75 backdrop-blur-[1px]" />
-        </div>
-        <div className="absolute inset-0 bg-grid opacity-20 pointer-events-none" />
+      {/* Enhanced Introduction Section */}
+      <section ref={introReveal.ref} className={`py-14 sm:py-16 lg:py-20 bg-gradient-to-b from-white via-orange-50/20 to-white relative overflow-hidden scroll-reveal ${introReveal.isInView ? 'in-view' : ''}`}>
+        <div className="absolute inset-0 bg-grid opacity-[0.04]" style={{ backgroundSize: '40px 40px' }} />
+        <div className="absolute top-0 right-0 w-[500px] sm:w-[600px] h-[500px] sm:h-[600px] bg-gradient-to-br from-orange-100/25 to-yellow-100/25 rounded-full blur-3xl animate-float" />
+        <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-amber-100/20 rounded-full blur-3xl animate-float" style={{animationDelay: '2s'}} />
         
-        <div className="container mx-auto px-4 sm:px-6 relative z-10 max-w-6xl">
-          <div className="text-center mb-10 sm:mb-12">
-            <div className="inline-flex items-center gap-2 px-4 py-1.5 sm:px-5 sm:py-2 bg-gradient-to-r from-orange-50 to-amber-50 rounded-full mb-4 sm:mb-5 border border-orange-200 shadow-md hover:shadow-lg transition-shadow">
-              <Star className="h-4 w-4 sm:h-5 sm:w-5 text-orange-500 animate-pulse" />
-              <span className="text-xs sm:text-sm font-bold text-orange-600">Success Stories</span>
-              <Sparkles className="h-3 w-3 sm:h-4 sm:w-4 text-amber-500 animate-sparkle" />
+        {/* Decorative Elements */}
+        <div className="absolute top-20 left-10 w-20 h-20 border-4 border-orange-200/30 rounded-full animate-rotate-slow" />
+        <div className="absolute bottom-20 right-10 w-32 h-32 border-4 border-amber-200/30 rounded-full animate-rotate-slow" style={{animationDelay: '1s'}} />
+        
+        <div className="container mx-auto px-4 sm:px-6 lg:px-10 xl:px-12 relative z-10 max-w-[96rem]">
+          <div className="text-center mb-12 sm:mb-14 max-w-3xl mx-auto">
+            <div className="inline-flex items-center gap-2 px-5 py-2.5 bg-white/90 backdrop-blur-sm rounded-full mb-5 border border-orange-200 shadow-md hover:shadow-lg transition-shadow">
+              <Leaf className="h-5 w-5 text-orange-500 animate-bounce-soft" />
+              <span className="text-sm font-bold text-orange-600">Our Mission</span>
+              <CircleDot className="h-4 w-4 text-orange-400 animate-pulse" />
             </div>
             
             <h2 className="font-headline text-3xl sm:text-4xl md:text-5xl font-black mb-4 sm:mb-5">
               <span className="font-headline text-gradient animate-gradient">
-                Featured Projects
+                Empowering Communities with
               </span>
+              <br />
+              <span className="font-headline text-gray-900">Clean Energy Solutions</span>
             </h2>
             
-            <div className="relative w-24 sm:w-32 h-1.5 sm:h-2 mx-auto rounded-full overflow-hidden">
-              <div className="absolute inset-0 bg-gradient-to-r from-orange-400 via-amber-400 to-yellow-400" />
+            <div className="relative w-28 sm:w-36 h-2 mx-auto rounded-full mb-5 overflow-hidden">
+              <div className="absolute inset-0 bg-gradient-to-r from-orange-400 via-amber-400 to-yellow-400 animate-slide-reveal" />
               <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/50 to-transparent animate-shimmer" />
             </div>
+            
+            <p className="text-base sm:text-lg text-gray-600 leading-relaxed">
+              Building a sustainable legacy for future generations through innovative solar technology
+            </p>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6 max-w-6xl mx-auto">
-            {featuredProjects.map((project, i) => (
-              <button
-                key={(project as FeaturedProject).id ?? `${project.title}-${i}`}
-                type="button"
-                className="group relative animate-slideInUp hover-lift text-left"
-                style={{ animationDelay: `${i * 0.1}s` }}
-                onClick={() => {
-                  setSelectedProject(project as FeaturedProject);
-                  setProjectDialogOpen(true);
-                }}
-                aria-label={`View details for ${project.title}`}
-              >
-                <div className="relative rounded-2xl sm:rounded-3xl overflow-hidden shadow-2xl card-shine">
-                  <div className="relative overflow-hidden">
-                    <img 
-                      src={project.image}
-                      alt={project.title}
-                      className="w-full h-56 sm:h-64 lg:h-72 object-cover transform group-hover:scale-110 transition-transform duration-700"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent" />
-                    
-                    {/* Decorative Corner */}
-                    <div className="absolute top-0 right-0 w-20 h-20 bg-gradient-to-bl from-white/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-                  </div>
-                  
-                  <div className="absolute bottom-0 left-0 right-0 p-4 sm:p-5">
-                    <div className="mb-2 sm:mb-2.5 flex items-center gap-2">
-                      <span className="px-3 py-1 sm:px-3.5 sm:py-1.5 bg-gradient-to-r from-orange-500 to-amber-500 text-white rounded-full text-[10px] sm:text-xs font-bold shadow-lg">
-                        {project.type}
-                      </span>
-                      <div className="w-1.5 h-1.5 bg-orange-400 rounded-full animate-pulse" />
-                    </div>
-                    <h3 className="font-headline text-lg sm:text-xl font-black text-white mb-1.5 sm:mb-2 group-hover:text-orange-300 transition-colors">
-                      {project.title}
-                    </h3>
-                    <div className="flex items-center justify-between text-orange-200 text-xs sm:text-sm">
-                      <span className="font-semibold flex items-center gap-1">
-                        <CircleDot className="h-3 w-3" />
-                        {project.location}
-                      </span>
-                      <span className="font-bold px-2 py-1 bg-white/10 rounded-full backdrop-blur-sm">{project.capacity}</span>
-                    </div>
-                  </div>
-
-                  {/* Hover Arrow */}
-                  <div className="absolute top-3 right-3 sm:top-4 sm:right-4 opacity-0 group-hover:opacity-100 transition-all duration-300 transform group-hover:rotate-45">
-                    <div className="p-2 sm:p-2.5 glass-effect rounded-full border border-white/30">
-                      <ArrowRight className="h-5 w-5 sm:h-6 sm:w-6 text-orange-500" />
-                    </div>
-                  </div>
-                </div>
-              </button>
-            ))}
-          </div>
-
-          <Dialog
-            open={projectDialogOpen}
-            onOpenChange={(open) => {
-              setProjectDialogOpen(open);
-              if (!open) setSelectedProject(null);
-            }}
+          {/* Enhanced Horizontal Cards */}
+          <div
+            ref={introScrollRef}
+            className="overflow-x-auto overflow-y-hidden -mx-4 px-4 sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8 scroll-smooth [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
           >
-            <DialogContent className="max-w-2xl p-0 overflow-hidden">
-              {selectedProject ? (
-                <div>
-                  <div className="relative">
-                    <img
-                      src={selectedProject.image}
-                      alt={selectedProject.title}
-                      className="w-full h-56 sm:h-72 object-cover"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/25 to-transparent" />
-                    <div className="absolute bottom-0 left-0 right-0 p-5 sm:p-6">
-                      <div className="mb-2 flex items-center gap-2">
-                        <span className="px-3 py-1 bg-gradient-to-r from-orange-500 to-amber-500 text-white rounded-full text-xs font-bold shadow-lg">
-                          {selectedProject.type}
-                        </span>
-                        <span className="text-orange-100/90 text-xs font-semibold">Project details</span>
+            <div className="flex gap-5 sm:gap-6 lg:gap-8 min-w-max">
+              {introPoints.map((point, idx) => (
+                <div
+                  key={point.title}
+                  data-intro-card
+                  className="group relative flex-shrink-0 w-[300px] sm:w-[340px] lg:w-[380px]"
+                >
+                  <div className="relative h-full bg-white rounded-2xl sm:rounded-3xl overflow-hidden border-2 border-orange-100 shadow-lg hover:shadow-[0_24px_48px_-12px_rgba(249,115,22,0.2)] hover:border-orange-200/80 transition-all duration-500 flex flex-col card-shine">
+                    {/* Decorative Corner */}
+                    <div className="absolute top-0 right-0 w-20 h-20 bg-gradient-to-bl from-orange-100/50 to-transparent rounded-bl-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                    
+                    {/* Image with Overlay */}
+                    <div className="relative w-full h-44 sm:h-52 lg:h-56 flex-shrink-0 overflow-hidden">
+                      <img
+                        src={point.image}
+                        alt=""
+                        className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent" />
+                      
+                      {/* Floating Icon */}
+                      <div className="absolute top-4 left-4 z-10 animate-float" style={{animationDelay: `${idx * 0.2}s`}}>
+                        <div className="relative">
+                          <div className="absolute inset-0 bg-orange-500/30 rounded-2xl blur-lg animate-pulse" />
+                          <div className="relative flex items-center justify-center w-12 h-12 sm:w-14 sm:h-14 rounded-xl sm:rounded-2xl bg-white/95 backdrop-blur-sm shadow-lg text-orange-600 group-hover:rotate-12 transition-transform duration-500">
+                            {point.icon}
+                          </div>
+                        </div>
                       </div>
-                      <h3 className="font-headline text-xl sm:text-2xl font-black text-white">
-                        {selectedProject.title}
+
+                      {/* Number Badge */}
+                      <div className="absolute bottom-3 right-3 w-10 h-10 glass-effect rounded-full flex items-center justify-center font-black text-orange-600 border border-orange-200">
+                        {idx + 1}
+                      </div>
+                    </div>
+
+                    {/* Content */}
+                    <div className="relative flex-1 p-5 sm:p-6 lg:p-7 flex flex-col min-h-0">
+                      <h3 className="font-headline text-xl sm:text-2xl font-bold text-gray-900 mb-3 group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-orange-600 group-hover:to-amber-600 transition-all duration-300">
+                        {point.title}
                       </h3>
-                    </div>
-                  </div>
-
-                  <div className="p-5 sm:p-6">
-                    <DialogHeader>
-                      <DialogTitle className="sr-only">Project details</DialogTitle>
-                      <DialogDescription className="sr-only">
-                        Details for the selected featured project.
-                      </DialogDescription>
-                    </DialogHeader>
-
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 mt-1">
-                      <div className="rounded-xl border border-slate-200 bg-white p-4">
-                        <div className="text-xs font-semibold text-slate-500 mb-1 flex items-center gap-1">
-                          <CircleDot className="h-3.5 w-3.5 text-orange-500" />
-                          Location
-                        </div>
-                        <div className="text-sm sm:text-base font-bold text-slate-900">
-                          {selectedProject.location}
-                        </div>
+                      <p className="text-sm sm:text-base text-gray-600 leading-relaxed mb-3 font-medium">
+                        {point.description}
+                      </p>
+                      <p className="text-xs sm:text-sm text-gray-600 leading-relaxed flex-1">
+                        {point.paragraph}
+                      </p>
+                      
+                      {/* Hover Indicator */}
+                      <div className="mt-4 flex items-center gap-2 text-orange-600 font-semibold text-sm opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                        <span>Learn More</span>
+                        <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
                       </div>
-                      <div className="rounded-xl border border-slate-200 bg-white p-4">
-                        <div className="text-xs font-semibold text-slate-500 mb-1">
-                          Capacity
-                        </div>
-                        <div className="text-sm sm:text-base font-bold text-slate-900">
-                          {selectedProject.capacity}
-                        </div>
-                      </div>
-                    </div>
-
-                    {(selectedProject.description?.trim() || selectedProject.highlights?.length) && (
-                      <div className="mt-4 rounded-xl border border-slate-200 bg-white p-4">
-                        {selectedProject.description?.trim() && (
-                          <p className="text-sm sm:text-base text-slate-700 leading-relaxed">
-                            {selectedProject.description}
-                          </p>
-                        )}
-                        {selectedProject.highlights?.length ? (
-                          <ul className={`mt-3 space-y-2 ${selectedProject.description?.trim() ? '' : 'mt-0'}`}>
-                            {selectedProject.highlights.slice(0, 6).map((h, idx) => (
-                              <li key={idx} className="text-sm text-slate-700 flex items-start gap-2">
-                                <span className="mt-1.5 inline-block h-2 w-2 rounded-full bg-orange-500 shrink-0" />
-                                <span>{h}</span>
-                              </li>
-                            ))}
-                          </ul>
-                        ) : null}
-                      </div>
-                    )}
-
-                    <div className="mt-5 flex flex-col sm:flex-row gap-3">
-                      <Button asChild className="w-full sm:w-auto bg-orange-600 hover:bg-orange-500 text-white font-bold">
-                        <Link href="/contact">Get a quote</Link>
-                      </Button>
-                      <Button
-                        type="button"
-                        variant="outline"
-                        className="w-full sm:w-auto border-slate-300 text-slate-700"
-                        onClick={() => setProjectDialogOpen(false)}
-                      >
-                        Close
-                      </Button>
+                      
+                      <div className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-orange-400 to-amber-500 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left rounded-b-2xl" />
                     </div>
                   </div>
                 </div>
-              ) : null}
-            </DialogContent>
-          </Dialog>
+              ))}
+            </div>
+          </div>
         </div>
       </section>
 

@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef } from 'react';
 import { getCollection, getDocument, setDocument, addDocument, updateDocument, removeDocument, toFirestore, COLLECTIONS } from '@/lib/firestore';
-import type { AboutStat, WhatSetsApart, Leadership, AboutHeroSlide, AboutHeroContent } from '@/lib/firestore-types';
+import type { AboutStat, WhatSetsApart, Leadership, AboutHeroSlide, AboutHeroContent, ProvenProject } from '@/lib/firestore-types';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -19,12 +19,12 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
-import { Plus, Pencil, Trash2, Loader2, Upload, X, ImageIcon, BarChart3, Sparkles, Users, LayoutTemplate } from 'lucide-react';
+import { Plus, Pencil, Trash2, Loader2, Upload, X, ImageIcon, BarChart3, Sparkles, Users, LayoutTemplate, MapPin } from 'lucide-react';
 import { getFirebaseClient } from '@/lib/firebase';
 import { uploadImage, validateImageFile } from '@/lib/storage';
 import Image from 'next/image';
 
-type TabKey = 'hero' | 'stats' | 'setsApart' | 'leadership';
+type TabKey = 'hero' | 'stats' | 'setsApart' | 'proven' | 'leadership';
 
 const ICON_OPTIONS = ['Award', 'Users', 'Zap', 'TrendingUp', 'Wrench', 'Factory', 'ShieldCheck', 'HeartHandshake', 'CheckCircle2', 'Target', 'Eye', 'Compass', 'Star', 'Globe', 'BrainCircuit', 'Leaf', 'Battery', 'Sun'];
 
@@ -32,6 +32,7 @@ const TAB_META: Record<TabKey, { label: string; icon: React.ReactNode; descripti
   hero:       { label: 'Hero Section',       icon: <LayoutTemplate className="h-4 w-4" />, description: 'Background images and text shown in the top banner of the About page.' },
   stats:      { label: 'Stats',              icon: <BarChart3 className="h-4 w-4" />,      description: 'Numbers shown in the orange banner below the hero (e.g. 500+ Projects, 50MW+ Capacity).' },
   setsApart:  { label: 'What Sets Us Apart', icon: <Sparkles className="h-4 w-4" />,      description: 'Cards in the "What Sets Us Apart" section — each has an icon, title, and description.' },
+  proven:     { label: 'Proven Projects',    icon: <MapPin className="h-4 w-4" />,        description: 'Case study cards in "Engineering Where Others Hesitate" — each has a location, description, and highlight.' },
   leadership: { label: 'Leadership',         icon: <Users className="h-4 w-4" />,         description: 'Team member profiles shown in the Leadership section with photo, role, and bio.' },
 };
 
@@ -49,9 +50,10 @@ export default function AdminAboutPage() {
   const [stats, setStats]               = useState<AboutStat[]>([]);
   const [setsApart, setSetsApart]       = useState<WhatSetsApart[]>([]);
   const [leadership, setLeadership]     = useState<Leadership[]>([]);
+  const [proven, setProven]             = useState<ProvenProject[]>([]);
   const [loading, setLoading]           = useState(true);
   const [error, setError]               = useState<string | null>(null);
-  const [dialog, setDialog]             = useState<{ open: boolean; tab: TabKey; item?: AboutStat | WhatSetsApart | Leadership }>({ open: false, tab: 'hero' });
+  const [dialog, setDialog]             = useState<{ open: boolean; tab: TabKey; item?: AboutStat | WhatSetsApart | ProvenProject | Leadership }>({ open: false, tab: 'hero' });
   const [deleteTarget, setDeleteTarget] = useState<{ tab: TabKey; id: string; label: string } | null>(null);
 
   const db = getFirebaseClient()?.db;
@@ -67,13 +69,15 @@ export default function AdminAboutPage() {
       getCollection<AboutStat>(COLLECTIONS.ABOUT_STATS),
       getCollection<WhatSetsApart>(COLLECTIONS.WHAT_SETS_APART),
       getCollection<Leadership>(COLLECTIONS.LEADERSHIP),
+      getCollection<ProvenProject>(COLLECTIONS.PROVEN_PROJECTS),
     ])
-      .then(([hs, hc, s, a, l]) => {
+      .then(([hs, hc, s, a, l, p]) => {
         setHeroSlides(hs);
         setHeroContent(hc ?? DEFAULT_HERO_CONTENT);
         setStats(s);
         setSetsApart(a);
         setLeadership(l);
+        setProven(p);
       })
       .catch((e) => setError(e.message))
       .finally(() => setLoading(false));
@@ -86,6 +90,7 @@ export default function AdminAboutPage() {
     const colMap: Record<string, string> = {
       stats:      COLLECTIONS.ABOUT_STATS,
       setsApart:  COLLECTIONS.WHAT_SETS_APART,
+      proven:     COLLECTIONS.PROVEN_PROJECTS,
       leadership: COLLECTIONS.LEADERSHIP,
       heroSlide:  COLLECTIONS.ABOUT_HERO_SLIDES,
       hero:       COLLECTIONS.ABOUT_HERO_SLIDES,
@@ -108,7 +113,7 @@ export default function AdminAboutPage() {
     );
   }
 
-  const counts: Record<TabKey, number> = { hero: heroSlides.length, stats: stats.length, setsApart: setsApart.length, leadership: leadership.length };
+  const counts: Record<TabKey, number> = { hero: heroSlides.length, stats: stats.length, setsApart: setsApart.length, proven: proven.length, leadership: leadership.length };
 
   return (
     <div className="space-y-6">
@@ -224,6 +229,35 @@ export default function AdminAboutPage() {
                 <CardActions
                   onEdit={() => setDialog({ open: true, tab: 'setsApart', item })}
                   onDelete={() => item.id && setDeleteTarget({ tab: 'setsApart', id: item.id, label: item.title })}
+                />
+              </div>
+            ))}
+          </div>
+        </TabsContent>
+
+        {/* ---- Proven Projects Tab ---- */}
+        <TabsContent value="proven">
+          <SectionHeader
+            title="Proven Capability Projects"
+            description={TAB_META.proven.description}
+            onAdd={() => setDialog({ open: true, tab: 'proven' })}
+            label="Add Project"
+          />
+          <div className="grid grid-cols-1 gap-3 mt-4">
+            {proven.length === 0 && <EmptyState label="No proven projects yet." />}
+            {proven.map((item) => (
+              <div key={item.id} className="flex items-start gap-4 rounded-lg border border-slate-700 bg-slate-800/50 p-4">
+                <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-lg bg-orange-600/20 text-orange-400">
+                  <MapPin className="h-5 w-5" />
+                </div>
+                <div className="min-w-0 flex-1">
+                  <p className="font-semibold text-white">{item.location} <span className="text-orange-400">{item.locationHighlight}</span></p>
+                  <p className="text-xs text-slate-400 mt-1 line-clamp-2">{item.description}</p>
+                  <span className="inline-block mt-1 rounded bg-slate-700 px-1.5 py-0.5 text-[10px] text-slate-300">{item.highlightLabel}</span>
+                </div>
+                <CardActions
+                  onEdit={() => setDialog({ open: true, tab: 'proven', item })}
+                  onDelete={() => item.id && setDeleteTarget({ tab: 'proven', id: item.id, label: `${item.location} ${item.locationHighlight}` })}
                 />
               </div>
             ))}
@@ -581,7 +615,7 @@ function AboutEditDialog({
   onSaved,
   iconOptions,
 }: {
-  dialog: { open: boolean; tab: TabKey; item?: AboutStat | WhatSetsApart | Leadership };
+  dialog: { open: boolean; tab: TabKey; item?: AboutStat | WhatSetsApart | ProvenProject | Leadership };
   onClose: () => void;
   onSaved: () => void;
   iconOptions: string[];
@@ -601,6 +635,7 @@ function AboutEditDialog({
     } else {
       if (dialog.tab === 'stats')      setForm({ iconName: 'Award', value: '', label: '', order: 0 });
       if (dialog.tab === 'setsApart') setForm({ iconName: 'Wrench', title: '', description: '', order: 0 });
+      if (dialog.tab === 'proven')    setForm({ location: '', locationHighlight: '', description: '', highlightLabel: '', order: 0 });
       if (dialog.tab === 'leadership') setForm({ name: '', role: '', image: '', bio: '', order: 0 });
     }
   }, [dialog.open, dialog.tab, dialog.item]);
@@ -623,6 +658,7 @@ function AboutEditDialog({
         hero:       COLLECTIONS.ABOUT_HERO_SLIDES,
         stats:      COLLECTIONS.ABOUT_STATS,
         setsApart:  COLLECTIONS.WHAT_SETS_APART,
+        proven:     COLLECTIONS.PROVEN_PROJECTS,
         leadership: COLLECTIONS.LEADERSHIP,
       };
       const col = colMap[dialog.tab];
@@ -643,6 +679,7 @@ function AboutEditDialog({
     hero:       'Hero Slide',
     stats:      'Stat',
     setsApart:  'Item',
+    proven:     'Proven Project',
     leadership: 'Team Member',
   };
 
@@ -689,6 +726,27 @@ function AboutEditDialog({
               </FieldWrap>
               <FieldWrap label="Description" hint="2–3 lines explaining this differentiator.">
                 <Textarea className="bg-slate-700 border-slate-600" value={field('description')} onChange={set('description')} rows={4} placeholder="Every system is designed based on real load behaviour…" required />
+              </FieldWrap>
+              <FieldWrap label="Order (lower = first)">
+                <Input type="number" className="bg-slate-700 border-slate-600 w-24" value={field('order')} onChange={set('order')} />
+              </FieldWrap>
+            </>
+          )}
+
+          {/* ---- Proven Projects Form ---- */}
+          {dialog.tab === 'proven' && (
+            <>
+              <FieldWrap label="Location" hint="Main location text, e.g. 'Chapar, Dhubri' or 'Howrah,'">
+                <Input className="bg-slate-700 border-slate-600" value={field('location')} onChange={set('location')} placeholder="Chapar, Dhubri" required />
+              </FieldWrap>
+              <FieldWrap label="Location Highlight" hint="Part shown in orange, e.g. '(Assam)' or 'West Bengal'">
+                <Input className="bg-slate-700 border-slate-600" value={field('locationHighlight')} onChange={set('locationHighlight')} placeholder="(Assam)" required />
+              </FieldWrap>
+              <FieldWrap label="Description" hint="Full case study description for this project.">
+                <Textarea className="bg-slate-700 border-slate-600" value={field('description')} onChange={set('description')} rows={5} placeholder="We successfully engineered and commissioned a…" required />
+              </FieldWrap>
+              <FieldWrap label="Highlight Label" hint="Short achievement tag shown at the bottom of the card.">
+                <Input className="bg-slate-700 border-slate-600" value={field('highlightLabel')} onChange={set('highlightLabel')} placeholder="First-of-its-kind solution" required />
               </FieldWrap>
               <FieldWrap label="Order (lower = first)">
                 <Input type="number" className="bg-slate-700 border-slate-600 w-24" value={field('order')} onChange={set('order')} />

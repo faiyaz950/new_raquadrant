@@ -16,6 +16,7 @@ export const COLLECTIONS = {
   SCOPE_OF_WORK: 'scopeOfWork',
   EXECUTION_PROCESS: 'executionProcess',
   CONTACT_SUBMISSIONS: 'contactSubmissions',
+  PROVEN_PROJECTS: 'provenProjects',
 } as const;
 
 // Document types (stored in Firestore)
@@ -156,6 +157,15 @@ export interface ExecutionProcessItem {
   iconName: string;
   duration: string;
   color: string;
+  order?: number;
+}
+
+export interface ProvenProject {
+  id?: string;
+  location: string;
+  locationHighlight: string;
+  description: string;
+  highlightLabel: string;
   order?: number;
 }
 

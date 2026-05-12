@@ -25,7 +25,7 @@ import {
 } from "lucide-react";
 import { useEffect, useState, useMemo } from "react";
 import { useScrollReveal } from "@/hooks/use-scroll-reveal";
-import { useAboutStats, useWhatSetsApart, useLeadership, useAboutHeroSlides, useAboutHeroContent } from "@/hooks/use-site-content";
+import { useAboutStats, useWhatSetsApart, useLeadership, useAboutHeroSlides, useAboutHeroContent, useProvenProjects } from "@/hooks/use-site-content";
 import { getIconComponent } from "@/lib/icon-map";
 
 const FALLBACK_HERO_IMAGES = [
@@ -62,6 +62,11 @@ const FALLBACK_SETS_APART = [
   { icon: CheckCircle2, title: "Proven Ground Reality", description: "Our projects speak louder than presentations." },
 ];
 
+const FALLBACK_PROVEN_PROJECTS = [
+  { location: "Chapar, Dhubri", locationHighlight: "(Assam)", description: "We successfully engineered and commissioned a 150 kWp gridless, battery-less captive solar power plant—a first-of-its-kind solution for a rural MSME operating without grid access. This project has been widely appreciated for proving that reliable industrial operations are possible even without grid dependency, through disciplined engineering and system design.", highlightLabel: "First-of-its-kind solution" },
+  { location: "Howrah,", locationHighlight: "West Bengal", description: "We executed a 138 kWp rooftop solar system on a non-penetrative dome structure, serving three separate meters with distinct load profiles, operational functions, and long cable distances—while addressing voltage-drop challenges and high-demand conditions. The project stands as a benchmark in precision rooftop engineering.", highlightLabel: "Precision engineering benchmark" },
+];
+
 const FALLBACK_LEADERSHIP = [
   { name: "Rizul Choudhury", role: "Founder and CEO", image: LEADER_FALLBACK_IMAGES.rizul, bio: "Over 18 years of leadership experience across energy, technology, and large-scale consumer businesses. He holds an MBA, along with a B.Sc. in Information Technology and Software Engineering, combining strategic thinking with strong technical and systems understanding. His professional journey includes leadership roles with globally respected organisations such as Samsung, Reliance Retail, Huawei Telecommunications, Future Group, Surya Business, Anvil Energy, and Husk Power Systems. Rizul has worked extensively on rural clean-energy transition and energy-access initiatives across Bihar, Uttar Pradesh, Assam, the North East, and West Bengal, focusing on MSMEs, agro-based industries, and underserved communities. A strong advocate for climate action and inclusive growth, he has led initiatives aligned with the UN Sustainable Development Goals, particularly SDG 7 (Affordable & Clean Energy) and SDG 13 (Climate Action)." },
   { name: "Shyam Chakraborty", role: "Co-Founder and COO", image: LEADER_FALLBACK_IMAGES.shyam, bio: "Over 14 years of deep, hands-on experience in rooftop and utility-scale solar projects. He leads operations, project management, engineering, and execution, ensuring every project is delivered with precision, safety, and long-term reliability. His expertise covers techno-commercial evaluation, project costing, system design (grid-connected and battery-based), risk management, and end-to-end project delivery—from site surveys and engineering validation to commissioning and O&M handover. An alumnus of XLRI Jamshedpur's Executive Program in Project Management, Shyam has worked with industry leaders including Areva T&D, Schneider Electric, Atha Group, Onergy Solar, Husk Power, and Anvil Cables & Energy. Known for his structured problem-solving approach and adherence to Total Quality Management (TQM) principles." },
@@ -78,6 +83,7 @@ export default function AboutPage() {
   const leadershipFromDb = useLeadership();
   const heroSlidesFromDb = useAboutHeroSlides();
   const heroContentFromDb = useAboutHeroContent();
+  const provenFromDb = useProvenProjects();
 
   const stats = useMemo(() => {
     if (statsFromDb.data?.length) {
@@ -94,6 +100,7 @@ export default function AboutPage() {
   }, [setsApartFromDb.data]);
 
   const leadership = useMemo(() => (leadershipFromDb.data?.length ? leadershipFromDb.data : FALLBACK_LEADERSHIP), [leadershipFromDb.data]);
+  const provenProjects = useMemo(() => (provenFromDb.data?.length ? provenFromDb.data : FALLBACK_PROVEN_PROJECTS), [provenFromDb.data]);
 
   const heroImages = useMemo(() =>
     heroSlidesFromDb.data?.length
@@ -690,41 +697,25 @@ export default function AboutPage() {
                 </div>
                 
                 <div className="grid md:grid-cols-2 gap-5 sm:gap-6">
-                  <div className="gradient-border rounded-2xl p-5 sm:p-6 card-hover bg-white">
-                    <div className="flex items-center gap-2 mb-4">
-                      <div className="bg-gradient-to-br from-[var(--color-sunrise)] to-[var(--color-amber)] p-2 rounded-lg shadow-lg">
-                        <MapPin className="h-5 w-5 text-white" />
+                  {provenProjects.map((project, index) => (
+                    <div key={project.id ?? index} className="gradient-border rounded-2xl p-5 sm:p-6 card-hover bg-white">
+                      <div className="flex items-center gap-2 mb-4">
+                        <div className={`p-2 rounded-lg shadow-lg ${index % 2 === 0 ? 'bg-gradient-to-br from-[var(--color-sunrise)] to-[var(--color-amber)]' : 'bg-gradient-to-br from-[var(--color-honey)] to-[var(--color-deep-orange)]'}`}>
+                          <MapPin className="h-5 w-5 text-white" />
+                        </div>
+                        <h3 className="font-display font-black text-gray-900 text-base sm:text-lg">
+                          {project.location} <span className="text-[var(--color-sunrise)]">{project.locationHighlight}</span>
+                        </h3>
                       </div>
-                      <h3 className="font-display font-black text-gray-900 text-base sm:text-lg">
-                        Chapar, Dhubri <span className="text-[var(--color-sunrise)]">(Assam)</span>
-                      </h3>
-                    </div>
-                    <p className="text-gray-700 leading-relaxed text-sm sm:text-base">
-                      We successfully engineered and commissioned a <strong className="text-[var(--color-sunrise)]">150 kWp gridless, battery-less captive solar power plant</strong>—a first-of-its-kind solution for a rural MSME operating without grid access. This project has been widely appreciated for proving that reliable industrial operations are possible even without grid dependency, through disciplined engineering and system design.
-                    </p>
-                    <div className="mt-4 flex items-center gap-2 text-[var(--color-sunrise)] font-semibold text-sm">
-                      <CheckCircle2 className="h-4 w-4" />
-                      <span>First-of-its-kind solution</span>
-                    </div>
-                  </div>
-                  
-                  <div className="gradient-border rounded-2xl p-5 sm:p-6 card-hover bg-white">
-                    <div className="flex items-center gap-2 mb-4">
-                      <div className="bg-gradient-to-br from-[var(--color-honey)] to-[var(--color-deep-orange)] p-2 rounded-lg shadow-lg">
-                        <MapPin className="h-5 w-5 text-white" />
+                      <p className="text-gray-700 leading-relaxed text-sm sm:text-base">
+                        {project.description}
+                      </p>
+                      <div className="mt-4 flex items-center gap-2 text-[var(--color-sunrise)] font-semibold text-sm">
+                        <CheckCircle2 className="h-4 w-4" />
+                        <span>{project.highlightLabel}</span>
                       </div>
-                      <h3 className="font-display font-black text-gray-900 text-base sm:text-lg">
-                        Howrah, <span className="text-[var(--color-sunrise)]">West Bengal</span>
-                      </h3>
                     </div>
-                    <p className="text-gray-700 leading-relaxed text-sm sm:text-base">
-                      We executed a <strong className="text-[var(--color-sunrise)]">138 kWp rooftop solar system</strong> on a non-penetrative dome structure, serving three separate meters with distinct load profiles, operational functions, and long cable distances—while addressing voltage-drop challenges and high-demand conditions. The project stands as a benchmark in precision rooftop engineering.
-                    </p>
-                    <div className="mt-4 flex items-center gap-2 text-[var(--color-sunrise)] font-semibold text-sm">
-                      <CheckCircle2 className="h-4 w-4" />
-                      <span>Precision engineering benchmark</span>
-                    </div>
-                  </div>
+                  ))}
                 </div>
                 
                 <div className="mt-6 text-center">
