@@ -3,15 +3,40 @@
 import Link from "next/link";
 import {
   LayoutPanelTop,
-  Linkedin,
-  Twitter,
-  Facebook,
   Mail,
   Phone,
   MapPin,
   Globe,
   ArrowRight,
 } from "lucide-react";
+
+function InstagramIcon({ className }: { className?: string }) {
+  return (
+    <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <rect x="2" y="2" width="20" height="20" rx="5" ry="5" />
+      <circle cx="12" cy="12" r="4" />
+      <circle cx="17.5" cy="6.5" r="0.5" fill="currentColor" stroke="none" />
+    </svg>
+  );
+}
+
+function FacebookIcon({ className }: { className?: string }) {
+  return (
+    <svg className={className} viewBox="0 0 24 24" fill="currentColor">
+      <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z" />
+    </svg>
+  );
+}
+
+function LinkedInIcon({ className }: { className?: string }) {
+  return (
+    <svg className={className} viewBox="0 0 24 24" fill="currentColor">
+      <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z" />
+      <rect x="2" y="9" width="4" height="12" />
+      <circle cx="4" cy="4" r="2" />
+    </svg>
+  );
+}
 import { useState, useEffect } from "react";
 
 const navItems = [
@@ -21,9 +46,24 @@ const navItems = [
 ];
 
 const socialLinks = [
-  { href: "#", icon: Twitter, label: "Twitter", color: "hover:bg-sky-500 hover:text-white hover:border-sky-500" },
-  { href: "#", icon: Facebook, label: "Facebook", color: "hover:bg-blue-600 hover:text-white hover:border-blue-600" },
-  { href: "#", icon: Linkedin, label: "LinkedIn", color: "hover:bg-[#0A66C2] hover:text-white hover:border-[#0A66C2]" },
+  {
+    href: "https://www.instagram.com/raquadrant_energy?igsh=MW9lYWZxdm5xYm8xOA%3D%3D&utm_source=qr",
+    icon: InstagramIcon,
+    label: "Instagram",
+    color: "hover:bg-gradient-to-br hover:from-purple-500 hover:via-pink-500 hover:to-orange-400 hover:text-white hover:border-pink-400",
+  },
+  {
+    href: "https://www.facebook.com/raquadrantenergy",
+    icon: FacebookIcon,
+    label: "Facebook",
+    color: "hover:bg-blue-600 hover:text-white hover:border-blue-600",
+  },
+  {
+    href: "https://www.linkedin.com/company/raquadrant-energy/",
+    icon: LinkedInIcon,
+    label: "LinkedIn",
+    color: "hover:bg-[#0A66C2] hover:text-white hover:border-[#0A66C2]",
+  },
 ];
 
 export default function Footer() {
