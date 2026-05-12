@@ -4,7 +4,7 @@ service firebase.storage {
     function isCmsPathName(name) {
       // Must match uploadImage(..., folder) in admin: home, about, services.
       return name.matches(
-        '^(hero-slides|about-hero-slides|intro-images|testimonials|partners|project-images|services-hero-slides|service-images|scope-images|leadership-photos)/.+'
+        '^(hero-slides|about-hero-slides|intro-images|testimonials|partners|project-images|services-hero-slides|service-images|scope-images|leadership-photos|blog-images)/.+'
       );
     }
 
