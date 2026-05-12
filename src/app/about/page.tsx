@@ -658,7 +658,7 @@ export default function AboutPage() {
                 </div>
 
                 {/* Vision card */}
-                <div className="rounded-2xl p-6 sm:p-8 border border-[var(--color-sunrise)]/20 bg-gradient-to-br from-[var(--color-sunrise)]/5 to-[var(--color-honey)]/5 backdrop-blur-sm relative overflow-hidden">
+                <div className="rounded-2xl p-6 sm:p-8 border border-[var(--color-sunrise)]/20 bg-white/5 relative overflow-hidden">
                   <div className="flex items-center gap-3 mb-4">
                     <div className="bg-gradient-to-br from-[var(--color-honey)] to-[var(--color-deep-orange)] p-2.5 rounded-xl shadow-lg">
                       <Eye className="h-5 w-5 text-white" />
