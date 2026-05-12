@@ -4,6 +4,13 @@
 
 @layer base {
   :root {
+    /* ── Brand palette ── */
+    --color-sunrise:    #f97316;   /* orange-500  */
+    --color-honey:      #f59e0b;   /* amber-500   */
+    --color-amber:      #d97706;   /* amber-600   */
+    --color-deep-orange:#ea580c;   /* orange-600  */
+    --color-warm-white: #fffbf5;
+
     --background: 0 0% 100%;
     --foreground: 20 14.3% 4.1%;
     --card: 0 0% 100%;

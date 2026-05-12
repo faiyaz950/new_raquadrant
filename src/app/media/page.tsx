@@ -121,7 +121,7 @@ export default function MediaPage() {
     <div className="min-h-screen bg-white">
 
       {/* ── Hero ── */}
-      <section className="relative py-20 sm:py-28 overflow-hidden bg-gradient-to-br from-[var(--color-sunrise)] via-[var(--color-honey)] to-amber-400">
+      <section className="relative py-20 sm:py-28 overflow-hidden" style={{ background: 'linear-gradient(135deg, #f97316 0%, #f59e0b 55%, #fbbf24 100%)' }}>
         {/* dot pattern */}
         <div
           className="absolute inset-0 opacity-[0.12]"
