@@ -1,6 +1,6 @@
 'use client';
 import React, { useState, useEffect, useMemo } from 'react';
-import { CheckCircle2, FileText, HardHat, LayoutPanelTop, ShieldCheck, Truck, Sun, Zap, TrendingUp, Award, ArrowRight, Sparkles, Clock, Star, Users, BarChart3, Shield, Leaf, Battery } from 'lucide-react';
+import { CheckCircle2, FileText, HardHat, LayoutPanelTop, ShieldCheck, Truck, Sun, Zap, TrendingUp, Award, ArrowRight, Sparkles, Clock, Users, BarChart3, Shield, Leaf, Battery } from 'lucide-react';
 import { useServices, useScopeOfWork, useExecutionProcess, useServicesHeroSlides, useServicesHeroContent } from '@/hooks/use-site-content';
 import { getIcon } from '@/lib/icon-map';
 
@@ -235,169 +235,127 @@ export default function ServicesPage() {
         }
       `}</style>
 
-      {/* Hero Section - Ultra Premium */}
-      <section className="relative min-h-[85vh] flex items-center justify-center overflow-hidden">
-        {/* Background Image Slider - Solar related */}
+      {/* Hero Section */}
+      <section className="relative min-h-[90vh] flex items-center justify-center overflow-hidden">
+
+        {/* Background image slideshow */}
         <div className="absolute inset-0">
           {heroImages.map((src, i) => (
             <div
               key={src}
-              className={`absolute inset-0 transition-opacity duration-300 ease-out ${
-                i === heroSlideIndex ? "opacity-100 z-[1]" : "opacity-0 z-0"
-              }`}
+              className={`absolute inset-0 transition-opacity duration-700 ease-in-out ${i === heroSlideIndex ? "opacity-100 z-[1]" : "opacity-0 z-0"}`}
               aria-hidden={i !== heroSlideIndex}
             >
-              <img
-                src={src}
-                alt=""
-                className="w-full h-full object-cover"
-                fetchPriority={i === 0 ? "high" : "low"}
-              />
+              <img src={src} alt="" className="w-full h-full object-cover" fetchPriority={i === 0 ? "high" : "low"} />
             </div>
           ))}
-          <div className="absolute inset-0 z-[2] bg-gradient-to-br from-orange-900/50 via-amber-900/45 to-yellow-900/40"></div>
-          <div className="absolute inset-0 z-[2] bg-gradient-to-b from-transparent via-orange-50/10 to-white/80"></div>
+          {/* Dark gradient overlay for readability */}
+          <div className="absolute inset-0 z-[2] bg-gradient-to-b from-black/65 via-black/55 to-black/70" />
+          {/* Brand colour wash at the bottom */}
+          <div className="absolute bottom-0 left-0 right-0 h-40 z-[3]" style={{ background: 'linear-gradient(to top, #f97316/20, transparent)' }} />
         </div>
+
         {/* Slider dots */}
-        <div className="absolute bottom-8 left-1/2 z-20 flex -translate-x-1/2 gap-2">
+        <div className="absolute bottom-10 left-1/2 z-20 flex -translate-x-1/2 gap-2">
           {heroImages.map((_, i) => (
             <button
               key={i}
               type="button"
               aria-label={`Slide ${i + 1}`}
               onClick={() => setHeroSlideIndex(i)}
-              className={`h-2 rounded-full transition-all duration-300 ${
-                i === heroSlideIndex
-                  ? "w-8 bg-white shadow-lg"
-                  : "w-2 bg-white/50 hover:bg-white/70"
-              }`}
+              className={`h-2 rounded-full transition-all duration-300 ${i === heroSlideIndex ? "w-8 bg-white shadow" : "w-2 bg-white/40 hover:bg-white/70"}`}
             />
           ))}
         </div>
-        
-        {/* Animated Gradient Background */}
-        <div className="absolute inset-0 bg-gradient-to-br from-orange-50/30 via-amber-50/30 to-yellow-50/30"></div>
-        
-        {/* Dynamic Floating Orbs */}
-        <div className="absolute inset-0 overflow-hidden">
-          <div className="absolute top-20 left-10 w-96 h-96 bg-gradient-to-br from-orange-300/40 to-amber-300/40 rounded-full mix-blend-multiply filter blur-3xl animate-float"></div>
-          <div className="absolute top-40 right-20 w-[500px] h-[500px] bg-gradient-to-br from-yellow-300/40 to-orange-400/40 rounded-full mix-blend-multiply filter blur-3xl animate-floatSlow" style={{animationDelay: '2s'}}></div>
-          <div className="absolute -bottom-20 left-1/2 w-[450px] h-[450px] bg-gradient-to-br from-amber-200/40 to-yellow-300/40 rounded-full mix-blend-multiply filter blur-3xl animate-float" style={{animationDelay: '4s'}}></div>
-          <div className="absolute top-1/2 right-1/4 w-72 h-72 bg-gradient-to-br from-orange-200/30 to-yellow-200/30 rounded-full mix-blend-multiply filter blur-3xl animate-floatSlow" style={{animationDelay: '3s'}}></div>
-        </div>
 
-        {/* Animated Grid Pattern */}
-        <div className="absolute inset-0 opacity-[0.03]" style={{
-          backgroundImage: `linear-gradient(#fb923c 1px, transparent 1px), linear-gradient(90deg, #fb923c 1px, transparent 1px)`,
-          backgroundSize: '50px 50px'
-        }}></div>
+        {/* Dot grid */}
+        <div className="absolute inset-0 z-[2] opacity-[0.04]" style={{ backgroundImage: 'radial-gradient(circle at 2px 2px, white 1.5px, transparent 0)', backgroundSize: '36px 36px' }} />
 
-        {/* Radial Gradient Overlay */}
-        <div className="absolute inset-0 bg-gradient-radial from-transparent via-white/5 to-white/20"></div>
+        <div className="container mx-auto px-4 text-center relative z-10 py-24">
 
-        <div className="container mx-auto px-4 text-center relative z-10 py-20">
-          {/* Top Badge */}
-          <div className={`inline-flex items-center gap-2 px-5 py-2.5 glass-effect rounded-full shadow-xl mb-6 ${isVisible ? 'animate-slideInDown' : 'opacity-0'} hover:scale-105 transition-transform duration-300`}>
-            <div className="relative">
-              <Sparkles className="h-4 w-4 text-orange-500 animate-pulse" />
-              <div className="absolute inset-0 animate-ping">
-                <Sparkles className="h-4 w-4 text-orange-400 opacity-75" />
-              </div>
-            </div>
-            <span className="font-headline text-xs font-bold bg-gradient-to-r from-orange-600 via-amber-600 to-yellow-600 bg-clip-text text-transparent">
-              {heroContent.badge}
-            </span>
-            <Star className="h-4 w-4 text-yellow-500 animate-pulse" />
+          {/* Badge */}
+          <div className={`inline-flex items-center gap-2 px-5 py-2 rounded-full border border-white/25 bg-white/10 backdrop-blur-sm mb-7 ${isVisible ? 'animate-slideInDown' : 'opacity-0'}`}>
+            <Sparkles className="h-3.5 w-3.5 text-amber-300" />
+            <span className="text-white/90 text-xs font-bold tracking-widest uppercase">{heroContent.badge}</span>
           </div>
-          
-          {/* Main Heading */}
-          <h1 className={`font-headline text-4xl md:text-5xl lg:text-6xl font-black mb-5 leading-tight ${isVisible ? 'animate-scaleIn' : 'opacity-0'}`} style={{animationDelay: '0.2s'}}>
-            <div className="relative inline-block">
-              <span className="absolute inset-0 blur-2xl bg-gradient-to-r from-orange-400 via-amber-400 to-yellow-400 opacity-50 animate-pulse"></span>
-              <span className="relative bg-gradient-to-r from-white via-orange-50 to-amber-50 bg-clip-text text-transparent animate-gradient drop-shadow-2xl">
-                {heroContent.titleLine1}
-              </span>
-            </div>
-            <br />
-            <div className="relative inline-block mt-2">
-              <span className="absolute inset-0 blur-2xl bg-gradient-to-r from-yellow-400 via-orange-400 to-amber-400 opacity-50 animate-pulse"></span>
-              <span className="relative bg-gradient-to-r from-amber-50 via-white to-yellow-50 bg-clip-text text-transparent animate-gradient drop-shadow-2xl" style={{animationDelay: '1s'}}>
+
+          {/* Heading */}
+          <h1 className={`font-headline text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black leading-tight mb-5 text-white drop-shadow-xl ${isVisible ? 'animate-scaleIn' : 'opacity-0'}`} style={{ animationDelay: '0.15s' }}>
+            {heroContent.titleLine1}{' '}
+            <span className="relative inline-block">
+              <span className="text-transparent bg-clip-text" style={{ backgroundImage: 'linear-gradient(90deg,#fbbf24,#f97316)' }}>
                 {heroContent.titleLine2}
               </span>
-            </div>
+              <span className="absolute -bottom-1 left-0 right-0 h-0.5 rounded-full opacity-60" style={{ background: 'linear-gradient(90deg,#fbbf24,#f97316)' }} />
+            </span>
           </h1>
-          
-          {/* Subheading */}
-          <p className={`font-headline mt-5 max-w-2xl mx-auto text-base md:text-lg text-white leading-relaxed font-medium ${isVisible ? 'animate-slideInUp' : 'opacity-0'} drop-shadow-lg`} style={{animationDelay: '0.4s'}}>
+
+          {/* Subtitle */}
+          <p className={`max-w-2xl mx-auto text-base sm:text-lg text-white/75 leading-relaxed mb-8 ${isVisible ? 'animate-slideInUp' : 'opacity-0'}`} style={{ animationDelay: '0.3s' }}>
             {heroContent.subtitle}
           </p>
 
-          {/* Feature Pills */}
-          <div className={`mt-6 flex flex-wrap gap-2 justify-center ${isVisible ? 'animate-fadeIn' : 'opacity-0'}`} style={{animationDelay: '0.6s'}}>
+          {/* Feature pills */}
+          <div className={`flex flex-wrap gap-2 justify-center mb-10 ${isVisible ? 'animate-fadeIn' : 'opacity-0'}`} style={{ animationDelay: '0.45s' }}>
             {[
               { icon: <Shield className="h-3.5 w-3.5" />, text: "25+ Year Warranty" },
-              { icon: <Leaf className="h-3.5 w-3.5" />, text: "90% Bill Reduction" },
-              { icon: <Award className="h-3.5 w-3.5" />, text: "MNRE Certified" },
-              { icon: <Battery className="h-3.5 w-3.5" />, text: "24/7 Monitoring" }
+              { icon: <Leaf className="h-3.5 w-3.5" />,   text: "90% Bill Reduction" },
+              { icon: <Award className="h-3.5 w-3.5" />,  text: "MNRE Certified" },
+              { icon: <Battery className="h-3.5 w-3.5" />, text: "24/7 Monitoring" },
             ].map((item, i) => (
-              <div key={i} className="glass-effect px-4 py-2 rounded-full flex items-center gap-1.5 shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-300 border border-orange-200/50">
-                <div className="text-orange-600">{item.icon}</div>
-                <span className="font-headline text-xs font-semibold text-gray-700">{item.text}</span>
+              <div key={i} className="flex items-center gap-1.5 px-4 py-2 rounded-full bg-white/10 border border-white/20 backdrop-blur-sm hover:bg-white/20 transition-colors duration-200">
+                <span className="text-amber-300">{item.icon}</span>
+                <span className="text-white text-xs font-semibold">{item.text}</span>
               </div>
             ))}
           </div>
 
           {/* CTA Buttons */}
-          <div className={`mt-8 flex flex-wrap gap-4 justify-center ${isVisible ? 'animate-slideInUp' : 'opacity-0'}`} style={{animationDelay: '0.8s'}}>
-            <button className="group relative px-8 py-3.5 bg-gradient-to-r from-orange-500 via-amber-500 to-yellow-500 text-white rounded-full font-headline font-bold text-sm shadow-xl hover:shadow-orange-500/50 transform hover:scale-110 transition-all duration-500 overflow-hidden">
-              <div className="absolute inset-0 bg-gradient-to-r from-yellow-500 via-orange-500 to-amber-500 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-              <div className="absolute inset-0 animate-shimmer"></div>
-              <span className="relative flex items-center gap-2">
-                Get Started Today
-                <ArrowRight className="h-4 w-4 group-hover:translate-x-2 transition-transform duration-300" />
-              </span>
-            </button>
-            <button className="group px-8 py-3.5 glass-effect text-orange-600 rounded-full font-headline font-bold text-sm shadow-xl hover:shadow-xl transform hover:scale-110 transition-all duration-500 border-2 border-orange-300/50 hover:border-orange-500">
-              <span className="flex items-center gap-2">
-                Explore Solutions
-                <Sparkles className="h-4 w-4 group-hover:rotate-180 transition-transform duration-500" />
-              </span>
-            </button>
+          <div className={`flex flex-wrap gap-4 justify-center mb-14 ${isVisible ? 'animate-slideInUp' : 'opacity-0'}`} style={{ animationDelay: '0.6s' }}>
+            <a
+              href="/contact"
+              className="group inline-flex items-center gap-2 px-8 py-3.5 rounded-full font-headline font-bold text-sm text-white shadow-xl shadow-orange-500/30 hover:shadow-orange-500/50 hover:scale-105 transition-all duration-300"
+              style={{ background: 'linear-gradient(135deg,#f97316,#f59e0b)' }}
+            >
+              Get Started Today
+              <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform duration-200" />
+            </a>
+            <a
+              href="#services"
+              className="group inline-flex items-center gap-2 px-8 py-3.5 rounded-full font-headline font-bold text-sm text-white border-2 border-white/30 bg-white/10 backdrop-blur-sm hover:bg-white/20 hover:border-white/60 hover:scale-105 transition-all duration-300"
+            >
+              Explore Solutions
+              <Sparkles className="h-4 w-4 group-hover:rotate-12 transition-transform duration-300" />
+            </a>
           </div>
 
-          {/* Stats Bar - dark background */}
-          <div className={`mt-12 grid grid-cols-2 md:grid-cols-4 gap-4 max-w-4xl mx-auto ${isVisible ? 'animate-fadeIn' : 'opacity-0'}`} style={{animationDelay: '1s'}}>
+          {/* Stats */}
+          <div className={`grid grid-cols-2 md:grid-cols-4 gap-4 max-w-3xl mx-auto ${isVisible ? 'animate-fadeIn' : 'opacity-0'}`} style={{ animationDelay: '0.75s' }}>
             {[
-              { value: "500+", label: "Projects", icon: <BarChart3 className="h-6 w-6" /> },
-              { value: "1000+", label: "Happy Clients", icon: <Users className="h-6 w-6" /> },
-              { value: "50MW+", label: "Installed", icon: <Zap className="h-6 w-6" /> },
-              { value: "10+", label: "Years Exp", icon: <Award className="h-6 w-6" /> }
+              { value: "500+",  label: "Projects",     icon: <BarChart3 className="h-5 w-5" /> },
+              { value: "1000+", label: "Happy Clients", icon: <Users className="h-5 w-5" /> },
+              { value: "50MW+", label: "Installed",    icon: <Zap className="h-5 w-5" /> },
+              { value: "10+",   label: "Years Exp",    icon: <Award className="h-5 w-5" /> },
             ].map((stat, i) => (
-              <div key={i} className="rounded-2xl p-4 shadow-xl hover:shadow-2xl transform hover:scale-105 transition-all duration-300 border border-gray-600/50 hover:border-orange-500/50 hover-lift group bg-gray-900/95 backdrop-blur-md">
-                <div className="text-amber-400 mb-2 inline-block group-hover:scale-110 transition-transform duration-300">
-                  {stat.icon}
-                </div>
-                <div className="font-headline text-2xl font-black text-white mb-0.5">
-                  {stat.value}
-                </div>
-                <div className="font-headline text-xs font-semibold text-gray-300">
-                  {stat.label}
-                </div>
+              <div key={i} className="group rounded-2xl p-4 border border-white/15 bg-white/10 backdrop-blur-md hover:bg-white/15 hover:border-amber-400/40 transition-all duration-300 text-center">
+                <div className="text-amber-300 mb-1.5 inline-block group-hover:scale-110 transition-transform duration-200">{stat.icon}</div>
+                <div className="font-headline text-2xl font-black text-white">{stat.value}</div>
+                <div className="text-xs font-semibold text-white/60 uppercase tracking-wide mt-0.5">{stat.label}</div>
               </div>
             ))}
           </div>
         </div>
 
-        {/* Scroll Indicator */}
-        <div className="absolute bottom-6 left-1/2 transform -translate-x-1/2 animate-bounce">
-          <div className="w-6 h-9 border-2 border-orange-400 rounded-full flex justify-center">
-            <div className="w-1 h-2 bg-orange-500 rounded-full mt-1.5 animate-pulse"></div>
+        {/* Scroll indicator */}
+        <div className="absolute bottom-6 left-1/2 -translate-x-1/2 z-20 animate-bounce">
+          <div className="w-6 h-9 border-2 border-white/40 rounded-full flex justify-center">
+            <div className="w-1 h-2 bg-white/60 rounded-full mt-1.5 animate-pulse" />
           </div>
         </div>
       </section>
 
       {/* Expertise Section */}
-      <section className="py-16 bg-white relative overflow-hidden">
+      <section id="services" className="py-16 bg-white relative overflow-hidden">
         {/* Background Pattern */}
         <div className="absolute inset-0 opacity-[0.02]">
           <div className="absolute inset-0" style={{
