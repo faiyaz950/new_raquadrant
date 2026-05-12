@@ -602,18 +602,23 @@ export default function AboutPage() {
         {/* Purpose & Vision */}
         <section
           ref={purposeReveal.ref}
-          className="py-12 sm:py-16 lg:py-20 bg-gradient-to-br from-[var(--color-sunrise)] via-[var(--color-honey)] to-[var(--color-deep-orange)] relative overflow-hidden"
+          className="py-16 sm:py-20 lg:py-24 bg-[#0f1117] relative overflow-hidden"
         >
-          <div className="absolute inset-0 opacity-10" style={{ 
-            backgroundImage: "radial-gradient(circle at 3px 3px, white 2px, transparent 0)", 
-            backgroundSize: "48px 48px" 
+          {/* Subtle warm glow top-left */}
+          <div className="absolute -top-24 -left-24 w-96 h-96 bg-[var(--color-sunrise)] opacity-10 rounded-full blur-3xl pointer-events-none" />
+          {/* Subtle warm glow bottom-right */}
+          <div className="absolute -bottom-24 -right-16 w-80 h-80 bg-[var(--color-honey)] opacity-10 rounded-full blur-3xl pointer-events-none" />
+          {/* Fine dot grid */}
+          <div className="absolute inset-0 opacity-[0.04]" style={{
+            backgroundImage: "radial-gradient(circle at 2px 2px, white 1.5px, transparent 0)",
+            backgroundSize: "36px 36px"
           }} />
-          
-          <div className="absolute top-8 left-8 opacity-20">
-            <Star className="h-12 w-12 text-white floating-icon" />
+
+          <div className="absolute top-10 left-10 opacity-10">
+            <Star className="h-10 w-10 text-[var(--color-honey)] floating-icon" />
           </div>
-          <div className="absolute bottom-8 right-8 opacity-20">
-            <Compass className="h-14 w-14 text-white rotate-slow" />
+          <div className="absolute bottom-10 right-10 opacity-10">
+            <Compass className="h-12 w-12 text-[var(--color-sunrise)] rotate-slow" />
           </div>
 
           <div className="container mx-auto px-4 relative z-10">
@@ -623,39 +628,44 @@ export default function AboutPage() {
                   purposeReveal.isInView ? "opacity-100 translate-y-0" : "opacity-0 translate-y-12"
                 }`}
               >
-                <div className="flex items-center gap-2 mb-3">
-                  <div className="h-0.5 w-12 bg-white rounded-full" />
-                  <span className="text-white font-bold text-xs tracking-widest uppercase">
+                {/* Label */}
+                <div className="flex items-center gap-3 mb-4">
+                  <div className="h-px w-10 bg-[var(--color-sunrise)]" />
+                  <span className="text-[var(--color-sunrise)] font-bold text-xs tracking-widest uppercase">
                     Our Purpose
                   </span>
                 </div>
-                
-                <h2 className="text-2xl sm:text-3xl md:text-4xl font-display font-black text-white mb-5">
-                  One Guiding Principle
+
+                <h2 className="text-3xl sm:text-4xl md:text-5xl font-display font-black text-white mb-8 leading-tight">
+                  One Guiding <span className="text-[var(--color-honey)]">Principle</span>
                 </h2>
-                
-                <div className="bg-white/10 backdrop-blur-lg rounded-2xl p-5 sm:p-6 md:p-8 border-2 border-white/20 shadow-2xl mb-6">
-                  <div className="flex items-start gap-3 mb-4">
-                    <div className="bg-white/20 p-2 rounded-full">
-                      <Target className="h-6 w-6 text-white" />
+
+                {/* Mission card */}
+                <div className="rounded-2xl p-6 sm:p-8 mb-5 border border-white/10 bg-white/5 backdrop-blur-sm shadow-xl relative overflow-hidden">
+                  {/* left accent bar */}
+                  <div className="absolute left-0 top-0 bottom-0 w-1 rounded-l-2xl bg-gradient-to-b from-[var(--color-sunrise)] to-[var(--color-honey)]" />
+                  <div className="flex items-start gap-4 mb-4 pl-4">
+                    <div className="bg-gradient-to-br from-[var(--color-sunrise)] to-[var(--color-honey)] p-2.5 rounded-xl shadow-lg shrink-0 mt-0.5">
+                      <Target className="h-5 w-5 text-white" />
                     </div>
-                    <blockquote className="text-base sm:text-lg md:text-xl text-white font-display font-semibold leading-relaxed flex-1">
+                    <blockquote className="text-base sm:text-lg md:text-xl text-white/90 font-display font-semibold leading-relaxed">
                       &ldquo;To deliver high-quality, reliable, and innovative solar solutions that customers can trust—executed with precision, transparency, and long-term commitment.&rdquo;
                     </blockquote>
                   </div>
-                  <p className="text-white/90 text-sm sm:text-base pl-12">
+                  <p className="text-white/50 text-sm sm:text-base pl-4 border-t border-white/10 pt-4">
                     This philosophy defines every decision we make—from engineering design and component selection to execution standards and post-commissioning support.
                   </p>
                 </div>
-                
-                <div className="glass-morphism rounded-2xl p-5 sm:p-6">
-                  <div className="flex items-center gap-3 mb-3">
-                    <div className="bg-white/20 p-2 rounded-full">
-                      <Eye className="h-6 w-6 text-white" />
+
+                {/* Vision card */}
+                <div className="rounded-2xl p-6 sm:p-8 border border-[var(--color-sunrise)]/20 bg-gradient-to-br from-[var(--color-sunrise)]/5 to-[var(--color-honey)]/5 backdrop-blur-sm relative overflow-hidden">
+                  <div className="flex items-center gap-3 mb-4">
+                    <div className="bg-gradient-to-br from-[var(--color-honey)] to-[var(--color-deep-orange)] p-2.5 rounded-xl shadow-lg">
+                      <Eye className="h-5 w-5 text-white" />
                     </div>
-                    <span className="text-xs font-bold tracking-widest uppercase text-white/90">Vision</span>
+                    <span className="text-[var(--color-honey)] text-xs font-bold tracking-widest uppercase">Vision</span>
                   </div>
-                  <p className="text-base sm:text-lg md:text-xl font-display font-bold text-white leading-relaxed">
+                  <p className="text-base sm:text-lg md:text-xl font-display font-bold text-white/90 leading-relaxed">
                     &ldquo;To redefine India&apos;s solar ecosystem with bold ideas, relentless execution, and solutions that inspire trust and transform lives.&rdquo;
                   </p>
                 </div>
