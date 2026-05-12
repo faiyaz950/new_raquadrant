@@ -792,29 +792,29 @@ export default function ServicesPage() {
       </section>
 
       {/* CTA Section */}
-      <section className="relative py-20 overflow-hidden bg-[#0a0f1e]">
-        {/* Subtle glow blobs */}
-        <div className="absolute -top-32 -left-32 w-[500px] h-[500px] bg-emerald-500/10 rounded-full blur-3xl pointer-events-none" />
-        <div className="absolute -bottom-32 -right-32 w-[500px] h-[500px] bg-teal-400/10 rounded-full blur-3xl pointer-events-none" />
+      <section className="relative py-20 overflow-hidden" style={{ background: 'linear-gradient(135deg, #f97316 0%, #f59e0b 55%, #fbbf24 100%)' }}>
         {/* Dot grid */}
-        <div className="absolute inset-0 opacity-[0.035]" style={{
+        <div className="absolute inset-0 opacity-[0.12]" style={{
           backgroundImage: `radial-gradient(circle at 2px 2px, white 1.5px, transparent 0)`,
-          backgroundSize: '36px 36px'
+          backgroundSize: '32px 32px'
         }} />
+        {/* Light orbs */}
+        <div className="absolute -top-24 -right-24 w-96 h-96 bg-white/20 rounded-full blur-3xl pointer-events-none" />
+        <div className="absolute -bottom-24 -left-24 w-96 h-96 bg-amber-200/30 rounded-full blur-3xl pointer-events-none" />
 
         <div className="container mx-auto px-4 text-center relative z-10">
           {/* Icon */}
-          <div className="inline-flex p-4 rounded-2xl mb-7 bg-gradient-to-br from-emerald-500 to-teal-500 shadow-lg shadow-emerald-500/30">
+          <div className="inline-flex p-4 rounded-2xl mb-7 bg-white/20 border border-white/30 backdrop-blur-sm shadow-lg">
             <Zap className="h-10 w-10 text-white" />
           </div>
 
           {/* Heading */}
-          <h2 className="font-headline text-3xl md:text-4xl lg:text-5xl font-black text-white mb-4 leading-tight">
-            Ready to Go <span className="text-emerald-400">Solar?</span>
+          <h2 className="font-headline text-3xl md:text-4xl lg:text-5xl font-black text-white mb-4 leading-tight drop-shadow-sm">
+            Ready to Go Solar?
           </h2>
 
           {/* Subheading */}
-          <p className="font-headline text-base md:text-lg text-white/60 max-w-2xl mx-auto mb-8 leading-relaxed font-medium">
+          <p className="font-headline text-base md:text-lg text-white/85 max-w-2xl mx-auto mb-8 leading-relaxed font-medium">
             Join thousands of satisfied customers who have made the switch to clean, renewable energy
           </p>
 
@@ -825,9 +825,9 @@ export default function ServicesPage() {
               { icon: <Award className="h-4 w-4" />, text: "MNRE Certified" },
               { icon: <Users className="h-4 w-4" />, text: "Expert Team" }
             ].map((item, i) => (
-              <div key={i} className="flex items-center gap-2 px-4 py-2 rounded-full border border-white/10 bg-white/5 backdrop-blur-sm hover:border-emerald-500/40 hover:bg-emerald-500/5 transition-all duration-300">
-                <div className="text-emerald-400">{item.icon}</div>
-                <span className="font-headline text-white/80 text-xs font-bold">{item.text}</span>
+              <div key={i} className="flex items-center gap-2 px-4 py-2 rounded-full bg-white/20 border border-white/30 backdrop-blur-sm hover:bg-white/30 transition-all duration-200">
+                <div className="text-white">{item.icon}</div>
+                <span className="font-headline text-white text-xs font-bold">{item.text}</span>
               </div>
             ))}
           </div>
@@ -836,14 +836,14 @@ export default function ServicesPage() {
           <div className="flex flex-wrap gap-4 justify-center mb-14">
             <a
               href="/contact"
-              className="group relative inline-flex items-center gap-2 px-8 py-4 bg-gradient-to-r from-emerald-500 to-teal-500 text-white rounded-full font-headline font-black text-sm shadow-xl shadow-emerald-500/30 hover:shadow-emerald-500/50 hover:scale-105 transition-all duration-300"
+              className="group inline-flex items-center gap-2 px-8 py-4 bg-white text-orange-600 rounded-full font-headline font-black text-sm shadow-xl shadow-orange-900/20 hover:shadow-orange-900/30 hover:scale-105 transition-all duration-300"
             >
               Get Your Free Consultation
               <ArrowRight className="h-5 w-5 group-hover:translate-x-1 transition-transform duration-300" />
             </a>
             <a
               href="/about"
-              className="group inline-flex items-center gap-2 px-8 py-4 rounded-full font-headline font-black text-sm border border-white/20 text-white bg-white/5 backdrop-blur-sm hover:bg-white/10 hover:border-white/40 hover:scale-105 transition-all duration-300"
+              className="group inline-flex items-center gap-2 px-8 py-4 rounded-full font-headline font-black text-sm border-2 border-white/50 text-white hover:bg-white/20 hover:border-white hover:scale-105 transition-all duration-300"
             >
               View Our Projects
               <Sparkles className="h-5 w-5 group-hover:rotate-12 transition-transform duration-300" />
@@ -854,18 +854,18 @@ export default function ServicesPage() {
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-4xl mx-auto">
             {[
               { label: "Projects Completed", value: "500+", icon: <BarChart3 className="h-6 w-6" /> },
-              { label: "Happy Customers", value: "1000+", icon: <Users className="h-6 w-6" /> },
-              { label: "MW Installed", value: "50+", icon: <Zap className="h-6 w-6" /> },
-              { label: "Years Experience", value: "10+", icon: <Award className="h-6 w-6" /> }
+              { label: "Happy Customers",    value: "1000+", icon: <Users className="h-6 w-6" /> },
+              { label: "MW Installed",       value: "50+",   icon: <Zap className="h-6 w-6" /> },
+              { label: "Years Experience",   value: "10+",   icon: <Award className="h-6 w-6" /> }
             ].map((stat, i) => (
-              <div key={i} className="group rounded-2xl p-5 border border-white/10 bg-white/5 backdrop-blur-sm hover:border-emerald-500/30 hover:bg-emerald-500/5 transition-all duration-300 text-center">
-                <div className="text-emerald-400 mb-2 inline-block group-hover:scale-110 transition-transform duration-300">
+              <div key={i} className="group rounded-2xl p-5 bg-white/15 border border-white/25 backdrop-blur-sm hover:bg-white/25 transition-all duration-300 text-center">
+                <div className="text-white mb-2 inline-block group-hover:scale-110 transition-transform duration-300">
                   {stat.icon}
                 </div>
                 <div className="font-headline text-2xl md:text-3xl font-black text-white mb-1">
                   {stat.value}
                 </div>
-                <div className="font-headline text-xs font-semibold text-white/50 uppercase tracking-wider">
+                <div className="font-headline text-xs font-semibold text-white/75 uppercase tracking-wider">
                   {stat.label}
                 </div>
               </div>
