@@ -310,25 +310,6 @@ export default function ServicesPage() {
             ))}
           </div>
 
-          {/* CTA Buttons */}
-          <div className={`flex flex-wrap gap-4 justify-center mb-14 ${isVisible ? 'animate-slideInUp' : 'opacity-0'}`} style={{ animationDelay: '0.6s' }}>
-            <a
-              href="/contact"
-              className="group inline-flex items-center gap-2 px-8 py-3.5 rounded-full font-headline font-bold text-sm text-white shadow-xl shadow-orange-500/30 hover:shadow-orange-500/50 hover:scale-105 transition-all duration-300"
-              style={{ background: 'linear-gradient(135deg,#f97316,#f59e0b)' }}
-            >
-              Get Started Today
-              <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform duration-200" />
-            </a>
-            <a
-              href="#services"
-              className="group inline-flex items-center gap-2 px-8 py-3.5 rounded-full font-headline font-bold text-sm text-white border-2 border-white/30 bg-white/10 backdrop-blur-sm hover:bg-white/20 hover:border-white/60 hover:scale-105 transition-all duration-300"
-            >
-              Explore Solutions
-              <Sparkles className="h-4 w-4 group-hover:rotate-12 transition-transform duration-300" />
-            </a>
-          </div>
-
           {/* Stats */}
           <div className={`grid grid-cols-2 md:grid-cols-4 gap-4 max-w-3xl mx-auto ${isVisible ? 'animate-fadeIn' : 'opacity-0'}`} style={{ animationDelay: '0.75s' }}>
             {[
@@ -830,24 +811,6 @@ export default function ServicesPage() {
                 <span className="font-headline text-white text-xs font-bold">{item.text}</span>
               </div>
             ))}
-          </div>
-
-          {/* CTA Buttons */}
-          <div className="flex flex-wrap gap-4 justify-center mb-14">
-            <a
-              href="/contact"
-              className="group inline-flex items-center gap-2 px-8 py-4 bg-white text-orange-600 rounded-full font-headline font-black text-sm shadow-xl shadow-orange-900/20 hover:shadow-orange-900/30 hover:scale-105 transition-all duration-300"
-            >
-              Get Your Free Consultation
-              <ArrowRight className="h-5 w-5 group-hover:translate-x-1 transition-transform duration-300" />
-            </a>
-            <a
-              href="/about"
-              className="group inline-flex items-center gap-2 px-8 py-4 rounded-full font-headline font-black text-sm border-2 border-white/50 text-white hover:bg-white/20 hover:border-white hover:scale-105 transition-all duration-300"
-            >
-              View Our Projects
-              <Sparkles className="h-5 w-5 group-hover:rotate-12 transition-transform duration-300" />
-            </a>
           </div>
 
           {/* Stats Grid */}
