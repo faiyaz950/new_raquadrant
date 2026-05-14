@@ -784,7 +784,7 @@ export default function ServicesPage() {
           </p>
 
           {/* Feature Pills */}
-          <div className="flex flex-wrap gap-3 justify-center mb-10">
+          <div className="flex flex-wrap gap-3 justify-center pb-2">
             {[
               { icon: <Shield className="h-4 w-4" />, text: "100% Safe & Secure" },
               { icon: <Award className="h-4 w-4" />, text: "MNRE Certified" },
@@ -793,28 +793,6 @@ export default function ServicesPage() {
               <div key={i} className="flex items-center gap-2 px-4 py-2 rounded-full bg-white/20 border border-white/30 backdrop-blur-sm hover:bg-white/30 transition-all duration-200">
                 <div className="text-white">{item.icon}</div>
                 <span className="font-headline text-white text-xs font-bold">{item.text}</span>
-              </div>
-            ))}
-          </div>
-
-          {/* Stats Grid */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-4xl mx-auto">
-            {[
-              { label: "Projects Completed", value: "500+", icon: <BarChart3 className="h-6 w-6" /> },
-              { label: "Happy Customers",    value: "1000+", icon: <Users className="h-6 w-6" /> },
-              { label: "MW Installed",       value: "50+",   icon: <Zap className="h-6 w-6" /> },
-              { label: "Years Experience",   value: "10+",   icon: <Award className="h-6 w-6" /> }
-            ].map((stat, i) => (
-              <div key={i} className="group rounded-2xl p-5 bg-white/15 border border-white/25 backdrop-blur-sm hover:bg-white/25 transition-all duration-300 text-center">
-                <div className="text-white mb-2 inline-block group-hover:scale-110 transition-transform duration-300">
-                  {stat.icon}
-                </div>
-                <div className="font-headline text-2xl md:text-3xl font-black text-white mb-1">
-                  {stat.value}
-                </div>
-                <div className="font-headline text-xs font-semibold text-white/75 uppercase tracking-wider">
-                  {stat.label}
-                </div>
               </div>
             ))}
           </div>
