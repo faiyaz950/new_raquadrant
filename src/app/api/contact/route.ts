@@ -1,8 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
 import { contactSchema } from "@/lib/contact-form-schema";
 
-/** Resend API key (server-only). If this repo is public, rotate the key in Resend after any leak. */
+/** Resend API key (server-only). Rotate in Resend if this file is ever exposed. */
 const RESEND_API_KEY = "re_XnibdfEp_NBPNioX7cDsgL6XgKk6a2tqQ";
+
+const RESEND_API_URL = "https://api.resend.com/emails";
 
 export async function POST(req: NextRequest) {
   try {
@@ -15,15 +17,7 @@ export async function POST(req: NextRequest) {
 
     const { name, email, phone, subject, message } = parsed.data;
 
-    const { Resend } = await import("resend");
-    const resend = new Resend(RESEND_API_KEY.trim());
-
-    await resend.emails.send({
-      from: "RaQuadrant Contact Form <onboarding@resend.dev>",
-      to: "faiyazmujtaba587@gmail.com",
-      replyTo: email,
-      subject: `New Contact Inquiry: ${subject}`,
-      html: `
+    const html = `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; background: #ffffff;">
           <!-- Header -->
           <div style="background: linear-gradient(135deg, #f97316 0%, #f59e0b 100%); padding: 32px 24px; border-radius: 8px 8px 0 0;">
@@ -76,8 +70,28 @@ export async function POST(req: NextRequest) {
             </p>
           </div>
         </div>
-      `,
+      `;
+
+    const res = await fetch(RESEND_API_URL, {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${RESEND_API_KEY.trim()}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        from: "RaQuadrant Contact Form <onboarding@resend.dev>",
+        to: ["faiyazmujtaba587@gmail.com"],
+        reply_to: email,
+        subject: `New Contact Inquiry: ${subject}`,
+        html,
+      }),
     });
+
+    if (!res.ok) {
+      const errText = await res.text();
+      console.error("Resend API error:", res.status, errText);
+      return NextResponse.json({ error: "Failed to send email" }, { status: 500 });
+    }
 
     return NextResponse.json({ success: true });
   } catch (error) {
