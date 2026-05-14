@@ -1,23 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
-import { Resend } from "resend";
 import { contactSchema } from "@/lib/contact-form-schema";
 
-function getResendClient(): Resend | null {
-  const key = process.env.RESEND_API_KEY?.trim();
-  if (!key) return null;
-  return new Resend(key);
-}
+/** Resend API key (server-only). If this repo is public, rotate the key in Resend after any leak. */
+const RESEND_API_KEY = "re_XnibdfEp_NBPNioX7cDsgL6XgKk6a2tqQ";
 
 export async function POST(req: NextRequest) {
   try {
-    const resend = getResendClient();
-    if (!resend) {
-      return NextResponse.json(
-        { error: "Email service is not configured. Set RESEND_API_KEY on the server." },
-        { status: 503 }
-      );
-    }
-
     const body = await req.json();
     const parsed = contactSchema.safeParse(body);
 
@@ -26,6 +14,9 @@ export async function POST(req: NextRequest) {
     }
 
     const { name, email, phone, subject, message } = parsed.data;
+
+    const { Resend } = await import("resend");
+    const resend = new Resend(RESEND_API_KEY.trim());
 
     await resend.emails.send({
       from: "RaQuadrant Contact Form <onboarding@resend.dev>",
