@@ -68,12 +68,14 @@ export function ContactForm() {
     setErrors(undefined);
     setPending(true);
     try {
+      let savedToFirestore = false;
       const fb = getFirebaseClient();
       if (fb?.db) {
         await addDocument(COLLECTIONS.CONTACT_SUBMISSIONS, {
           ...parsed.data,
           createdAt: new Date().toISOString(),
         });
+        savedToFirestore = true;
       } else {
         const result = await handleContactForm(initialState, formData);
         setFields(result.fields);
@@ -81,12 +83,30 @@ export function ContactForm() {
         if (result.errors) return;
       }
 
-      // Send email notification
-      await fetch("/api/contact", {
+      // Send email notification (must check response — Resend can return 4xx without throwing)
+      const mailRes = await fetch("/api/contact", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(parsed.data),
       });
+      let mailBody: { error?: string } = {};
+      try {
+        mailBody = (await mailRes.json()) as { error?: string };
+      } catch {
+        /* ignore */
+      }
+
+      if (!mailRes.ok) {
+        const base =
+          mailBody.error ||
+          `Server returned ${mailRes.status}. With onboarding@resend.dev, Resend often only delivers to your verified addresses until you add a domain — check Resend → Emails for errors and Gmail spam.`;
+        toast({
+          title: "Email notification failed",
+          description: savedToFirestore ? `${base} Your enquiry is still saved in our system.` : base,
+          variant: "destructive",
+        });
+        return;
+      }
 
       toast({ title: "Message Sent!", description: "Thank you for your inquiry! We will get back to you shortly." });
       form.reset();

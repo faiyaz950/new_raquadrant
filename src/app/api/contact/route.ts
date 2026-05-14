@@ -1,13 +1,19 @@
 import { NextRequest, NextResponse } from "next/server";
 import { contactSchema } from "@/lib/contact-form-schema";
 
-/** Resend API key (server-only). Rotate in Resend if this file is ever exposed. */
-const RESEND_API_KEY = "re_XnibdfEp_NBPNioX7cDsgL6XgKk6a2tqQ";
-
 const RESEND_API_URL = "https://api.resend.com/emails";
 
 export async function POST(req: NextRequest) {
   try {
+    const resendKey = process.env.RESEND_API_KEY?.trim();
+    if (!resendKey) {
+      console.error("RESEND_API_KEY is not set");
+      return NextResponse.json(
+        { error: "Email service is not configured." },
+        { status: 503 }
+      );
+    }
+
     const body = await req.json();
     const parsed = contactSchema.safeParse(body);
 
@@ -75,22 +81,31 @@ export async function POST(req: NextRequest) {
     const res = await fetch(RESEND_API_URL, {
       method: "POST",
       headers: {
-        Authorization: `Bearer ${RESEND_API_KEY.trim()}`,
+        Authorization: `Bearer ${resendKey}`,
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
         from: "RaQuadrant Contact Form <onboarding@resend.dev>",
         to: ["faiyazmujtaba587@gmail.com"],
-        reply_to: email,
+        reply_to: [email],
         subject: `New Contact Inquiry: ${subject}`,
         html,
       }),
     });
 
     if (!res.ok) {
-      const errText = await res.text();
-      console.error("Resend API error:", res.status, errText);
-      return NextResponse.json({ error: "Failed to send email" }, { status: 500 });
+      let detail = await res.text();
+      try {
+        const j = JSON.parse(detail) as { message?: string };
+        if (j.message) detail = j.message;
+      } catch {
+        /* keep raw */
+      }
+      console.error("Resend API error:", res.status, detail);
+      return NextResponse.json(
+        { error: detail || "Resend rejected the request", status: res.status },
+        { status: 502 }
+      );
     }
 
     return NextResponse.json({ success: true });
