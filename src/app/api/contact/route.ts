@@ -29,7 +29,7 @@ export async function POST(req: NextRequest) {
 
     await resend.emails.send({
       from: "RaQuadrant Contact Form <onboarding@resend.dev>",
-      to: "info@raquadrantenergy.com",
+      to: "faiyazmujtaba587@gmail.com",
       replyTo: email,
       subject: `New Contact Inquiry: ${subject}`,
       html: `
