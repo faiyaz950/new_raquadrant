@@ -1288,38 +1288,6 @@ export default function HomePage() {
               <div className="absolute inset-0 bg-orange-100/30 transform scale-x-0 group-hover:scale-x-100 transition-transform origin-left" />
             </Link>
           </Button>
-
-          <div
-            className={`mt-10 sm:mt-12 grid gap-4 sm:gap-6 max-w-4xl mx-auto ${
-              homeCta.stats.length <= 1
-                ? 'grid-cols-1 max-w-xs mx-auto'
-                : homeCta.stats.length === 2
-                  ? 'grid-cols-2'
-                  : homeCta.stats.length === 3
-                    ? 'grid-cols-2 md:grid-cols-3'
-                    : 'grid-cols-2 md:grid-cols-4'
-            }`}
-          >
-            {homeCta.stats.map((stat, i) => (
-              <div key={`${stat.label}-${i}`} className="text-center transform hover:scale-110 transition-transform duration-300 group/stat">
-                <div className="relative">
-                  <div className="absolute inset-0 bg-white/20 rounded-3xl blur-lg animate-pulse" />
-                  <div className="relative glass-effect-dark rounded-2xl sm:rounded-3xl p-4 sm:p-5 shadow-2xl border-2 border-white/30 backdrop-blur-xl">
-                    <div className="text-white mb-2 sm:mb-3 inline-block group-hover/stat:scale-110 group-hover/stat:rotate-12 transition-all duration-300">
-                      {getIcon(stat.iconName, 'h-6 w-6 sm:h-7 sm:w-7 lg:h-8 lg:w-8')}
-                    </div>
-                    <div className="text-3xl sm:text-4xl lg:text-5xl font-black text-white mb-1 sm:mb-2 drop-shadow-lg text-shadow-glow">
-                      {stat.value}
-                    </div>
-                    <div className="text-xs sm:text-sm font-bold text-white/90 uppercase tracking-wider">
-                      {stat.label}
-                    </div>
-                    <div className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-white/50 to-white/70 transform scale-x-0 group-hover/stat:scale-x-100 transition-transform duration-500 rounded-b-2xl" />
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
         </div>
       </section>
     </div>
