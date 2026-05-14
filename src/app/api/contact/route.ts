@@ -1,19 +1,13 @@
 import { NextRequest, NextResponse } from "next/server";
 import { contactSchema } from "@/lib/contact-form-schema";
 
+/** Resend API key (server-only). Rotate in Resend if this file is ever exposed. */
+const RESEND_API_KEY = "re_TAMcV9SM_FWsnYTWb1Q4rzfx7JKpfr58m";
+
 const RESEND_API_URL = "https://api.resend.com/emails";
 
 export async function POST(req: NextRequest) {
   try {
-    const resendKey = process.env.RESEND_API_KEY?.trim();
-    if (!resendKey) {
-      console.error("RESEND_API_KEY is not set");
-      return NextResponse.json(
-        { error: "Email service is not configured." },
-        { status: 503 }
-      );
-    }
-
     const body = await req.json();
     const parsed = contactSchema.safeParse(body);
 
@@ -81,12 +75,12 @@ export async function POST(req: NextRequest) {
     const res = await fetch(RESEND_API_URL, {
       method: "POST",
       headers: {
-        Authorization: `Bearer ${resendKey}`,
+        Authorization: `Bearer ${RESEND_API_KEY.trim()}`,
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
         from: "RaQuadrant Contact Form <onboarding@resend.dev>",
-        to: ["faiyazmujtaba587@gmail.com"],
+        to: ["faiyazmujtaba72@gmail.com"],
         reply_to: [email],
         subject: `New Contact Inquiry: ${subject}`,
         html,
