@@ -4,12 +4,9 @@ import Image from "next/image";
 import Link from "next/link";
 import { PlaceHolderImages } from "@/lib/placeholder-images";
 import {
-  Award,
   Users,
   Eye,
   Target,
-  Zap,
-  TrendingUp,
   Sparkles,
   Wrench,
   Factory,
@@ -25,7 +22,7 @@ import {
 } from "lucide-react";
 import { useEffect, useState, useMemo } from "react";
 import { useScrollReveal } from "@/hooks/use-scroll-reveal";
-import { useAboutStats, useWhatSetsApart, useLeadership, useAboutHeroSlides, useAboutHeroContent, useProvenProjects } from "@/hooks/use-site-content";
+import { useWhatSetsApart, useLeadership, useAboutHeroSlides, useAboutHeroContent, useProvenProjects } from "@/hooks/use-site-content";
 import { getIconComponent } from "@/lib/icon-map";
 
 const FALLBACK_HERO_IMAGES = [
@@ -47,13 +44,6 @@ const LEADER_FALLBACK_IMAGES = {
   shyam: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=500&h=600&fit=crop",
 };
 
-const FALLBACK_STATS = [
-  { icon: Award, value: "500+", label: "Projects Completed" },
-  { icon: Users, value: "10,000+", label: "Happy Customers" },
-  { icon: Zap, value: "50MW+", label: "Solar Capacity" },
-  { icon: TrendingUp, value: "98%", label: "Customer Satisfaction" },
-];
-
 const FALLBACK_SETS_APART = [
   { icon: Wrench, title: "Engineering-First Approach", description: "Every system is designed based on real load behaviour, grid conditions, and long-term performance—not assumptions." },
   { icon: Factory, title: "MSME-Focused Solutions", description: "We understand cash flows, operating hours, and business realities of Indian MSMEs." },
@@ -72,25 +62,12 @@ const FALLBACK_LEADERSHIP = [
   { name: "Shyam Chakraborty", role: "Co-Founder and COO", image: LEADER_FALLBACK_IMAGES.shyam, bio: "Over 14 years of deep, hands-on experience in rooftop and utility-scale solar projects. He leads operations, project management, engineering, and execution, ensuring every project is delivered with precision, safety, and long-term reliability. His expertise covers techno-commercial evaluation, project costing, system design (grid-connected and battery-based), risk management, and end-to-end project delivery—from site surveys and engineering validation to commissioning and O&M handover. An alumnus of XLRI Jamshedpur's Executive Program in Project Management, Shyam has worked with industry leaders including Areva T&D, Schneider Electric, Atha Group, Onergy Solar, Husk Power, and Anvil Cables & Energy. Known for his structured problem-solving approach and adherence to Total Quality Management (TQM) principles." },
 ];
 
-function parseStatValue(v: string): number {
-  const n = parseInt(v.replace(/\D/g, ""), 10);
-  return isNaN(n) ? 0 : n;
-}
-
 export default function AboutPage() {
-  const statsFromDb = useAboutStats();
   const setsApartFromDb = useWhatSetsApart();
   const leadershipFromDb = useLeadership();
   const heroSlidesFromDb = useAboutHeroSlides();
   const heroContentFromDb = useAboutHeroContent();
   const provenFromDb = useProvenProjects();
-
-  const stats = useMemo(() => {
-    if (statsFromDb.data?.length) {
-      return statsFromDb.data.map((s) => ({ ...s, icon: getIconComponent(s.iconName) }));
-    }
-    return FALLBACK_STATS;
-  }, [statsFromDb.data]);
 
   const whatSetsUsApart = useMemo(() => {
     if (setsApartFromDb.data?.length) {
@@ -115,7 +92,6 @@ export default function AboutPage() {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [isVisible, setIsVisible] = useState(false);
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
-  const [statsCount, setStatsCount] = useState([0, 0, 0, 0]);
 
   const introReveal = useScrollReveal(0.06);
   const purposeReveal = useScrollReveal(0.06);
@@ -123,7 +99,6 @@ export default function AboutPage() {
   const setsApartReveal = useScrollReveal(0.06);
   const futureReveal = useScrollReveal(0.06);
   const leadershipReveal = useScrollReveal(0.06);
-  const statsReveal = useScrollReveal(0.06);
 
   useEffect(() => {
     setIsVisible(true);
@@ -141,33 +116,6 @@ export default function AboutPage() {
     window.addEventListener("mousemove", handleMouseMove);
     return () => window.removeEventListener("mousemove", handleMouseMove);
   }, []);
-
-  // Animated counter for stats
-  useEffect(() => {
-    if (statsReveal.isInView) {
-      const targets = stats.slice(0, 4).map((s) => parseStatValue(typeof s.value === "string" ? s.value : "0"));
-      if (targets.length < 4) targets.push(500, 10000, 50, 98);
-      const duration = 2000;
-      const steps = 60;
-      const stepDuration = duration / steps;
-
-      let currentStep = 0;
-      const interval = setInterval(() => {
-        currentStep++;
-        const progress = currentStep / steps;
-        const easeOutQuart = 1 - Math.pow(1 - progress, 4);
-        
-        setStatsCount(targets.map(target => Math.floor(target * easeOutQuart)));
-        
-        if (currentStep >= steps) {
-          clearInterval(interval);
-          setStatsCount(targets);
-        }
-      }, stepDuration);
-
-      return () => clearInterval(interval);
-    }
-  }, [statsReveal.isInView]);
 
   return (
     <>
@@ -230,11 +178,6 @@ export default function AboutPage() {
         @keyframes rotate {
           from { transform: rotate(0deg); }
           to { transform: rotate(360deg); }
-        }
-        
-        @keyframes ripple {
-          0% { transform: scale(0.8); opacity: 1; }
-          100% { transform: scale(2.4); opacity: 0; }
         }
         
         .hero-gradient {
@@ -309,29 +252,6 @@ export default function AboutPage() {
           transition: transform 0.3s ease-out;
         }
         
-        .stat-card {
-          position: relative;
-          overflow: hidden;
-        }
-        
-        .stat-card::after {
-          content: '';
-          position: absolute;
-          top: 50%;
-          left: 50%;
-          width: 0;
-          height: 0;
-          border-radius: 50%;
-          background: rgba(255, 255, 255, 0.2);
-          transform: translate(-50%, -50%);
-          transition: width 0.6s, height 0.6s;
-        }
-        
-        .stat-card:hover::after {
-          width: 300px;
-          height: 300px;
-        }
-        
         .gradient-border {
           position: relative;
           background: linear-gradient(white, white) padding-box,
@@ -362,10 +282,6 @@ export default function AboutPage() {
         
         .floating-icon {
           animation: float 3s ease-in-out infinite;
-        }
-        
-        .pulse-ring {
-          animation: ripple 2s cubic-bezier(0, 0.2, 0.8, 1) infinite;
         }
         
         .section-divider {
@@ -509,48 +425,6 @@ export default function AboutPage() {
               <div className="w-6 h-10 border-2 border-white rounded-full flex items-start justify-center p-2">
                 <div className="w-1 h-3 bg-white rounded-full animate-pulse" />
               </div>
-            </div>
-          </div>
-        </section>
-
-        {/* Stats */}
-        <section 
-          ref={statsReveal.ref}
-          className="py-10 sm:py-12 bg-gradient-to-r from-[var(--color-deep-orange)] via-[var(--color-sunrise)] to-[var(--color-honey)] -mt-16 relative z-20 overflow-hidden"
-        >
-          {/* Animated Background Pattern */}
-          <div className="absolute inset-0 opacity-10">
-            <div className="absolute inset-0" style={{ 
-              backgroundImage: 'repeating-linear-gradient(45deg, transparent, transparent 10px, rgba(255,255,255,0.1) 10px, rgba(255,255,255,0.1) 20px)',
-              animation: 'slide-right 20s linear infinite'
-            }} />
-          </div>
-
-          <div className="container mx-auto px-4 relative z-10">
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6 max-w-5xl mx-auto">
-              {stats.map((stat, index) => (
-                <div 
-                  key={index} 
-                  className="text-center text-white stat-card group"
-                  style={{ animation: statsReveal.isInView ? `scaleIn 0.6s ease ${index * 0.1}s forwards` : 'none', opacity: statsReveal.isInView ? 1 : 0 }}
-                >
-                  <div className="relative inline-block mb-2">
-                    <div className="absolute inset-0 bg-white/20 rounded-full blur-xl pulse-ring" />
-                    <div className="relative bg-white/10 p-3 rounded-full backdrop-blur-sm border border-white/30 group-hover:scale-110 transition-transform duration-300">
-                      <stat.icon className="h-6 w-6 sm:h-8 sm:w-8" />
-                    </div>
-                  </div>
-                  <div className="text-2xl sm:text-3xl md:text-4xl font-display font-black mb-1">
-                    {index === 0 && `${statsCount[0]}+`}
-                    {index === 1 && `${statsCount[1].toLocaleString()}+`}
-                    {index === 2 && `${statsCount[2]}MW+`}
-                    {index === 3 && `${statsCount[3]}%`}
-                  </div>
-                  <div className="text-xs sm:text-sm font-semibold opacity-95 tracking-wide">
-                    {stat.label}
-                  </div>
-                </div>
-              ))}
             </div>
           </div>
         </section>

@@ -309,22 +309,6 @@ export default function ServicesPage() {
               </div>
             ))}
           </div>
-
-          {/* Stats */}
-          <div className={`grid grid-cols-2 md:grid-cols-4 gap-4 max-w-3xl mx-auto ${isVisible ? 'animate-fadeIn' : 'opacity-0'}`} style={{ animationDelay: '0.75s' }}>
-            {[
-              { value: "500+",  label: "Projects",     icon: <BarChart3 className="h-5 w-5" /> },
-              { value: "1000+", label: "Happy Clients", icon: <Users className="h-5 w-5" /> },
-              { value: "50MW+", label: "Installed",    icon: <Zap className="h-5 w-5" /> },
-              { value: "10+",   label: "Years Exp",    icon: <Award className="h-5 w-5" /> },
-            ].map((stat, i) => (
-              <div key={i} className="group rounded-2xl p-4 border border-white/15 bg-white/10 backdrop-blur-md hover:bg-white/15 hover:border-amber-400/40 transition-all duration-300 text-center">
-                <div className="text-amber-300 mb-1.5 inline-block group-hover:scale-110 transition-transform duration-200">{stat.icon}</div>
-                <div className="font-headline text-2xl font-black text-white">{stat.value}</div>
-                <div className="text-xs font-semibold text-white/60 uppercase tracking-wide mt-0.5">{stat.label}</div>
-              </div>
-            ))}
-          </div>
         </div>
 
         {/* Scroll indicator */}

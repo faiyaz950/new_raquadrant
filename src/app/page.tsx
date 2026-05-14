@@ -13,10 +13,11 @@ import {
 import { ArrowRight, Award, Building2, CheckSquare, BrainCircuit, Globe, Handshake, HomeIcon, Lightbulb, Droplets, ShieldCheck, Users, Zap, Sun, Leaf, Battery, TrendingUp, Star, ChevronRight, ChevronLeft, Play, Sparkles, CircleDot, Quote } from 'lucide-react';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
 import { useState, useEffect, useRef, useMemo } from 'react';
-import { useHeroSlides, useHomeHeroContent, useIntroPoints, useTestimonials, usePartners, useFeaturedProjects } from '@/hooks/use-site-content';
+import { useHeroSlides, useHomeHeroContent, useHomeCtaContent, useIntroPoints, useTestimonials, usePartners, useFeaturedProjects } from '@/hooks/use-site-content';
 import { getIcon } from '@/lib/icon-map';
 import type { FeaturedProject } from '@/lib/firestore-types';
 import { mergeHomeHeroContent } from '@/lib/home-hero-content';
+import { mergeHomeCtaContent } from '@/lib/home-cta-content';
 
 const heroImage = PlaceHolderImages.find(img => img.id === 'hero-home');
 const aboutImage = PlaceHolderImages.find(img => img.id === 'about-home');
@@ -76,6 +77,7 @@ function useScrollReveal(threshold = 0.1) {
 export default function HomePage() {
   const heroFromDb = useHeroSlides();
   const homeHeroFromDb = useHomeHeroContent();
+  const homeCtaFromDb = useHomeCtaContent();
   const introFromDb = useIntroPoints();
   const testimonialsFromDb = useTestimonials();
   const partnersFromDb = usePartners();
@@ -83,6 +85,7 @@ export default function HomePage() {
 
   const heroSlides = useMemo(() => (heroFromDb.data?.length ? heroFromDb.data : FALLBACK_HERO), [heroFromDb.data]);
   const homeHero = useMemo(() => mergeHomeHeroContent(homeHeroFromDb.data), [homeHeroFromDb.data]);
+  const homeCta = useMemo(() => mergeHomeCtaContent(homeCtaFromDb.data), [homeCtaFromDb.data]);
   const introPoints = useMemo(() => {
     if (introFromDb.data?.length) {
       return introFromDb.data.map((p) => ({ ...p, icon: getIcon(p.iconName, 'h-8 w-8 sm:h-9 sm:w-9') }));
@@ -1270,35 +1273,40 @@ export default function HomePage() {
           </div>
           
           <h2 className="font-headline text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black text-white mb-4 sm:mb-5 drop-shadow-2xl text-shadow-glow">
-            <span className="font-headline">Ready to Go Solar?</span>
+            <span className="font-headline">{homeCta.title}</span>
           </h2>
           
           <p className="text-base sm:text-lg md:text-xl text-white/95 max-w-2xl mx-auto mb-8 sm:mb-10 leading-relaxed drop-shadow-lg">
-            Join thousands of satisfied customers who've made the switch to clean, affordable solar energy.
+            {homeCta.description}
           </p>
 
           <Button asChild size="lg" className="bg-white text-orange-600 hover:bg-orange-50 font-black px-8 py-6 sm:px-10 sm:py-7 lg:px-12 lg:py-7 text-base sm:text-lg lg:text-xl rounded-full shadow-2xl hover:shadow-white/50 transform hover:scale-110 transition-all duration-500 group relative overflow-hidden">
-            <Link href="/contact" className="flex items-center gap-2 sm:gap-3 relative z-10">
+            <Link href={homeCta.ctaHref} className="flex items-center gap-2 sm:gap-3 relative z-10">
               <Sparkles className="h-5 w-5 sm:h-6 sm:w-6 lg:h-7 lg:w-7 animate-sparkle" />
-              Get Your Free Quote Now
+              {homeCta.ctaLabel}
               <ArrowRight className="h-5 w-5 sm:h-6 sm:w-6 lg:h-7 lg:w-7 group-hover:translate-x-2 transition-transform" />
               <div className="absolute inset-0 bg-orange-100/30 transform scale-x-0 group-hover:scale-x-100 transition-transform origin-left" />
             </Link>
           </Button>
 
-          <div className="mt-10 sm:mt-12 grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6 max-w-4xl mx-auto">
-            {[
-              { value: "500+", label: "Projects", icon: <Building2 className="h-6 w-6 sm:h-7 sm:w-7 lg:h-8 lg:w-8" /> },
-              { value: "10,000+", label: "Customers", icon: <Users className="h-6 w-6 sm:h-7 sm:w-7 lg:h-8 lg:w-8" /> },
-              { value: "50MW+", label: "Installed", icon: <Zap className="h-6 w-6 sm:h-7 sm:w-7 lg:h-8 lg:w-8" /> },
-              { value: "10+", label: "Years Exp", icon: <Award className="h-6 w-6 sm:h-7 sm:w-7 lg:h-8 lg:w-8" /> }
-            ].map((stat, i) => (
-              <div key={i} className="text-center transform hover:scale-110 transition-transform duration-300 group/stat">
+          <div
+            className={`mt-10 sm:mt-12 grid gap-4 sm:gap-6 max-w-4xl mx-auto ${
+              homeCta.stats.length <= 1
+                ? 'grid-cols-1 max-w-xs mx-auto'
+                : homeCta.stats.length === 2
+                  ? 'grid-cols-2'
+                  : homeCta.stats.length === 3
+                    ? 'grid-cols-2 md:grid-cols-3'
+                    : 'grid-cols-2 md:grid-cols-4'
+            }`}
+          >
+            {homeCta.stats.map((stat, i) => (
+              <div key={`${stat.label}-${i}`} className="text-center transform hover:scale-110 transition-transform duration-300 group/stat">
                 <div className="relative">
                   <div className="absolute inset-0 bg-white/20 rounded-3xl blur-lg animate-pulse" />
                   <div className="relative glass-effect-dark rounded-2xl sm:rounded-3xl p-4 sm:p-5 shadow-2xl border-2 border-white/30 backdrop-blur-xl">
                     <div className="text-white mb-2 sm:mb-3 inline-block group-hover/stat:scale-110 group-hover/stat:rotate-12 transition-all duration-300">
-                      {stat.icon}
+                      {getIcon(stat.iconName, 'h-6 w-6 sm:h-7 sm:w-7 lg:h-8 lg:w-8')}
                     </div>
                     <div className="text-3xl sm:text-4xl lg:text-5xl font-black text-white mb-1 sm:mb-2 drop-shadow-lg text-shadow-glow">
                       {stat.value}

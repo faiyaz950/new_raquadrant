@@ -2,6 +2,7 @@
 export const COLLECTIONS = {
   HERO_SLIDES: 'heroSlides',
   HOME_HERO_CONTENT: 'homeHeroContent',
+  HOME_CTA_CONTENT: 'homeCtaContent',
   INTRO_POINTS: 'introPoints',
   TESTIMONIALS: 'testimonials',
   PARTNERS: 'partners',
@@ -46,6 +47,23 @@ export interface HomeHeroContent {
   secondaryCtaLabel: string;
   secondaryCtaHref: string;
   stats: HomeHeroStat[];
+}
+
+/** Stat card in the orange “Ready to Go Solar?” section before the footer. */
+export interface HomeCtaStat {
+  value: string;
+  label: string;
+  iconName: string;
+}
+
+/** Bottom-of-home CTA block (Firestore doc `homeCtaContent/main`). */
+export interface HomeCtaContent {
+  id?: string;
+  title: string;
+  description: string;
+  ctaLabel: string;
+  ctaHref: string;
+  stats: HomeCtaStat[];
 }
 
 export interface IntroPoint {

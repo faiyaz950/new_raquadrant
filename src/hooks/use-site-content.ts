@@ -6,6 +6,7 @@ import { COLLECTIONS } from '@/lib/firestore-types';
 import type {
   HeroSlide,
   HomeHeroContent,
+  HomeCtaContent,
   IntroPoint,
   Testimonial,
   Partner,
@@ -64,6 +65,20 @@ export function useHomeHeroContent() {
 
   useEffect(() => {
     getDocument<HomeHeroContent>(COLLECTIONS.HOME_HERO_CONTENT, 'main')
+      .then((d) => setData(d))
+      .catch(() => setData(null))
+      .finally(() => setLoading(false));
+  }, []);
+
+  return { data, loading };
+}
+
+export function useHomeCtaContent() {
+  const [data, setData] = useState<HomeCtaContent | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    getDocument<HomeCtaContent>(COLLECTIONS.HOME_CTA_CONTENT, 'main')
       .then((d) => setData(d))
       .catch(() => setData(null))
       .finally(() => setLoading(false));

@@ -27,6 +27,7 @@ import {
   TrendingUp,
   Clock,
   Star,
+  Building2,
 } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
 
@@ -57,6 +58,7 @@ const iconMap: Record<string, LucideIcon> = {
   TrendingUp,
   Clock,
   Star,
+  Building2,
 };
 
 export function getIcon(name: string, className = 'h-6 w-6'): React.ReactNode {
@@ -66,4 +68,8 @@ export function getIcon(name: string, className = 'h-6 w-6'): React.ReactNode {
 
 export function getIconComponent(name: string): LucideIcon {
   return iconMap[name] || Zap;
+}
+
+export function isRegisteredIconName(name: string): boolean {
+  return Boolean(name && name in iconMap);
 }

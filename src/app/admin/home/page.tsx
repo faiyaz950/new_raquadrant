@@ -2,8 +2,9 @@
 
 import { useState, useEffect, useRef } from 'react';
 import { getCollection, getDocument, setDocument, addDocument, updateDocument, removeDocument, toFirestore, COLLECTIONS } from '@/lib/firestore';
-import type { HeroSlide, IntroPoint, Testimonial, Partner, FeaturedProject, HomeHeroContent } from '@/lib/firestore-types';
+import type { HeroSlide, IntroPoint, Testimonial, Partner, FeaturedProject, HomeHeroContent, HomeCtaContent } from '@/lib/firestore-types';
 import { DEFAULT_HOME_HERO_CONTENT, mergeHomeHeroContent } from '@/lib/home-hero-content';
+import { DEFAULT_HOME_CTA_CONTENT, mergeHomeCtaContent } from '@/lib/home-cta-content';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -26,21 +27,22 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
-import { Plus, Pencil, Trash2, Loader2, Upload, X, ImageIcon, Star, Quote, Award, Users, Layers } from 'lucide-react';
+import { Plus, Pencil, Trash2, Loader2, Upload, X, ImageIcon, Star, Quote, Award, Users, Layers, Megaphone } from 'lucide-react';
 import { getFirebaseClient } from '@/lib/firebase';
 import { uploadImage, validateImageFile } from '@/lib/storage';
 import Image from 'next/image';
 
-type TabKey = 'hero' | 'intro' | 'testimonials' | 'partners' | 'projects';
+type TabKey = 'hero' | 'cta' | 'intro' | 'testimonials' | 'partners' | 'projects';
 
-const ICON_OPTIONS = ['Zap', 'Handshake', 'Globe', 'BrainCircuit', 'ShieldCheck', 'Users', 'Award', 'CheckSquare', 'Sun', 'BarChart3', 'Leaf', 'Battery'];
+const ICON_OPTIONS = ['Zap', 'Handshake', 'Globe', 'BrainCircuit', 'ShieldCheck', 'Users', 'Award', 'CheckSquare', 'Sun', 'BarChart3', 'Leaf', 'Battery', 'Building2', 'Factory', 'TrendingUp', 'Wrench', 'HardHat', 'HeartHandshake', 'CheckCircle2', 'Target', 'Eye', 'Compass'];
 
 const TAB_META: Record<TabKey, { label: string; icon: React.ReactNode; folder: string }> = {
   hero:         { label: 'Hero Slides',   icon: <ImageIcon className="h-4 w-4" />,  folder: 'hero-slides' },
+  cta:          { label: 'Bottom CTA',    icon: <Megaphone className="h-4 w-4" />, folder: 'home-cta' },
   intro:        { label: 'Intro Points',  icon: <Layers className="h-4 w-4" />,     folder: 'intro-images' },
   testimonials: { label: 'Testimonials',  icon: <Quote className="h-4 w-4" />,      folder: 'testimonials' },
   partners:     { label: 'Partners',      icon: <Award className="h-4 w-4" />,      folder: 'partners' },
-  projects:     { label: 'Projects',      icon: <Star className="h-4 w-4" />,       folder: 'project-images' },
+  projects:     { label: 'Projects',        icon: <Star className="h-4 w-4" />,       folder: 'project-images' },
 };
 
 export default function AdminHomePage() {
@@ -51,6 +53,8 @@ export default function AdminHomePage() {
   const [projects, setProjects] = useState<FeaturedProject[]>([]);
   const [homeHeroOverlay, setHomeHeroOverlay] = useState<HomeHeroContent>(DEFAULT_HOME_HERO_CONTENT);
   const [savingHomeHero, setSavingHomeHero] = useState(false);
+  const [homeCtaForm, setHomeCtaForm] = useState<HomeCtaContent>(DEFAULT_HOME_CTA_CONTENT);
+  const [savingHomeCta, setSavingHomeCta] = useState(false);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [dialog, setDialog] = useState<{ open: boolean; tab: TabKey; item?: HeroSlide | IntroPoint | Testimonial | Partner | FeaturedProject }>({ open: false, tab: 'hero' });
@@ -70,14 +74,16 @@ export default function AdminHomePage() {
       getCollection<Partner>(COLLECTIONS.PARTNERS),
       getCollection<FeaturedProject>(COLLECTIONS.FEATURED_PROJECTS),
       getDocument<HomeHeroContent>(COLLECTIONS.HOME_HERO_CONTENT, 'main'),
+      getDocument<HomeCtaContent>(COLLECTIONS.HOME_CTA_CONTENT, 'main'),
     ])
-      .then(([h, i, t, p, proj, hc]) => {
+      .then(([h, i, t, p, proj, hc, ctc]) => {
         setHeroSlides(h);
         setIntroPoints(i);
         setTestimonials(t);
         setPartners(p);
         setProjects(proj);
         setHomeHeroOverlay(mergeHomeHeroContent(hc));
+        setHomeCtaForm(mergeHomeCtaContent(ctc));
       })
       .catch((e) => setError(e.message))
       .finally(() => setLoading(false));
@@ -87,14 +93,16 @@ export default function AdminHomePage() {
 
   async function handleDelete() {
     if (!deleteTarget) return;
-    const collectionMap: Record<TabKey, string> = {
+    const collectionMap: Partial<Record<TabKey, string>> = {
       hero: COLLECTIONS.HERO_SLIDES,
       intro: COLLECTIONS.INTRO_POINTS,
       testimonials: COLLECTIONS.TESTIMONIALS,
       partners: COLLECTIONS.PARTNERS,
       projects: COLLECTIONS.FEATURED_PROJECTS,
     };
-    await removeDocument(collectionMap[deleteTarget.tab], deleteTarget.id);
+    const col = collectionMap[deleteTarget.tab];
+    if (!col) return;
+    await removeDocument(col, deleteTarget.id);
     setDeleteTarget(null);
     load();
   }
@@ -131,6 +139,38 @@ export default function AdminHomePage() {
     }
   }
 
+  async function saveHomeCtaContent() {
+    setSavingHomeCta(true);
+    setError(null);
+    try {
+      const stats = homeCtaForm.stats.filter((s) => s.value.trim() || s.label.trim());
+      if (stats.length === 0) {
+        setError('Add at least one bottom CTA stat (value or label).');
+        return;
+      }
+      const statsOut = stats.map((s) => ({
+        value: s.value.trim(),
+        label: s.label.trim(),
+        iconName: ICON_OPTIONS.includes(s.iconName) ? s.iconName : 'Zap',
+      }));
+      await setDocument(
+        COLLECTIONS.HOME_CTA_CONTENT,
+        'main',
+        toFirestore({
+          title: homeCtaForm.title,
+          description: homeCtaForm.description,
+          ctaLabel: homeCtaForm.ctaLabel,
+          ctaHref: homeCtaForm.ctaHref?.trim() || DEFAULT_HOME_CTA_CONTENT.ctaHref,
+          stats: statsOut,
+        } as Record<string, unknown>)
+      );
+    } catch (e) {
+      setError(e instanceof Error ? e.message : 'Failed to save bottom CTA');
+    } finally {
+      setSavingHomeCta(false);
+    }
+  }
+
   if (!canEdit) {
     return (
       <div className="rounded-lg bg-amber-500/20 p-4 text-amber-200">
@@ -149,6 +189,7 @@ export default function AdminHomePage() {
 
   const counts: Record<TabKey, number> = {
     hero: heroSlides.length,
+    cta: homeCtaForm.stats.length,
     intro: introPoints.length,
     testimonials: testimonials.length,
     partners: partners.length,
@@ -159,7 +200,7 @@ export default function AdminHomePage() {
     <div className="space-y-6">
       <div>
         <h1 className="font-headline text-2xl font-bold text-white">Home Page Content</h1>
-        <p className="text-slate-400 mt-1">Manage hero slides and banner text, intro points, testimonials, partners, and featured projects.</p>
+        <p className="text-slate-400 mt-1">Manage hero, bottom CTA (orange banner), intro points, testimonials, partners, and featured projects.</p>
       </div>
 
       {error && (
@@ -169,7 +210,7 @@ export default function AdminHomePage() {
       )}
 
       {/* Summary Stats */}
-      <div className="grid grid-cols-2 sm:grid-cols-5 gap-3">
+      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
         {(Object.keys(TAB_META) as TabKey[]).map((key) => (
           <div key={key} className="rounded-lg border border-slate-700 bg-slate-800/60 p-3 text-center">
             <div className="text-2xl font-bold text-orange-400">{counts[key]}</div>
@@ -338,6 +379,150 @@ export default function AdminHomePage() {
                 onDelete={() => item.id && askDelete('hero', item.id, item.title)}
               />
             ))}
+          </div>
+        </TabsContent>
+
+        <TabsContent value="cta">
+          <div className="rounded-lg border border-slate-700 bg-slate-800/40 p-4 space-y-4">
+            <div>
+              <h2 className="font-semibold text-white">Bottom CTA section</h2>
+              <p className="text-sm text-slate-400 mt-0.5">
+                Orange &ldquo;Ready to Go Solar?&rdquo; block above the footer — headline, text, button, and stat cards with icons.
+              </p>
+            </div>
+            <div className="space-y-1.5">
+              <Label className="text-slate-300">Headline</Label>
+              <Input
+                value={homeCtaForm.title}
+                onChange={(e) => setHomeCtaForm((o) => ({ ...o, title: e.target.value }))}
+                className="bg-slate-900 border-slate-600 text-white"
+              />
+            </div>
+            <div className="space-y-1.5">
+              <Label className="text-slate-300">Description</Label>
+              <Textarea
+                value={homeCtaForm.description}
+                onChange={(e) => setHomeCtaForm((o) => ({ ...o, description: e.target.value }))}
+                rows={3}
+                className="bg-slate-900 border-slate-600 text-white resize-y"
+              />
+            </div>
+            <div className="grid gap-3 sm:grid-cols-2">
+              <div className="space-y-1.5">
+                <Label className="text-slate-300">Button label</Label>
+                <Input
+                  value={homeCtaForm.ctaLabel}
+                  onChange={(e) => setHomeCtaForm((o) => ({ ...o, ctaLabel: e.target.value }))}
+                  className="bg-slate-900 border-slate-600 text-white"
+                />
+              </div>
+              <div className="space-y-1.5">
+                <Label className="text-slate-300">Button link</Label>
+                <Input
+                  value={homeCtaForm.ctaHref}
+                  onChange={(e) => setHomeCtaForm((o) => ({ ...o, ctaHref: e.target.value }))}
+                  placeholder="/contact"
+                  className="bg-slate-900 border-slate-600 text-white"
+                />
+              </div>
+            </div>
+            <div className="space-y-2">
+              <Label className="text-slate-300">Stat cards</Label>
+              {homeCtaForm.stats.map((stat, idx) => (
+                <div key={idx} className="flex flex-wrap items-end gap-2 rounded-md border border-slate-700/80 p-3 bg-slate-900/40">
+                  <div className="flex-1 min-w-[80px] space-y-1">
+                    <span className="text-[10px] uppercase text-slate-500">Value</span>
+                    <Input
+                      value={stat.value}
+                      onChange={(e) => {
+                        const v = e.target.value;
+                        setHomeCtaForm((o) => {
+                          const stats = [...o.stats];
+                          stats[idx] = { ...stats[idx], value: v };
+                          return { ...o, stats };
+                        });
+                      }}
+                      className="bg-slate-900 border-slate-600 text-white"
+                    />
+                  </div>
+                  <div className="flex-1 min-w-[80px] space-y-1">
+                    <span className="text-[10px] uppercase text-slate-500">Label</span>
+                    <Input
+                      value={stat.label}
+                      onChange={(e) => {
+                        const v = e.target.value;
+                        setHomeCtaForm((o) => {
+                          const stats = [...o.stats];
+                          stats[idx] = { ...stats[idx], label: v };
+                          return { ...o, stats };
+                        });
+                      }}
+                      className="bg-slate-900 border-slate-600 text-white"
+                    />
+                  </div>
+                  <div className="w-full sm:w-40 space-y-1">
+                    <span className="text-[10px] uppercase text-slate-500">Icon</span>
+                    <select
+                      value={stat.iconName}
+                      onChange={(e) => {
+                        const v = e.target.value;
+                        setHomeCtaForm((o) => {
+                          const stats = [...o.stats];
+                          stats[idx] = { ...stats[idx], iconName: v };
+                          return { ...o, stats };
+                        });
+                      }}
+                      className="flex h-10 w-full rounded-md border border-slate-600 bg-slate-900 px-3 py-2 text-sm text-white"
+                    >
+                      {ICON_OPTIONS.map((name) => (
+                        <option key={name} value={name}>
+                          {name}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="sm"
+                    className="text-red-400 hover:text-red-300 shrink-0"
+                    disabled={homeCtaForm.stats.length <= 1}
+                    onClick={() =>
+                      setHomeCtaForm((o) =>
+                        o.stats.length <= 1 ? o : { ...o, stats: o.stats.filter((_, i) => i !== idx) }
+                      )
+                    }
+                  >
+                    <Trash2 className="h-4 w-4" />
+                  </Button>
+                </div>
+              ))}
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                className="border-slate-600 text-slate-300"
+                disabled={homeCtaForm.stats.length >= 6}
+                onClick={() =>
+                  setHomeCtaForm((o) =>
+                    o.stats.length >= 6
+                      ? o
+                      : { ...o, stats: [...o.stats, { value: '', label: '', iconName: 'Zap' }] }
+                  )
+                }
+              >
+                <Plus className="mr-1 h-3 w-3" /> Add stat
+              </Button>
+            </div>
+            <Button
+              type="button"
+              onClick={saveHomeCtaContent}
+              disabled={savingHomeCta}
+              className="bg-orange-600 hover:bg-orange-500 text-white"
+            >
+              {savingHomeCta ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
+              Save bottom CTA
+            </Button>
           </div>
         </TabsContent>
 
@@ -727,13 +912,14 @@ function HomeEditDialog({
       }
       const data = toFirestore(dataBase);
 
-      const collectionMap: Record<TabKey, string> = {
+      const collectionMap = {
         hero: COLLECTIONS.HERO_SLIDES,
         intro: COLLECTIONS.INTRO_POINTS,
         testimonials: COLLECTIONS.TESTIMONIALS,
         partners: COLLECTIONS.PARTNERS,
         projects: COLLECTIONS.FEATURED_PROJECTS,
-      };
+      } as const;
+      if (dialog.tab === 'cta') return;
       const col = collectionMap[dialog.tab];
       if (item?.id) await updateDocument(col, item.id, data);
       else await addDocument(col, data);
