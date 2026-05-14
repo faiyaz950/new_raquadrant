@@ -74,17 +74,22 @@ export function ContactForm() {
           ...parsed.data,
           createdAt: new Date().toISOString(),
         });
-        toast({ title: "Success! 🎉", description: "Thank you for your inquiry! We will get back to you shortly." });
-        form.reset();
       } else {
         const result = await handleContactForm(initialState, formData);
         setFields(result.fields);
         setErrors(result.errors);
-        if (!result.errors) {
-          toast({ title: "Success! 🎉", description: result.message });
-          form.reset();
-        }
+        if (result.errors) return;
       }
+
+      // Send email notification
+      await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(parsed.data),
+      });
+
+      toast({ title: "Message Sent!", description: "Thank you for your inquiry! We will get back to you shortly." });
+      form.reset();
     } catch (err) {
       toast({ title: "Error", description: "Something went wrong. Please try again.", variant: "destructive" });
     } finally {
