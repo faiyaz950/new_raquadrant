@@ -186,7 +186,6 @@ export default function ContactPage() {
                   <div className="relative z-10">
                     <h3 className="font-headline text-lg font-bold text-gray-900 mb-1">Call Us</h3>
                     <p className="text-sm text-gray-600 font-semibold">+91-8910855185</p>
-                    <p className="text-sm text-gray-600 font-semibold">+91-8017337117</p>
                     <span className="inline-flex items-center gap-1 mt-3 text-xs font-semibold text-yellow-600 group-hover:gap-2 transition-all">
                       Call now
                       <ArrowRight className="h-3 w-3" />

@@ -951,7 +951,7 @@ export default function HomePage() {
                     {/* Stats Overlay */}
                     <div className="absolute bottom-6 left-6 right-6 grid grid-cols-3 gap-3">
                       {[
-                        { value: "90%", label: "Subsidy" },
+                        { value: "60 to 90%", label: "Subsidy" },
                         { value: "25HP", label: "Max" },
                         { value: "5Y+", label: "Life" }
                       ].map((stat, idx) => (
@@ -986,7 +986,7 @@ export default function HomePage() {
 
                     <div className="space-y-3 mb-6 text-gray-600 text-sm sm:text-base leading-relaxed">
                       <p>
-                        Off-grid solar for rural areas: solar pumps (1–25 HP) and street lighting. Up to 90% subsidy under PM-KUSUM; we handle applications. IP65-rated, low maintenance.
+                        Off-grid solar for rural areas: solar pumps (1–25 HP) and street lighting. 60% to 90% subsidy under PM-KUSUM; we handle applications. IP65-rated, low maintenance.
                       </p>
                       <p>
                         Solar pumping for irrigation and dusk-to-dawn street lights for villages and municipalities. Weather-resistant components for farms and public spaces.
