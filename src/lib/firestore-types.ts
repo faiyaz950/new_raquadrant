@@ -1,6 +1,7 @@
 // Firestore collection names
 export const COLLECTIONS = {
   HERO_SLIDES: 'heroSlides',
+  HOME_HERO_CONTENT: 'homeHeroContent',
   INTRO_POINTS: 'introPoints',
   TESTIMONIALS: 'testimonials',
   PARTNERS: 'partners',
@@ -28,6 +29,23 @@ export interface HeroSlide {
   subtitle: string;
   description: string;
   order?: number;
+}
+
+/** Single stat pill on the home hero (e.g. value "500+", label "Projects"). */
+export interface HomeHeroStat {
+  value: string;
+  label: string;
+}
+
+/** Shared hero chrome: badge, CTAs, bottom stats (Firestore doc `homeHeroContent/main`). */
+export interface HomeHeroContent {
+  id?: string;
+  badge: string;
+  primaryCtaLabel: string;
+  primaryCtaHref: string;
+  secondaryCtaLabel: string;
+  secondaryCtaHref: string;
+  stats: HomeHeroStat[];
 }
 
 export interface IntroPoint {

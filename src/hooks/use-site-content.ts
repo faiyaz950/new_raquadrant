@@ -5,6 +5,7 @@ import { getCollection, getCollectionUnordered, getDocument } from '@/lib/firest
 import { COLLECTIONS } from '@/lib/firestore-types';
 import type {
   HeroSlide,
+  HomeHeroContent,
   IntroPoint,
   Testimonial,
   Partner,
@@ -55,6 +56,20 @@ function useFirestoreCollection<T>(collectionName: string | null) {
 
 export function useHeroSlides() {
   return useFirestoreCollection<HeroSlide>(COLLECTIONS.HERO_SLIDES);
+}
+
+export function useHomeHeroContent() {
+  const [data, setData] = useState<HomeHeroContent | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    getDocument<HomeHeroContent>(COLLECTIONS.HOME_HERO_CONTENT, 'main')
+      .then((d) => setData(d))
+      .catch(() => setData(null))
+      .finally(() => setLoading(false));
+  }, []);
+
+  return { data, loading };
 }
 
 export function useIntroPoints() {

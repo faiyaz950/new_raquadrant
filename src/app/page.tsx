@@ -13,9 +13,10 @@ import {
 import { ArrowRight, Award, Building2, CheckSquare, BrainCircuit, Globe, Handshake, HomeIcon, Lightbulb, Droplets, ShieldCheck, Users, Zap, Sun, Leaf, Battery, TrendingUp, Star, ChevronRight, ChevronLeft, Play, Sparkles, CircleDot, Quote } from 'lucide-react';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
 import { useState, useEffect, useRef, useMemo } from 'react';
-import { useHeroSlides, useIntroPoints, useTestimonials, usePartners, useFeaturedProjects } from '@/hooks/use-site-content';
+import { useHeroSlides, useHomeHeroContent, useIntroPoints, useTestimonials, usePartners, useFeaturedProjects } from '@/hooks/use-site-content';
 import { getIcon } from '@/lib/icon-map';
 import type { FeaturedProject } from '@/lib/firestore-types';
+import { mergeHomeHeroContent } from '@/lib/home-hero-content';
 
 const heroImage = PlaceHolderImages.find(img => img.id === 'hero-home');
 const aboutImage = PlaceHolderImages.find(img => img.id === 'about-home');
@@ -74,12 +75,14 @@ function useScrollReveal(threshold = 0.1) {
 
 export default function HomePage() {
   const heroFromDb = useHeroSlides();
+  const homeHeroFromDb = useHomeHeroContent();
   const introFromDb = useIntroPoints();
   const testimonialsFromDb = useTestimonials();
   const partnersFromDb = usePartners();
   const projectsFromDb = useFeaturedProjects();
 
   const heroSlides = useMemo(() => (heroFromDb.data?.length ? heroFromDb.data : FALLBACK_HERO), [heroFromDb.data]);
+  const homeHero = useMemo(() => mergeHomeHeroContent(homeHeroFromDb.data), [homeHeroFromDb.data]);
   const introPoints = useMemo(() => {
     if (introFromDb.data?.length) {
       return introFromDb.data.map((p) => ({ ...p, icon: getIcon(p.iconName, 'h-8 w-8 sm:h-9 sm:w-9') }));
@@ -439,7 +442,7 @@ export default function HomePage() {
             <div className={`inline-flex items-center gap-2 sm:gap-3 px-3 py-1.5 sm:px-4 sm:py-2 glass-effect-dark rounded-full mb-3 sm:mb-4 border border-white/30 shadow-2xl backdrop-blur-xl ${isVisible ? 'animate-slideInDown' : 'opacity-0'}`}>
               <Sun className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-orange-400 animate-pulse" />
               <span className="font-headline text-[11px] sm:text-xs font-bold text-white">
-                Leading Solar EPC Company
+                {homeHero.badge}
               </span>
               <Star className="h-2.5 w-2.5 sm:h-3 sm:w-3 text-yellow-400 animate-pulse" />
               <Sparkles className="h-2.5 w-2.5 sm:h-3 sm:w-3 text-orange-300 animate-sparkle" />
@@ -462,28 +465,35 @@ export default function HomePage() {
             {/* Enhanced CTA Buttons */}
             <div className={`flex flex-wrap gap-2 sm:gap-3 mb-6 sm:mb-8 ${isVisible ? 'animate-slideInUp' : 'opacity-0'}`} style={{animationDelay: '0.4s'}}>
               <Button asChild size="lg" className="font-headline relative overflow-hidden bg-gradient-to-r from-orange-500 via-amber-500 to-yellow-500 hover:from-orange-600 hover:via-amber-600 hover:to-yellow-600 text-white font-bold px-5 py-4 sm:px-6 sm:py-5 text-sm sm:text-base rounded-full shadow-2xl hover:shadow-orange-500/50 transform hover:scale-105 transition-all duration-300 group">
-                <Link href="/contact" className="font-headline flex items-center gap-2 sm:gap-3 relative z-10">
+                <Link href={homeHero.primaryCtaHref} className="font-headline flex items-center gap-2 sm:gap-3 relative z-10">
                   <Sparkles className="h-5 w-5 sm:h-6 sm:w-6 animate-sparkle" />
-                  Get Free Solar Quote
+                  {homeHero.primaryCtaLabel}
                   <ArrowRight className="h-5 w-5 sm:h-6 sm:w-6 group-hover:translate-x-2 transition-transform" />
                   <div className="absolute inset-0 bg-white/20 transform scale-x-0 group-hover:scale-x-100 transition-transform origin-left" />
                 </Link>
               </Button>
               <Button asChild size="lg" variant="outline" className="font-headline glass-effect-dark border-2 border-white/50 text-white hover:bg-white/20 font-bold px-5 py-4 sm:px-6 sm:py-5 text-sm sm:text-base rounded-full shadow-2xl transform hover:scale-105 transition-all duration-300 group backdrop-blur-xl">
-                <Link href="/services" className="font-headline flex items-center gap-2 sm:gap-3">
-                  Explore Projects
+                <Link href={homeHero.secondaryCtaHref} className="font-headline flex items-center gap-2 sm:gap-3">
+                  {homeHero.secondaryCtaLabel}
                   <Play className="h-3.5 w-3.5 sm:h-4 sm:w-4 group-hover:scale-110 transition-transform" />
                 </Link>
               </Button>
             </div>
 
             {/* Enhanced Stats with Animations - ~10% smaller */}
-            <div className={`grid grid-cols-3 gap-3 sm:gap-4 max-w-xl ${isVisible ? 'animate-fadeIn' : 'opacity-0'}`} style={{animationDelay: '0.6s'}}>
-              {[
-                { value: "500+", label: "Projects" },
-                { value: "50MW+", label: "Installed" },
-                { value: "10,000+", label: "Customers" }
-              ].map((stat, i) => (
+            <div
+              className={`grid gap-3 sm:gap-4 max-w-xl ${
+                homeHero.stats.length <= 1
+                  ? 'grid-cols-1'
+                  : homeHero.stats.length === 2
+                    ? 'grid-cols-2'
+                    : homeHero.stats.length === 3
+                      ? 'grid-cols-3'
+                      : 'grid-cols-2 sm:grid-cols-3'
+              } ${isVisible ? 'animate-fadeIn' : 'opacity-0'}`}
+              style={{animationDelay: '0.6s'}}
+            >
+              {homeHero.stats.map((stat, i) => (
                 <div key={i} className="text-center transform hover:scale-110 transition-transform duration-300 group">
                   <div className="relative">
                     <div className="absolute inset-0 bg-orange-500/20 rounded-xl blur-xl group-hover:bg-orange-500/40 transition-all" />

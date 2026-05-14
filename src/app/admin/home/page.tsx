@@ -1,8 +1,9 @@
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
-import { getCollection, addDocument, updateDocument, removeDocument, toFirestore, COLLECTIONS } from '@/lib/firestore';
-import type { HeroSlide, IntroPoint, Testimonial, Partner, FeaturedProject } from '@/lib/firestore-types';
+import { getCollection, getDocument, setDocument, addDocument, updateDocument, removeDocument, toFirestore, COLLECTIONS } from '@/lib/firestore';
+import type { HeroSlide, IntroPoint, Testimonial, Partner, FeaturedProject, HomeHeroContent } from '@/lib/firestore-types';
+import { DEFAULT_HOME_HERO_CONTENT, mergeHomeHeroContent } from '@/lib/home-hero-content';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -48,6 +49,8 @@ export default function AdminHomePage() {
   const [testimonials, setTestimonials] = useState<Testimonial[]>([]);
   const [partners, setPartners] = useState<Partner[]>([]);
   const [projects, setProjects] = useState<FeaturedProject[]>([]);
+  const [homeHeroOverlay, setHomeHeroOverlay] = useState<HomeHeroContent>(DEFAULT_HOME_HERO_CONTENT);
+  const [savingHomeHero, setSavingHomeHero] = useState(false);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [dialog, setDialog] = useState<{ open: boolean; tab: TabKey; item?: HeroSlide | IntroPoint | Testimonial | Partner | FeaturedProject }>({ open: false, tab: 'hero' });
@@ -66,13 +69,15 @@ export default function AdminHomePage() {
       getCollection<Testimonial>(COLLECTIONS.TESTIMONIALS),
       getCollection<Partner>(COLLECTIONS.PARTNERS),
       getCollection<FeaturedProject>(COLLECTIONS.FEATURED_PROJECTS),
+      getDocument<HomeHeroContent>(COLLECTIONS.HOME_HERO_CONTENT, 'main'),
     ])
-      .then(([h, i, t, p, proj]) => {
+      .then(([h, i, t, p, proj, hc]) => {
         setHeroSlides(h);
         setIntroPoints(i);
         setTestimonials(t);
         setPartners(p);
         setProjects(proj);
+        setHomeHeroOverlay(mergeHomeHeroContent(hc));
       })
       .catch((e) => setError(e.message))
       .finally(() => setLoading(false));
@@ -96,6 +101,34 @@ export default function AdminHomePage() {
 
   function askDelete(tab: TabKey, id: string, label: string) {
     setDeleteTarget({ tab, id, label });
+  }
+
+  async function saveHomeHeroOverlay() {
+    setSavingHomeHero(true);
+    setError(null);
+    try {
+      const stats = homeHeroOverlay.stats.filter((s) => s.value.trim() || s.label.trim());
+      if (stats.length === 0) {
+        setError('Add at least one hero stat (value or label).');
+        return;
+      }
+      await setDocument(
+        COLLECTIONS.HOME_HERO_CONTENT,
+        'main',
+        toFirestore({
+          badge: homeHeroOverlay.badge,
+          primaryCtaLabel: homeHeroOverlay.primaryCtaLabel,
+          primaryCtaHref: homeHeroOverlay.primaryCtaHref?.trim() || DEFAULT_HOME_HERO_CONTENT.primaryCtaHref,
+          secondaryCtaLabel: homeHeroOverlay.secondaryCtaLabel,
+          secondaryCtaHref: homeHeroOverlay.secondaryCtaHref?.trim() || DEFAULT_HOME_HERO_CONTENT.secondaryCtaHref,
+          stats,
+        } as Record<string, unknown>)
+      );
+    } catch (e) {
+      setError(e instanceof Error ? e.message : 'Failed to save hero content');
+    } finally {
+      setSavingHomeHero(false);
+    }
   }
 
   if (!canEdit) {
@@ -126,7 +159,7 @@ export default function AdminHomePage() {
     <div className="space-y-6">
       <div>
         <h1 className="font-headline text-2xl font-bold text-white">Home Page Content</h1>
-        <p className="text-slate-400 mt-1">Manage hero slides, intro points, testimonials, partners, and featured projects.</p>
+        <p className="text-slate-400 mt-1">Manage hero slides and banner text, intro points, testimonials, partners, and featured projects.</p>
       </div>
 
       {error && (
@@ -159,6 +192,136 @@ export default function AdminHomePage() {
         </TabsList>
 
         <TabsContent value="hero">
+          <div className="rounded-lg border border-slate-700 bg-slate-800/40 p-4 space-y-4 mb-6">
+            <div>
+              <h2 className="font-semibold text-white">Hero banner text &amp; stats</h2>
+              <p className="text-sm text-slate-400 mt-0.5">
+                Top badge, both CTA buttons (labels and links), and the metric row under the headline. Rotating slide copy and images are edited below.
+              </p>
+            </div>
+            <div className="grid gap-3 sm:grid-cols-2">
+              <div className="sm:col-span-2 space-y-1.5">
+                <Label className="text-slate-300">Badge</Label>
+                <Input
+                  value={homeHeroOverlay.badge}
+                  onChange={(e) => setHomeHeroOverlay((o) => ({ ...o, badge: e.target.value }))}
+                  className="bg-slate-900 border-slate-600 text-white"
+                />
+              </div>
+              <div className="space-y-1.5">
+                <Label className="text-slate-300">Primary CTA label</Label>
+                <Input
+                  value={homeHeroOverlay.primaryCtaLabel}
+                  onChange={(e) => setHomeHeroOverlay((o) => ({ ...o, primaryCtaLabel: e.target.value }))}
+                  className="bg-slate-900 border-slate-600 text-white"
+                />
+              </div>
+              <div className="space-y-1.5">
+                <Label className="text-slate-300">Primary CTA link</Label>
+                <Input
+                  value={homeHeroOverlay.primaryCtaHref}
+                  onChange={(e) => setHomeHeroOverlay((o) => ({ ...o, primaryCtaHref: e.target.value }))}
+                  placeholder="/contact"
+                  className="bg-slate-900 border-slate-600 text-white"
+                />
+              </div>
+              <div className="space-y-1.5">
+                <Label className="text-slate-300">Secondary CTA label</Label>
+                <Input
+                  value={homeHeroOverlay.secondaryCtaLabel}
+                  onChange={(e) => setHomeHeroOverlay((o) => ({ ...o, secondaryCtaLabel: e.target.value }))}
+                  className="bg-slate-900 border-slate-600 text-white"
+                />
+              </div>
+              <div className="space-y-1.5">
+                <Label className="text-slate-300">Secondary CTA link</Label>
+                <Input
+                  value={homeHeroOverlay.secondaryCtaHref}
+                  onChange={(e) => setHomeHeroOverlay((o) => ({ ...o, secondaryCtaHref: e.target.value }))}
+                  placeholder="/services"
+                  className="bg-slate-900 border-slate-600 text-white"
+                />
+              </div>
+            </div>
+            <div className="space-y-2">
+              <Label className="text-slate-300">Stats row (e.g. 500+ / Projects)</Label>
+              {homeHeroOverlay.stats.map((stat, idx) => (
+                <div key={idx} className="flex flex-wrap items-end gap-2">
+                  <div className="flex-1 min-w-[100px] space-y-1">
+                    <span className="text-[10px] uppercase text-slate-500">Value</span>
+                    <Input
+                      value={stat.value}
+                      onChange={(e) => {
+                        const v = e.target.value;
+                        setHomeHeroOverlay((o) => {
+                          const stats = [...o.stats];
+                          stats[idx] = { ...stats[idx], value: v };
+                          return { ...o, stats };
+                        });
+                      }}
+                      className="bg-slate-900 border-slate-600 text-white"
+                    />
+                  </div>
+                  <div className="flex-1 min-w-[100px] space-y-1">
+                    <span className="text-[10px] uppercase text-slate-500">Label</span>
+                    <Input
+                      value={stat.label}
+                      onChange={(e) => {
+                        const v = e.target.value;
+                        setHomeHeroOverlay((o) => {
+                          const stats = [...o.stats];
+                          stats[idx] = { ...stats[idx], label: v };
+                          return { ...o, stats };
+                        });
+                      }}
+                      className="bg-slate-900 border-slate-600 text-white"
+                    />
+                  </div>
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="sm"
+                    className="text-red-400 hover:text-red-300 shrink-0"
+                    disabled={homeHeroOverlay.stats.length <= 1}
+                    onClick={() =>
+                      setHomeHeroOverlay((o) =>
+                        o.stats.length <= 1
+                          ? o
+                          : { ...o, stats: o.stats.filter((_, i) => i !== idx) }
+                      )
+                    }
+                  >
+                    <Trash2 className="h-4 w-4" />
+                  </Button>
+                </div>
+              ))}
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                className="border-slate-600 text-slate-300"
+                disabled={homeHeroOverlay.stats.length >= 6}
+                onClick={() =>
+                  setHomeHeroOverlay((o) =>
+                    o.stats.length >= 6
+                      ? o
+                      : { ...o, stats: [...o.stats, { value: '', label: '' }] }
+                  )
+                }
+              >
+                <Plus className="mr-1 h-3 w-3" /> Add stat
+              </Button>
+            </div>
+            <Button
+              type="button"
+              onClick={saveHomeHeroOverlay}
+              disabled={savingHomeHero}
+              className="bg-orange-600 hover:bg-orange-500 text-white"
+            >
+              {savingHomeHero ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
+              Save hero text &amp; stats
+            </Button>
+          </div>
           <SectionHeader
             title="Hero Slides"
             description="Slides shown in the homepage banner. Each slide has a background image, title, subtitle, and description."
