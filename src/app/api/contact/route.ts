@@ -2,10 +2,22 @@ import { NextRequest, NextResponse } from "next/server";
 import { Resend } from "resend";
 import { contactSchema } from "@/lib/contact-form-schema";
 
-const resend = new Resend(process.env.RESEND_API_KEY);
+function getResendClient(): Resend | null {
+  const key = process.env.RESEND_API_KEY?.trim();
+  if (!key) return null;
+  return new Resend(key);
+}
 
 export async function POST(req: NextRequest) {
   try {
+    const resend = getResendClient();
+    if (!resend) {
+      return NextResponse.json(
+        { error: "Email service is not configured. Set RESEND_API_KEY on the server." },
+        { status: 503 }
+      );
+    }
+
     const body = await req.json();
     const parsed = contactSchema.safeParse(body);
 
