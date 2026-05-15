@@ -45,6 +45,7 @@ const navItems = [
   { href: "/media", label: "Blogs" },
   { href: "/contact", label: "Contact Us" },
   { href: "/privacy-policy", label: "Privacy Policy" },
+  { href: "/terms-and-conditions", label: "Terms & Conditions" },
 ];
 
 const socialLinks = [
