@@ -13,8 +13,8 @@ const FALLBACK_SERVICES = [
 const FALLBACK_SCOPE = [
   { phase: "Technical Selection & Design", icon: <LayoutPanelTop className="h-6 w-6" />, iconName: "LayoutPanelTop", content: "Comprehensive technical selection and system design with premium Tier-1 solar panels from globally recognized manufacturers.", details: ["PVsyst simulation", "3D roof modeling", "Load calculations", "Energy forecasting"], color: "orange", image: "https://images.unsplash.com/photo-1581094271901-8022df4466f9?w=600&auto=format&fit=crop" },
   { phase: "Government Liaison & Approvals", icon: <FileText className="h-6 w-6" />, iconName: "FileText", content: "We handle all bureaucratic complexities including subsidy applications under PM Surya Ghar Muft Bijli Yojana.", details: ["PM Surya Ghar subsidy", "PM-KUSUM facilitation", "Net metering", "DISCOM coordination"], color: "amber", image: "https://images.unsplash.com/photo-1450101499163-c8848c66ca85?w=600&auto=format&fit=crop" },
-  { phase: "Procurement & Logistics", icon: <Truck className="h-6 w-6" />, iconName: "Truck", content: "Strong partnerships with leading manufacturers ensure competitive prices without compromising quality.", details: ["Manufacturer partnerships", "Quality inspection", "BIS & MNRE compliance", "Material traceability"], color: "yellow", image: "https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?w=600&auto=format&fit=crop" },
-  { phase: "Professional Installation", icon: <HardHat className="h-6 w-6" />, iconName: "HardHat", content: "MNRE-certified technicians and electrical engineers execute installation with top priority on safety.", details: ["MNRE-certified team", "Safety protocols", "IS 3043 earthing", "Grid synchronization"], color: "orange", image: "https://images.unsplash.com/photo-1621905251918-48416bd8575a?w=600&auto=format&fit=crop" },
+  { phase: "Procurement & Logistics", icon: <Truck className="h-6 w-6" />, iconName: "Truck", content: "Strong partnerships with leading manufacturers ensure competitive prices without compromising quality.", details: ["Manufacturer partnerships", "Quality inspection", "BIS certified, ALMM approved", "Material traceability"], color: "yellow", image: "https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?w=600&auto=format&fit=crop" },
+  { phase: "Professional Installation", icon: <HardHat className="h-6 w-6" />, iconName: "HardHat", content: "BIS-certified, ALMM-approved technicians and electrical engineers execute installation with top priority on safety.", details: ["BIS certified, ALMM approved team", "Safety protocols", "IS 3043 earthing", "Grid synchronization"], color: "orange", image: "https://images.unsplash.com/photo-1621905251918-48416bd8575a?w=600&auto=format&fit=crop" },
   { phase: "After-Sales Support", icon: <ShieldCheck className="h-6 w-6" />, iconName: "ShieldCheck", content: "Committed to your system's optimal performance for decades with 24/7 monitoring and support.", details: ["24/7 cloud monitoring", "Automatic alerts", "Bi-annual maintenance", "48-hour response"], color: "amber", image: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=600&auto=format&fit=crop" },
 ];
 
@@ -23,7 +23,7 @@ const FALLBACK_EXECUTION = [
   { name: "Feasibility Study", description: "Comprehensive technical and financial reports with solar irradiation analysis and ROI calculations.", icon: <TrendingUp className="h-6 w-6" />, iconName: "TrendingUp", duration: "3-5 days", color: "from-amber-400 to-yellow-500" },
   { name: "Engineering & Design", description: "Detailed technical plans with diagrams, layouts, 3D visualizations, and complete documentation.", icon: <LayoutPanelTop className="h-6 w-6" />, iconName: "LayoutPanelTop", duration: "1 week", color: "from-yellow-400 to-orange-500" },
   { name: "Procurement", description: "Sourcing equipment through verified vendors with proper certifications and quality checks.", icon: <Truck className="h-6 w-6" />, iconName: "Truck", duration: "1-2 weeks", color: "from-orange-400 to-amber-400" },
-  { name: "Installation", description: "MNRE-certified installers execute complete installation with comprehensive testing.", icon: <HardHat className="h-6 w-6" />, iconName: "HardHat", duration: "3-10 days", color: "from-amber-400 to-orange-500" },
+  { name: "Installation", description: "BIS-certified, ALMM-approved installers execute complete installation with comprehensive testing.", icon: <HardHat className="h-6 w-6" />, iconName: "HardHat", duration: "3-10 days", color: "from-amber-400 to-orange-500" },
   { name: "Support & Maintenance", description: "Continuous support through cloud monitoring, preventive maintenance, and warranty management.", icon: <Zap className="h-6 w-6" />, iconName: "Zap", duration: "Lifetime", color: "from-yellow-400 to-amber-500" },
 ];
 
@@ -300,7 +300,7 @@ export default function ServicesPage() {
             {[
               { icon: <Shield className="h-3.5 w-3.5" />, text: "25+ Year Warranty" },
               { icon: <Leaf className="h-3.5 w-3.5" />,   text: "90% Bill Reduction" },
-              { icon: <Award className="h-3.5 w-3.5" />,  text: "MNRE Certified" },
+              { icon: <Award className="h-3.5 w-3.5" />,  text: "BIS Certified, ALMM Approved" },
               { icon: <Battery className="h-3.5 w-3.5" />, text: "24/7 Monitoring" },
             ].map((item, i) => (
               <div key={i} className="flex items-center gap-1.5 px-4 py-2 rounded-full bg-white/10 border border-white/20 backdrop-blur-sm hover:bg-white/20 transition-colors duration-200">
@@ -787,7 +787,7 @@ export default function ServicesPage() {
           <div className="flex flex-wrap gap-3 justify-center pb-2">
             {[
               { icon: <Shield className="h-4 w-4" />, text: "100% Safe & Secure" },
-              { icon: <Award className="h-4 w-4" />, text: "MNRE Certified" },
+              { icon: <Award className="h-4 w-4" />, text: "BIS Certified, ALMM Approved" },
               { icon: <Users className="h-4 w-4" />, text: "Expert Team" }
             ].map((item, i) => (
               <div key={i} className="flex items-center gap-2 px-4 py-2 rounded-full bg-white/20 border border-white/30 backdrop-blur-sm hover:bg-white/30 transition-all duration-200">
