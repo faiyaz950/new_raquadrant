@@ -44,10 +44,8 @@ const navItems = [
   { href: "/services", label: "What We Do" },
   { href: "/media", label: "Blogs" },
   { href: "/contact", label: "Contact Us" },
-  { href: "/faq", label: "FAQ" },
   { href: "/privacy-policy", label: "Privacy Policy" },
   { href: "/terms-and-conditions", label: "Terms & Conditions" },
-  { href: "/return-refund-policy", label: "Return & Refund Policy" },
 ];
 
 const socialLinks = [

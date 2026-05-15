@@ -4,6 +4,7 @@ import { CheckCircle2, FileText, HardHat, LayoutPanelTop, ShieldCheck, Truck, Su
 import { useServices, useScopeOfWork, useExecutionProcess, useServicesHeroSlides, useServicesHeroContent } from '@/hooks/use-site-content';
 import { getIcon } from '@/lib/icon-map';
 import ProvenCapabilitySection from '@/components/proven-capability-section';
+import WhatSetsUsApartSection from '@/components/what-sets-us-apart-section';
 
 const FALLBACK_SERVICES = [
   { id: "residential", idKey: "residential", title: "Residential Rooftop Solar", description: "Transform your home into a clean energy powerhouse. Slash bills by up to 90%.", features: ["Custom-engineered designs", "Premium Tier-1 panels with 25+ year warranty", "Smart monitoring & full subsidy assistance"], stats: ["90% Bill Cut", "25+ Years", "Full Subsidy", "3-5 Year ROI"], capacity: "1kW to 10kW", roi: "20-25% returns", gradient: "from-orange-400 via-amber-400 to-yellow-400", icon: <Sun className="h-6 w-6" />, iconName: "Sun", image: "https://images.unsplash.com/photo-1509391366360-2e959784a276?w=800&auto=format&fit=crop" },
@@ -758,6 +759,8 @@ export default function ServicesPage() {
       </section>
 
       <ProvenCapabilitySection />
+
+      <WhatSetsUsApartSection />
 
       {/* CTA Section */}
       <section className="relative py-20 overflow-hidden" style={{ background: 'linear-gradient(135deg, #f97316 0%, #f59e0b 55%, #fbbf24 100%)' }}>

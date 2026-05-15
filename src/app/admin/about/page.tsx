@@ -31,7 +31,7 @@ const ICON_OPTIONS = ['Award', 'Users', 'Zap', 'TrendingUp', 'Wrench', 'Factory'
 const TAB_META: Record<TabKey, { label: string; icon: React.ReactNode; description: string }> = {
   hero:       { label: 'Hero Section',       icon: <LayoutTemplate className="h-4 w-4" />, description: 'Background images and text shown in the top banner of the About page.' },
   stats:      { label: 'Stats',              icon: <BarChart3 className="h-4 w-4" />,      description: 'Numbers shown in the orange banner below the hero (e.g. 500+ Projects, 50MW+ Capacity).' },
-  setsApart:  { label: 'What Sets Us Apart', icon: <Sparkles className="h-4 w-4" />,      description: 'Cards in the "What Sets Us Apart" section — each has an icon, title, and description.' },
+  setsApart:  { label: 'What Sets Us Apart', icon: <Sparkles className="h-4 w-4" />,      description: 'Cards on the Services page ("What Sets Us Apart") — each has an icon, title, and description.' },
   proven:     { label: 'Proven Projects',    icon: <MapPin className="h-4 w-4" />,        description: 'Case study cards on the Services page ("Engineering Where Others Hesitate") — each has a location, description, and highlight.' },
   leadership: { label: 'Leadership',         icon: <Users className="h-4 w-4" />,         description: 'Team member profiles shown in the Leadership section with photo, role, and bio.' },
 };

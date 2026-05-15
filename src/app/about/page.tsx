@@ -8,21 +8,15 @@ import {
   Eye,
   Target,
   Sparkles,
-  Wrench,
-  Factory,
-  ShieldCheck,
-  HeartHandshake,
   Lightbulb,
   Leaf,
-  CheckCircle2,
   ArrowRight,
   Star,
   Compass,
 } from "lucide-react";
 import { useEffect, useState, useMemo } from "react";
 import { useScrollReveal } from "@/hooks/use-scroll-reveal";
-import { useWhatSetsApart, useLeadership, useAboutHeroSlides, useAboutHeroContent } from "@/hooks/use-site-content";
-import { getIconComponent } from "@/lib/icon-map";
+import { useLeadership, useAboutHeroSlides, useAboutHeroContent } from "@/hooks/use-site-content";
 
 const FALLBACK_HERO_IMAGES = [
   PlaceHolderImages.find((img) => img.id === "about-hero")?.imageUrl,
@@ -43,31 +37,15 @@ const LEADER_FALLBACK_IMAGES = {
   shyam: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=500&h=600&fit=crop",
 };
 
-const FALLBACK_SETS_APART = [
-  { icon: Wrench, title: "Engineering-First Approach", description: "Every system is designed based on real load behaviour, grid conditions, and long-term performance—not assumptions." },
-  { icon: Factory, title: "MSME-Focused Solutions", description: "We understand cash flows, operating hours, and business realities of Indian MSMEs." },
-  { icon: ShieldCheck, title: "Execution with Integrity", description: "No inflated projections. No silent compromises. Only what can be engineered and delivered." },
-  { icon: HeartHandshake, title: "Long-Term Commitment", description: "We stay engaged beyond commissioning, ensuring systems perform as promised over their lifecycle." },
-  { icon: CheckCircle2, title: "Proven Ground Reality", description: "Our projects speak louder than presentations." },
-];
-
 const FALLBACK_LEADERSHIP = [
   { name: "Rizul Choudhury", role: "Founder and CEO", image: LEADER_FALLBACK_IMAGES.rizul, bio: "Over 18 years of leadership experience across energy, technology, and large-scale consumer businesses. He holds an MBA, along with a B.Sc. in Information Technology and Software Engineering, combining strategic thinking with strong technical and systems understanding. His professional journey includes leadership roles with globally respected organisations such as Samsung, Reliance Retail, Huawei Telecommunications, Future Group, Surya Business, Anvil Energy, and Husk Power Systems. Rizul has worked extensively on rural clean-energy transition and energy-access initiatives across Bihar, Uttar Pradesh, Assam, the North East, and West Bengal, focusing on MSMEs, agro-based industries, and underserved communities. A strong advocate for climate action and inclusive growth, he has led initiatives aligned with the UN Sustainable Development Goals, particularly SDG 7 (Affordable & Clean Energy) and SDG 13 (Climate Action)." },
   { name: "Shyam Chakraborty", role: "Co-Founder and COO", image: LEADER_FALLBACK_IMAGES.shyam, bio: "Over 14 years of deep, hands-on experience in rooftop and utility-scale solar projects. He leads operations, project management, engineering, and execution, ensuring every project is delivered with precision, safety, and long-term reliability. His expertise covers techno-commercial evaluation, project costing, system design (grid-connected and battery-based), risk management, and end-to-end project delivery—from site surveys and engineering validation to commissioning and O&M handover. An alumnus of XLRI Jamshedpur's Executive Program in Project Management, Shyam has worked with industry leaders including Areva T&D, Schneider Electric, Atha Group, Onergy Solar, Husk Power, and Anvil Cables & Energy. Known for his structured problem-solving approach and adherence to Total Quality Management (TQM) principles." },
 ];
 
 export default function AboutPage() {
-  const setsApartFromDb = useWhatSetsApart();
   const leadershipFromDb = useLeadership();
   const heroSlidesFromDb = useAboutHeroSlides();
   const heroContentFromDb = useAboutHeroContent();
-  const whatSetsUsApart = useMemo(() => {
-    if (setsApartFromDb.data?.length) {
-      return setsApartFromDb.data.map((s) => ({ ...s, icon: getIconComponent(s.iconName) }));
-    }
-    return FALLBACK_SETS_APART;
-  }, [setsApartFromDb.data]);
-
   const leadership = useMemo(() => (leadershipFromDb.data?.length ? leadershipFromDb.data : FALLBACK_LEADERSHIP), [leadershipFromDb.data]);
 
   const heroImages = useMemo(() =>
@@ -86,7 +64,6 @@ export default function AboutPage() {
 
   const introReveal = useScrollReveal(0.06);
   const purposeReveal = useScrollReveal(0.06);
-  const setsApartReveal = useScrollReveal(0.06);
   const futureReveal = useScrollReveal(0.06);
   const leadershipReveal = useScrollReveal(0.06);
 
@@ -682,65 +659,6 @@ export default function AboutPage() {
           </div>
         </section>
 
-
-        {/* What Sets Us Apart */}
-        <section
-          ref={setsApartReveal.ref}
-          className="py-12 sm:py-16 lg:py-20 bg-white relative overflow-hidden"
-        >
-          <div className="container mx-auto px-4 relative z-10">
-            <div className="max-w-5xl mx-auto">
-              <div
-                className={`transition-all duration-1000 ${
-                  setsApartReveal.isInView ? "opacity-100 translate-y-0" : "opacity-0 translate-y-12"
-                }`}
-              >
-                <div className="text-center mb-8">
-                  <div className="flex items-center justify-center gap-2 mb-3">
-                    <Sparkles className="h-5 w-5 text-[var(--color-sunrise)]" />
-                    <span className="text-[var(--color-sunrise)] font-bold text-xs tracking-widest uppercase">
-                      Our Difference
-                    </span>
-                    <Sparkles className="h-5 w-5 text-[var(--color-sunrise)]" />
-                  </div>
-                  
-                  <h2 className="text-3xl sm:text-4xl md:text-5xl font-display font-black text-gray-900">
-                    What Sets Us <span className="text-gradient">Apart</span>
-                  </h2>
-                </div>
-                
-                <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5">
-                  {whatSetsUsApart.map((item, index) => (
-                    <div
-                      key={index}
-                      className="group relative bg-gradient-to-br from-[var(--color-cream)] via-white to-[var(--color-soft-peach)] rounded-xl p-5 sm:p-6 border-2 border-[var(--color-soft-peach)] card-hover"
-                      style={{ 
-                        animation: setsApartReveal.isInView ? `scaleIn 0.6s ease ${index * 0.1}s forwards` : 'none',
-                        opacity: setsApartReveal.isInView ? 1 : 0 
-                      }}
-                    >
-                      <div className="relative z-10">
-                        <div className="bg-gradient-to-br from-[var(--color-sunrise)] to-[var(--color-amber)] p-3 rounded-lg w-fit mb-3 shadow-lg group-hover:scale-110 transition-transform duration-300">
-                          <item.icon className="h-6 w-6 text-white" />
-                        </div>
-                        
-                        <h3 className="font-display font-black text-gray-900 text-base sm:text-lg mb-2">
-                          {item.title}
-                        </h3>
-                        
-                        <p className="text-gray-600 leading-relaxed text-xs sm:text-sm">
-                          {item.description}
-                        </p>
-                      </div>
-                      
-                      <div className="absolute top-0 right-0 w-14 h-14 bg-gradient-to-br from-[var(--color-sunrise)]/10 to-transparent rounded-bl-full" />
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
 
         {/* CTA */}
         <section className="py-12 sm:py-16 lg:py-20 bg-gradient-to-r from-[var(--color-deep-orange)] via-[var(--color-sunrise)] to-[var(--color-honey)] relative overflow-hidden">
