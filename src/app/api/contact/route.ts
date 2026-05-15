@@ -80,7 +80,7 @@ export async function POST(req: NextRequest) {
       },
       body: JSON.stringify({
         from: "RaQuadrant Contact Form <onboarding@resend.dev>",
-        to: ["faiyazmujtaba72@gmail.com"],
+        to: ["info@raquadrantenergy.com"],
         reply_to: [email],
         subject: `New Contact Inquiry: ${subject}`,
         html,
