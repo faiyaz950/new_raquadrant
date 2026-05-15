@@ -548,6 +548,151 @@ export default function AboutPage() {
           </div>
         </section>
 
+        {/* Leadership Team */}
+        <section
+          ref={leadershipReveal.ref}
+          className="py-12 sm:py-16 lg:py-20 bg-white relative overflow-hidden"
+        >
+          <div className="container mx-auto px-4 relative z-10">
+            <div className="max-w-5xl mx-auto">
+              <div
+                className={`transition-all duration-1000 ${
+                  leadershipReveal.isInView ? "opacity-100 translate-y-0" : "opacity-0 translate-y-12"
+                }`}
+              >
+                <div className="text-center mb-8">
+                  <div className="flex items-center justify-center gap-2 mb-3">
+                    <Users className="h-5 w-5 text-[var(--color-sunrise)]" />
+                    <span className="text-[var(--color-sunrise)] font-bold text-xs tracking-widest uppercase">
+                      The People Behind RaQuadrant
+                    </span>
+                    <Users className="h-5 w-5 text-[var(--color-sunrise)]" />
+                  </div>
+                  
+                  <h2 className="text-3xl sm:text-4xl md:text-5xl font-display font-black text-gray-900">
+                    Leadership <span className="text-gradient">Team</span>
+                  </h2>
+                </div>
+                
+                <div className="space-y-6 sm:space-y-8">
+                  {leadership.map((person, index) => (
+                    <div
+                      key={person.name}
+                      className={`group team-card relative bg-white rounded-2xl overflow-hidden shadow-xl border border-gray-100 card-hover flex flex-col md:flex-row ${
+                        index % 2 === 1 ? "md:flex-row-reverse" : ""
+                      }`}
+                      style={{ 
+                        animation: leadershipReveal.isInView ? `fadeInUp 0.7s ease ${index * 0.15}s forwards` : "none",
+                        opacity: leadershipReveal.isInView ? 1 : 0 
+                      }}
+                    >
+                      {/* Image - horizontal half */}
+                      <div className="relative w-full md:w-2/5 md:min-w-[280px] md:max-w-[340px] aspect-[4/5] md:aspect-auto md:min-h-[280px] bg-gradient-to-br from-gray-200 to-gray-100 overflow-hidden flex-shrink-0">
+                        <Image
+                          src={person.image}
+                          alt={person.name}
+                          fill
+                          className="object-cover transition-transform duration-500 group-hover:scale-105"
+                          sizes="(max-width: 768px) 100vw, 340px"
+                        />
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 md:hidden" />
+                        <div className="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black/70 to-transparent md:hidden">
+                          <h3 className="font-display font-black text-white text-lg">{person.name}</h3>
+                          <p className="text-[var(--color-amber)] font-bold text-sm">{person.role}</p>
+                        </div>
+                        {/* Accent corner */}
+                        <div className="absolute top-0 right-0 w-20 h-20 bg-gradient-to-bl from-[var(--color-sunrise)]/20 to-transparent rounded-bl-full" />
+                      </div>
+                      
+                      {/* Content - horizontal half */}
+                      <div className="flex-1 flex flex-col justify-center p-6 sm:p-8 md:py-8">
+                        <div className="flex items-center gap-3 mb-3">
+                          <div className="h-1 w-10 bg-gradient-to-r from-[var(--color-sunrise)] to-[var(--color-amber)] rounded-full flex-shrink-0" />
+                          <span className="text-[var(--color-sunrise)] font-bold text-xs tracking-widest uppercase hidden md:inline">
+                            Leadership
+                          </span>
+                        </div>
+                        <h3 className="font-display font-black text-gray-900 text-xl sm:text-2xl mb-1">
+                          {person.name}
+                        </h3>
+                        <p className="text-[var(--color-sunrise)] font-bold text-sm sm:text-base mb-4">
+                          {person.role}
+                        </p>
+                        <p className="text-gray-600 leading-relaxed text-sm sm:text-base">
+                          {person.bio}
+                        </p>
+                      </div>
+                      
+                      {/* Hover border */}
+                      <div className="absolute inset-0 border-2 border-transparent group-hover:border-[var(--color-sunrise)]/30 rounded-2xl transition-all duration-300 pointer-events-none" />
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Building the Future */}
+        <section
+          ref={futureReveal.ref}
+          className="py-14 sm:py-20 lg:py-24 bg-gradient-to-b from-[var(--color-cream)] via-[var(--color-warm-white)] to-white relative overflow-hidden"
+        >
+          <div className="absolute top-16 right-10 w-28 h-28 border-2 border-[var(--color-amber)] rounded-full opacity-20 floating-icon" />
+          <div className="absolute bottom-16 left-10 w-32 h-32 border-2 border-[var(--color-sunrise)] opacity-20" style={{ animation: 'float 5s ease-in-out infinite' }} />
+          
+          <div className="container mx-auto px-4 relative z-10">
+            <div className="max-w-4xl mx-auto text-center">
+              <div
+                className={`transition-all duration-1000 ${
+                  futureReveal.isInView ? "opacity-100 translate-y-0" : "opacity-0 translate-y-12"
+                }`}
+              >
+                <div className="flex justify-center gap-4 mb-6">
+                  <div className="bg-gradient-to-br from-[var(--color-sunrise)] to-[var(--color-amber)] p-4 rounded-full shadow-xl floating-icon">
+                    <Lightbulb className="h-11 w-11 text-white" />
+                  </div>
+                  <div className="bg-gradient-to-br from-[var(--color-amber)] to-[var(--color-honey)] p-4 rounded-full shadow-xl floating-icon" style={{ animationDelay: '0.5s' }}>
+                    <Leaf className="h-11 w-11 text-white" />
+                  </div>
+                </div>
+                
+                <span className="text-[var(--color-sunrise)] font-bold text-sm tracking-widest uppercase">
+                  Our Commitment
+                </span>
+                
+                <h2 className="text-3xl sm:text-4xl md:text-5xl font-display font-black text-gray-900 mt-3 mb-6">
+                  Building the Future of <span className="text-gradient">Clean Energy</span>
+                </h2>
+                
+                <div className="bg-white rounded-2xl p-6 sm:p-8 shadow-2xl border-2 border-[var(--color-soft-peach)] mb-6">
+                  <p className="text-gray-700 text-base sm:text-lg leading-relaxed mb-5">
+                    Aligned with <strong className="text-[var(--color-sunrise)]">SDG 7 (Affordable & Clean Energy)</strong> and <strong className="text-[var(--color-sunrise)]">SDG 13 (Climate Action)</strong>, RaQuadrant Energy believes that the energy transition will succeed only when reliability meets responsibility—and when clean energy works equally well for urban industries and rural enterprises.
+                  </p>
+                  
+                  <div className="inline-block bg-gradient-to-r from-[var(--color-sunrise)] to-[var(--color-amber)] p-[2px] rounded-xl">
+                    <div className="bg-white rounded-xl px-6 py-5">
+                      <p className="text-gray-800 text-base sm:text-lg font-bold leading-relaxed">
+                        We are not here to chase volumes.<br />
+                        <span className="text-gradient">We are here to build trust, resilience, and performance—one project at a time.</span>
+                      </p>
+                    </div>
+                  </div>
+                </div>
+                
+                <div className="relative">
+                  <div className="absolute inset-0 bg-gradient-to-r from-[var(--color-sunrise)] via-[var(--color-amber)] to-[var(--color-honey)] blur-2xl opacity-30" />
+                  <h3 className="relative text-xl sm:text-2xl md:text-3xl font-display font-black text-gradient leading-relaxed">
+                    Engineering Trust. Delivering Performance.<br />
+                    Powering India&apos;s Industrial Future.
+                  </h3>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+
         {/* Engineering Where Others Hesitate */}
         <section
           ref={engineeringReveal.ref}
@@ -665,150 +810,6 @@ export default function AboutPage() {
                       </div>
                       
                       <div className="absolute top-0 right-0 w-14 h-14 bg-gradient-to-br from-[var(--color-sunrise)]/10 to-transparent rounded-bl-full" />
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* Building the Future */}
-        <section
-          ref={futureReveal.ref}
-          className="py-14 sm:py-20 lg:py-24 bg-gradient-to-b from-[var(--color-cream)] via-[var(--color-warm-white)] to-white relative overflow-hidden"
-        >
-          <div className="absolute top-16 right-10 w-28 h-28 border-2 border-[var(--color-amber)] rounded-full opacity-20 floating-icon" />
-          <div className="absolute bottom-16 left-10 w-32 h-32 border-2 border-[var(--color-sunrise)] opacity-20" style={{ animation: 'float 5s ease-in-out infinite' }} />
-          
-          <div className="container mx-auto px-4 relative z-10">
-            <div className="max-w-4xl mx-auto text-center">
-              <div
-                className={`transition-all duration-1000 ${
-                  futureReveal.isInView ? "opacity-100 translate-y-0" : "opacity-0 translate-y-12"
-                }`}
-              >
-                <div className="flex justify-center gap-4 mb-6">
-                  <div className="bg-gradient-to-br from-[var(--color-sunrise)] to-[var(--color-amber)] p-4 rounded-full shadow-xl floating-icon">
-                    <Lightbulb className="h-11 w-11 text-white" />
-                  </div>
-                  <div className="bg-gradient-to-br from-[var(--color-amber)] to-[var(--color-honey)] p-4 rounded-full shadow-xl floating-icon" style={{ animationDelay: '0.5s' }}>
-                    <Leaf className="h-11 w-11 text-white" />
-                  </div>
-                </div>
-                
-                <span className="text-[var(--color-sunrise)] font-bold text-sm tracking-widest uppercase">
-                  Our Commitment
-                </span>
-                
-                <h2 className="text-3xl sm:text-4xl md:text-5xl font-display font-black text-gray-900 mt-3 mb-6">
-                  Building the Future of <span className="text-gradient">Clean Energy</span>
-                </h2>
-                
-                <div className="bg-white rounded-2xl p-6 sm:p-8 shadow-2xl border-2 border-[var(--color-soft-peach)] mb-6">
-                  <p className="text-gray-700 text-base sm:text-lg leading-relaxed mb-5">
-                    Aligned with <strong className="text-[var(--color-sunrise)]">SDG 7 (Affordable & Clean Energy)</strong> and <strong className="text-[var(--color-sunrise)]">SDG 13 (Climate Action)</strong>, RaQuadrant Energy believes that the energy transition will succeed only when reliability meets responsibility—and when clean energy works equally well for urban industries and rural enterprises.
-                  </p>
-                  
-                  <div className="inline-block bg-gradient-to-r from-[var(--color-sunrise)] to-[var(--color-amber)] p-[2px] rounded-xl">
-                    <div className="bg-white rounded-xl px-6 py-5">
-                      <p className="text-gray-800 text-base sm:text-lg font-bold leading-relaxed">
-                        We are not here to chase volumes.<br />
-                        <span className="text-gradient">We are here to build trust, resilience, and performance—one project at a time.</span>
-                      </p>
-                    </div>
-                  </div>
-                </div>
-                
-                <div className="relative">
-                  <div className="absolute inset-0 bg-gradient-to-r from-[var(--color-sunrise)] via-[var(--color-amber)] to-[var(--color-honey)] blur-2xl opacity-30" />
-                  <h3 className="relative text-xl sm:text-2xl md:text-3xl font-display font-black text-gradient leading-relaxed">
-                    Engineering Trust. Delivering Performance.<br />
-                    Powering India&apos;s Industrial Future.
-                  </h3>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* Leadership Team */}
-        <section
-          ref={leadershipReveal.ref}
-          className="py-12 sm:py-16 lg:py-20 bg-white relative overflow-hidden"
-        >
-          <div className="container mx-auto px-4 relative z-10">
-            <div className="max-w-5xl mx-auto">
-              <div
-                className={`transition-all duration-1000 ${
-                  leadershipReveal.isInView ? "opacity-100 translate-y-0" : "opacity-0 translate-y-12"
-                }`}
-              >
-                <div className="text-center mb-8">
-                  <div className="flex items-center justify-center gap-2 mb-3">
-                    <Users className="h-5 w-5 text-[var(--color-sunrise)]" />
-                    <span className="text-[var(--color-sunrise)] font-bold text-xs tracking-widest uppercase">
-                      The People Behind RaQuadrant
-                    </span>
-                    <Users className="h-5 w-5 text-[var(--color-sunrise)]" />
-                  </div>
-                  
-                  <h2 className="text-3xl sm:text-4xl md:text-5xl font-display font-black text-gray-900">
-                    Leadership <span className="text-gradient">Team</span>
-                  </h2>
-                </div>
-                
-                <div className="space-y-6 sm:space-y-8">
-                  {leadership.map((person, index) => (
-                    <div
-                      key={person.name}
-                      className={`group team-card relative bg-white rounded-2xl overflow-hidden shadow-xl border border-gray-100 card-hover flex flex-col md:flex-row ${
-                        index % 2 === 1 ? "md:flex-row-reverse" : ""
-                      }`}
-                      style={{ 
-                        animation: leadershipReveal.isInView ? `fadeInUp 0.7s ease ${index * 0.15}s forwards` : "none",
-                        opacity: leadershipReveal.isInView ? 1 : 0 
-                      }}
-                    >
-                      {/* Image - horizontal half */}
-                      <div className="relative w-full md:w-2/5 md:min-w-[280px] md:max-w-[340px] aspect-[4/5] md:aspect-auto md:min-h-[280px] bg-gradient-to-br from-gray-200 to-gray-100 overflow-hidden flex-shrink-0">
-                        <Image
-                          src={person.image}
-                          alt={person.name}
-                          fill
-                          className="object-cover transition-transform duration-500 group-hover:scale-105"
-                          sizes="(max-width: 768px) 100vw, 340px"
-                        />
-                        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 md:hidden" />
-                        <div className="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black/70 to-transparent md:hidden">
-                          <h3 className="font-display font-black text-white text-lg">{person.name}</h3>
-                          <p className="text-[var(--color-amber)] font-bold text-sm">{person.role}</p>
-                        </div>
-                        {/* Accent corner */}
-                        <div className="absolute top-0 right-0 w-20 h-20 bg-gradient-to-bl from-[var(--color-sunrise)]/20 to-transparent rounded-bl-full" />
-                      </div>
-                      
-                      {/* Content - horizontal half */}
-                      <div className="flex-1 flex flex-col justify-center p-6 sm:p-8 md:py-8">
-                        <div className="flex items-center gap-3 mb-3">
-                          <div className="h-1 w-10 bg-gradient-to-r from-[var(--color-sunrise)] to-[var(--color-amber)] rounded-full flex-shrink-0" />
-                          <span className="text-[var(--color-sunrise)] font-bold text-xs tracking-widest uppercase hidden md:inline">
-                            Leadership
-                          </span>
-                        </div>
-                        <h3 className="font-display font-black text-gray-900 text-xl sm:text-2xl mb-1">
-                          {person.name}
-                        </h3>
-                        <p className="text-[var(--color-sunrise)] font-bold text-sm sm:text-base mb-4">
-                          {person.role}
-                        </p>
-                        <p className="text-gray-600 leading-relaxed text-sm sm:text-base">
-                          {person.bio}
-                        </p>
-                      </div>
-                      
-                      {/* Hover border */}
-                      <div className="absolute inset-0 border-2 border-transparent group-hover:border-[var(--color-sunrise)]/30 rounded-2xl transition-all duration-300 pointer-events-none" />
                     </div>
                   ))}
                 </div>
