@@ -83,162 +83,184 @@ export default function SplashScreen({
         }
         .splash-fade-out { animation: splash-fade-out 0.7s cubic-bezier(0.4, 0, 0.2, 1) forwards; }
         .splash-particle { animation: splash-particle-float 4s ease-in-out infinite; }
-        .splash-glow-rotate { animation: splash-glow-rotate 20s linear infinite; }
+
+        @media (max-width: 640px) {
+          .splash-particle {
+            animation-duration: 5s;
+          }
+          @keyframes splash-particle-float {
+            0%, 100% { transform: translate(0, 0) scale(1); opacity: 0.25; }
+            50% { transform: translate(12px, -18px) scale(1.05); opacity: 0.45; }
+          }
+        }
+
+        @media (max-height: 520px) and (orientation: landscape) {
+          .splash-logo-in { animation-duration: 0.9s; }
+          .splash-ring-pulse { animation-duration: 3s; }
+        }
       `}</style>
 
       <div
-        className={`fixed inset-0 z-[100] flex flex-col items-center justify-center overflow-hidden ${
+        className={`fixed inset-0 z-[100] flex h-dvh max-h-dvh min-h-dvh w-full flex-col overflow-hidden ${
           isExiting ? "splash-fade-out" : ""
         }`}
         aria-hidden="true"
       >
         {/* Premium gradient background - White to Light Orange */}
         <div className="absolute inset-0 bg-gradient-to-br from-white via-orange-50 to-yellow-50" />
-        
+
         {/* Radial glow effects */}
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,rgba(251,146,60,0.15),transparent_50%)]" />
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom_right,rgba(251,191,36,0.12),transparent_50%)]" />
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom_left,rgba(253,186,116,0.1),transparent_50%)]" />
 
-        {/* Rotating glow backdrop */}
-        <div className="splash-glow-rotate absolute left-1/2 top-1/2 h-[600px] w-[600px] -translate-x-1/2 -translate-y-1/2 opacity-30">
+        {/* Rotating glow backdrop — scales with viewport */}
+        <div
+          className="splash-glow-rotate pointer-events-none absolute left-1/2 top-1/2 aspect-square w-[min(92vw,92vh,36rem)] -translate-x-1/2 -translate-y-1/2 opacity-20 sm:opacity-30"
+          style={{ animation: "splash-glow-rotate 20s linear infinite" }}
+        >
           <div className="absolute inset-0 rounded-full bg-gradient-to-r from-orange-200 via-yellow-200 to-orange-200 blur-3xl" />
         </div>
 
         {/* Elegant geometric pattern */}
         <div
-          className="absolute inset-0 opacity-[0.08]"
+          className="absolute inset-0 opacity-[0.06] sm:opacity-[0.08]"
           style={{
             backgroundImage: `
               linear-gradient(rgba(251,146,60,0.3) 1.5px, transparent 1.5px),
               linear-gradient(90deg, rgba(251,146,60,0.3) 1.5px, transparent 1.5px)
             `,
-            backgroundSize: "60px 60px",
+            backgroundSize: "clamp(32px, 8vw, 60px) clamp(32px, 8vw, 60px)",
           }}
         />
 
-        {/* Floating energy particles */}
-        <div className="splash-particle absolute left-[12%] top-[20%] h-3 w-3 rounded-full bg-gradient-to-br from-orange-400 to-yellow-400 shadow-lg shadow-orange-300" style={{ animationDelay: '0s' }} />
-        <div className="splash-particle absolute right-[18%] top-[35%] h-4 w-4 rounded-full bg-gradient-to-br from-yellow-400 to-orange-300 shadow-lg shadow-yellow-300" style={{ animationDelay: '0.5s' }} />
-        <div className="splash-particle absolute left-[25%] bottom-[25%] h-2.5 w-2.5 rounded-full bg-gradient-to-br from-orange-300 to-amber-400 shadow-lg shadow-orange-200" style={{ animationDelay: '1s' }} />
-        <div className="splash-particle absolute right-[22%] bottom-[40%] h-3.5 w-3.5 rounded-full bg-gradient-to-br from-amber-400 to-orange-400 shadow-lg shadow-amber-300" style={{ animationDelay: '1.5s' }} />
-        <div className="splash-particle absolute left-[35%] top-[15%] h-2 w-2 rounded-full bg-gradient-to-br from-yellow-300 to-orange-300 shadow-lg shadow-yellow-200" style={{ animationDelay: '0.8s' }} />
-        <div className="splash-particle absolute right-[30%] top-[65%] h-3 w-3 rounded-full bg-gradient-to-br from-orange-400 to-yellow-300 shadow-lg shadow-orange-200" style={{ animationDelay: '2s' }} />
+        {/* Floating energy particles — hidden on very small / landscape to reduce clutter */}
+        <div className="splash-particle pointer-events-none absolute left-[8%] top-[18%] hidden h-2 w-2 rounded-full bg-gradient-to-br from-orange-400 to-yellow-400 shadow-lg shadow-orange-300 min-[360px]:block sm:h-3 sm:w-3" style={{ animationDelay: "0s" }} />
+        <div className="splash-particle pointer-events-none absolute right-[10%] top-[32%] hidden h-2.5 w-2.5 rounded-full bg-gradient-to-br from-yellow-400 to-orange-300 shadow-lg shadow-yellow-300 min-[360px]:block sm:h-4 sm:w-4" style={{ animationDelay: "0.5s" }} />
+        <div className="splash-particle pointer-events-none absolute left-[18%] bottom-[22%] hidden h-2 w-2 rounded-full bg-gradient-to-br from-orange-300 to-amber-400 shadow-lg shadow-orange-200 min-[400px]:block sm:h-2.5 sm:w-2.5" style={{ animationDelay: "1s" }} />
+        <div className="splash-particle pointer-events-none absolute right-[14%] bottom-[38%] hidden h-2.5 w-2.5 rounded-full bg-gradient-to-br from-amber-400 to-orange-400 shadow-lg shadow-amber-300 min-[400px]:block sm:h-3.5 sm:w-3.5" style={{ animationDelay: "1.5s" }} />
+        <div className="splash-particle pointer-events-none absolute left-[28%] top-[12%] hidden h-1.5 w-1.5 rounded-full bg-gradient-to-br from-yellow-300 to-orange-300 shadow-lg shadow-yellow-200 md:block sm:h-2 sm:w-2" style={{ animationDelay: "0.8s" }} />
+        <div className="splash-particle pointer-events-none absolute right-[24%] top-[62%] hidden h-2 w-2 rounded-full bg-gradient-to-br from-orange-400 to-yellow-300 shadow-lg shadow-orange-200 md:block sm:h-3 sm:w-3" style={{ animationDelay: "2s" }} />
 
         {/* Top elegant accent */}
-        <div className="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-transparent via-orange-400 to-transparent" />
+        <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-orange-400 to-transparent sm:h-1.5" />
         <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-orange-300 to-transparent opacity-60" />
 
-        {/* Main content container */}
-        <div className="relative flex flex-col items-center gap-10">
-          {/* Logo card with premium ring effect */}
-          <div className="splash-ring-pulse relative rounded-[2rem] border-2 border-orange-300/40 bg-white/90 p-8 shadow-2xl shadow-orange-200/50 backdrop-blur-xl sm:p-10">
-            {/* Inner glow */}
-            <div className="absolute inset-0 rounded-[2rem] bg-gradient-to-br from-orange-100/50 via-yellow-50/30 to-orange-100/50" />
-            
-            <div className="splash-logo-in relative flex flex-col items-center">
-              {!logoError ? (
-                <div className="relative">
-                  {/* Logo glow effect */}
-                  <div className="absolute inset-0 blur-2xl bg-gradient-to-br from-orange-300 to-yellow-300 opacity-40 scale-110" />
-                  <Image
-                    src="/quadrantlogo.png"
-                    alt="RaQuadrant Energy"
-                    width={320}
-                    height={320}
-                    className="relative z-10 h-44 w-auto object-contain drop-shadow-2xl sm:h-52 md:h-60"
-                    priority
-                    onError={() => setLogoError(true)}
-                  />
-                </div>
-              ) : (
-                <div className="relative flex h-44 w-44 items-center justify-center rounded-2xl bg-gradient-to-br from-orange-400 via-amber-400 to-yellow-400 shadow-2xl shadow-orange-400/60 sm:h-52 sm:w-52 md:h-60 md:w-60">
-                  <div className="absolute inset-0 rounded-2xl bg-white/10" />
-                  <LayoutPanelTop className="relative z-10 h-24 w-24 text-white drop-shadow-lg sm:h-28 sm:w-28 md:h-32 md:w-32" />
-                </div>
-              )}
-            </div>
-          </div>
+        {/* Main content — flex-1 keeps progress bar from overlapping on short screens */}
+        <div className="relative z-10 flex min-h-0 flex-1 flex-col items-center justify-center px-4 pt-[max(0.75rem,env(safe-area-inset-top))] pb-2 sm:px-6 md:px-8">
+          <div className="flex w-full max-w-lg flex-col items-center gap-5 min-[380px]:gap-6 sm:gap-8 md:gap-10 landscape:max-h-[70dvh] landscape:gap-3 landscape:sm:gap-4">
+            {/* Logo card with premium ring effect */}
+            <div className="splash-ring-pulse relative w-full max-w-[min(100%,20rem)] rounded-2xl border-2 border-orange-300/40 bg-white/90 p-4 shadow-2xl shadow-orange-200/50 backdrop-blur-xl min-[380px]:max-w-xs min-[380px]:p-5 sm:max-w-sm sm:rounded-3xl sm:p-7 md:max-w-md md:p-9 landscape:max-w-[11rem] landscape:p-3 landscape:sm:max-w-[12rem] landscape:sm:p-4">
+              <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-orange-100/50 via-yellow-50/30 to-orange-100/50 sm:rounded-3xl" />
 
-          {/* Text content with enhanced styling */}
-          <div className="flex flex-col items-center gap-3 text-center">
-            <div className="flex items-center gap-3">
-              <Zap className="h-8 w-8 text-orange-500 drop-shadow-lg" style={{
-                animation: "splash-energy-pulse 2s ease-in-out infinite",
-              }} />
-              <h1
-                className="font-headline text-3xl font-bold tracking-tight sm:text-4xl md:text-5xl"
+              <div className="splash-logo-in relative flex flex-col items-center">
+                {!logoError ? (
+                  <div className="relative w-full">
+                    <div className="absolute inset-0 scale-110 bg-gradient-to-br from-orange-300 to-yellow-300 opacity-40 blur-2xl" />
+                    <Image
+                      src="/quadrantlogo.png"
+                      alt="RaQuadrant Energy"
+                      width={320}
+                      height={320}
+                      className="relative z-10 mx-auto h-auto w-full max-h-[7.5rem] object-contain drop-shadow-2xl min-[380px]:max-h-[8.5rem] sm:max-h-[10.5rem] md:max-h-[12rem] lg:max-h-[13rem] landscape:max-h-[4.5rem] landscape:sm:max-h-[5.5rem]"
+                      sizes="(max-width: 380px) 240px, (max-width: 640px) 280px, (max-width: 1024px) 320px, 400px"
+                      priority
+                      onError={() => setLogoError(true)}
+                    />
+                  </div>
+                ) : (
+                  <div className="relative mx-auto flex aspect-square w-[min(70vw,11rem)] max-w-full items-center justify-center rounded-2xl bg-gradient-to-br from-orange-400 via-amber-400 to-yellow-400 shadow-2xl shadow-orange-400/60 min-[380px]:w-44 sm:w-52 md:w-60 landscape:w-28 landscape:sm:w-32">
+                    <div className="absolute inset-0 rounded-2xl bg-white/10" />
+                    <LayoutPanelTop className="relative z-10 h-[clamp(3.5rem,18vw,6rem)] w-[clamp(3.5rem,18vw,6rem)] text-white drop-shadow-lg sm:h-24 sm:w-24 md:h-28 md:w-28 landscape:h-12 landscape:w-12" />
+                  </div>
+                )}
+              </div>
+            </div>
+
+            {/* Text content */}
+            <div className="flex w-full flex-col items-center gap-2 text-center min-[380px]:gap-2.5 sm:gap-3 landscape:gap-1.5">
+              <div className="flex max-w-full flex-wrap items-center justify-center gap-2 px-1 min-[380px]:gap-2.5 sm:gap-3">
+                <Zap
+                  className="hidden h-5 w-5 shrink-0 text-orange-500 drop-shadow-lg min-[360px]:block sm:h-6 sm:w-6 md:h-8 md:w-8 landscape:h-4 landscape:w-4"
+                  style={{ animation: "splash-energy-pulse 2s ease-in-out infinite" }}
+                />
+                <h1
+                  className="font-headline text-[clamp(1.35rem,5.5vw,3rem)] font-bold leading-tight tracking-tight"
+                  style={{
+                    animation: "splash-text-in 1s 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) forwards",
+                    opacity: 0,
+                    background: "linear-gradient(135deg, #ea580c 0%, #f97316 30%, #fb923c 60%, #fbbf24 100%)",
+                    WebkitBackgroundClip: "text",
+                    WebkitTextFillColor: "transparent",
+                    backgroundClip: "text",
+                    filter: "drop-shadow(0 2px 8px rgba(251,146,60,0.3))",
+                  }}
+                >
+                  RaQuadrant Energy
+                </h1>
+                <Zap
+                  className="hidden h-5 w-5 shrink-0 text-orange-500 drop-shadow-lg min-[360px]:block sm:h-6 sm:w-6 md:h-8 md:w-8 landscape:h-4 landscape:w-4"
+                  style={{ animation: "splash-energy-pulse 2s ease-in-out infinite 0.3s" }}
+                />
+              </div>
+
+              <p
+                className="max-w-[18rem] px-2 font-body text-sm font-medium text-orange-700 min-[380px]:max-w-xs min-[380px]:text-base sm:max-w-md sm:text-lg landscape:text-xs landscape:sm:text-sm"
                 style={{
-                  animation: "splash-text-in 1s 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) forwards",
+                  animation: "splash-text-in 1s 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) forwards",
                   opacity: 0,
-                  background: "linear-gradient(135deg, #ea580c 0%, #f97316 30%, #fb923c 60%, #fbbf24 100%)",
-                  WebkitBackgroundClip: "text",
-                  WebkitTextFillColor: "transparent",
-                  backgroundClip: "text",
-                  filter: "drop-shadow(0 2px 8px rgba(251,146,60,0.3))",
+                  textShadow: "0 1px 2px rgba(251,146,60,0.1)",
                 }}
               >
-                RaQuadrant Energy
-              </h1>
-              <Zap className="h-8 w-8 text-orange-500 drop-shadow-lg" style={{
-                animation: "splash-energy-pulse 2s ease-in-out infinite 0.3s",
-              }} />
+                Powering a sustainable tomorrow
+              </p>
+
+              <p
+                className="mt-1 flex items-center justify-center gap-1 font-body text-[0.65rem] font-semibold uppercase tracking-[0.12em] text-orange-500 min-[380px]:mt-2 min-[380px]:text-xs min-[380px]:tracking-[0.18em] sm:mt-3 sm:text-sm sm:tracking-[0.2em] landscape:mt-0 landscape:text-[0.6rem]"
+                style={{
+                  animation: "splash-text-in 1s 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) forwards",
+                  opacity: 0,
+                }}
+              >
+                Loading
+                <span className="inline-flex gap-0.5">
+                  <span style={{ animation: "splash-dots 1.5s ease-in-out infinite" }}>.</span>
+                  <span style={{ animation: "splash-dots 1.5s ease-in-out 0.2s infinite" }}>.</span>
+                  <span style={{ animation: "splash-dots 1.5s ease-in-out 0.4s infinite" }}>.</span>
+                </span>
+              </p>
             </div>
-            
-            <p
-              className="font-body text-base font-medium text-orange-700 sm:text-lg"
-              style={{
-                animation: "splash-text-in 1s 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) forwards",
-                opacity: 0,
-                textShadow: "0 1px 2px rgba(251,146,60,0.1)",
-              }}
-            >
-              Powering a sustainable tomorrow
-            </p>
-            
-            <p
-              className="mt-3 flex items-center justify-center gap-1 font-body text-sm font-semibold uppercase tracking-[0.2em] text-orange-500"
-              style={{
-                animation: "splash-text-in 1s 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) forwards",
-                opacity: 0,
-              }}
-            >
-              Loading
-              <span className="inline-flex gap-0.5">
-                <span style={{ animation: "splash-dots 1.5s ease-in-out infinite" }}>.</span>
-                <span style={{ animation: "splash-dots 1.5s ease-in-out 0.2s infinite" }}>.</span>
-                <span style={{ animation: "splash-dots 1.5s ease-in-out 0.4s infinite" }}>.</span>
-              </span>
-            </p>
           </div>
         </div>
 
-        {/* Premium progress bar */}
-        <div className="absolute bottom-16 left-1/2 w-80 -translate-x-1/2 sm:bottom-24 sm:w-[28rem]">
-          <div className="relative">
-            {/* Progress bar glow */}
-            <div className="absolute inset-0 rounded-full bg-orange-300 opacity-40 blur-md" />
-            
-            <div className="relative h-2 overflow-hidden rounded-full border border-orange-200 bg-gradient-to-r from-orange-50 to-yellow-50 shadow-inner">
-              <div
-                className="splash-bar-fill splash-bar-shimmer h-full rounded-full shadow-lg"
-                style={{
-                  background: "linear-gradient(90deg, #f97316 0%, #fb923c 25%, #fbbf24 50%, #fb923c 75%, #f97316 100%)",
-                  boxShadow: "0 0 20px rgba(251,146,60,0.5), inset 0 1px 2px rgba(255,255,255,0.3)",
-                }}
-                onAnimationEnd={() => onComplete()}
-              />
+        {/* Progress bar — pinned to bottom with safe area */}
+        <div className="relative z-10 w-full shrink-0 px-4 pb-[max(1rem,env(safe-area-inset-bottom))] pt-2 sm:px-6 sm:pb-[max(1.25rem,env(safe-area-inset-bottom))] md:px-8 landscape:pb-[max(0.5rem,env(safe-area-inset-bottom))] landscape:pt-1">
+          <div className="mx-auto w-full max-w-xs min-[380px]:max-w-sm sm:max-w-md md:max-w-lg">
+            <div className="relative">
+              <div className="absolute inset-0 rounded-full bg-orange-300 opacity-40 blur-md" />
+
+              <div className="relative h-1.5 overflow-hidden rounded-full border border-orange-200 bg-gradient-to-r from-orange-50 to-yellow-50 shadow-inner sm:h-2">
+                <div
+                  className="splash-bar-fill splash-bar-shimmer h-full rounded-full shadow-lg"
+                  style={{
+                    background:
+                      "linear-gradient(90deg, #f97316 0%, #fb923c 25%, #fbbf24 50%, #fb923c 75%, #f97316 100%)",
+                    boxShadow:
+                      "0 0 20px rgba(251,146,60,0.5), inset 0 1px 2px rgba(255,255,255,0.3)",
+                  }}
+                  onAnimationEnd={() => onComplete()}
+                />
+              </div>
             </div>
+
+            <p className="mt-2 text-center text-[0.65rem] font-medium leading-snug text-orange-600/80 min-[380px]:mt-2.5 min-[380px]:text-xs sm:mt-3 sm:text-xs landscape:mt-1.5 landscape:text-[0.6rem]">
+              Initializing sustainable energy solutions...
+            </p>
           </div>
-          
-          {/* Progress percentage text */}
-          <p className="mt-3 text-center text-xs font-medium text-orange-600/80">
-            Initializing sustainable energy solutions...
-          </p>
         </div>
 
         {/* Bottom elegant accent */}
-        <div className="absolute bottom-0 left-0 right-0 h-1.5 bg-gradient-to-r from-transparent via-orange-400 to-transparent" />
+        <div className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-orange-400 to-transparent sm:h-1.5" />
         <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-orange-300 to-transparent opacity-60" />
       </div>
     </>
