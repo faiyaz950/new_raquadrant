@@ -46,6 +46,7 @@ const navItems = [
   { href: "/contact", label: "Contact Us" },
   { href: "/privacy-policy", label: "Privacy Policy" },
   { href: "/terms-and-conditions", label: "Terms & Conditions" },
+  { href: "/return-refund-policy", label: "Return & Refund Policy" },
 ];
 
 const socialLinks = [
