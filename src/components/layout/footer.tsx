@@ -42,7 +42,9 @@ import { useState, useEffect } from "react";
 const navItems = [
   { href: "/about", label: "About Us" },
   { href: "/services", label: "What We Do" },
+  { href: "/media", label: "Blogs" },
   { href: "/contact", label: "Contact Us" },
+  { href: "/privacy-policy", label: "Privacy Policy" },
 ];
 
 const socialLinks = [
