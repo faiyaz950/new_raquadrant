@@ -14,7 +14,6 @@ import {
   HeartHandshake,
   Lightbulb,
   Leaf,
-  MapPin,
   CheckCircle2,
   ArrowRight,
   Star,
@@ -22,7 +21,7 @@ import {
 } from "lucide-react";
 import { useEffect, useState, useMemo } from "react";
 import { useScrollReveal } from "@/hooks/use-scroll-reveal";
-import { useWhatSetsApart, useLeadership, useAboutHeroSlides, useAboutHeroContent, useProvenProjects } from "@/hooks/use-site-content";
+import { useWhatSetsApart, useLeadership, useAboutHeroSlides, useAboutHeroContent } from "@/hooks/use-site-content";
 import { getIconComponent } from "@/lib/icon-map";
 
 const FALLBACK_HERO_IMAGES = [
@@ -52,11 +51,6 @@ const FALLBACK_SETS_APART = [
   { icon: CheckCircle2, title: "Proven Ground Reality", description: "Our projects speak louder than presentations." },
 ];
 
-const FALLBACK_PROVEN_PROJECTS = [
-  { location: "Chapar, Dhubri", locationHighlight: "(Assam)", description: "We successfully engineered and commissioned a 150 kWp gridless, battery-less captive solar power plant—a first-of-its-kind solution for a rural MSME operating without grid access. This project has been widely appreciated for proving that reliable industrial operations are possible even without grid dependency, through disciplined engineering and system design.", highlightLabel: "First-of-its-kind solution" },
-  { location: "Howrah,", locationHighlight: "West Bengal", description: "We executed a 138 kWp rooftop solar system on a non-penetrative dome structure, serving three separate meters with distinct load profiles, operational functions, and long cable distances—while addressing voltage-drop challenges and high-demand conditions. The project stands as a benchmark in precision rooftop engineering.", highlightLabel: "Precision engineering benchmark" },
-];
-
 const FALLBACK_LEADERSHIP = [
   { name: "Rizul Choudhury", role: "Founder and CEO", image: LEADER_FALLBACK_IMAGES.rizul, bio: "Over 18 years of leadership experience across energy, technology, and large-scale consumer businesses. He holds an MBA, along with a B.Sc. in Information Technology and Software Engineering, combining strategic thinking with strong technical and systems understanding. His professional journey includes leadership roles with globally respected organisations such as Samsung, Reliance Retail, Huawei Telecommunications, Future Group, Surya Business, Anvil Energy, and Husk Power Systems. Rizul has worked extensively on rural clean-energy transition and energy-access initiatives across Bihar, Uttar Pradesh, Assam, the North East, and West Bengal, focusing on MSMEs, agro-based industries, and underserved communities. A strong advocate for climate action and inclusive growth, he has led initiatives aligned with the UN Sustainable Development Goals, particularly SDG 7 (Affordable & Clean Energy) and SDG 13 (Climate Action)." },
   { name: "Shyam Chakraborty", role: "Co-Founder and COO", image: LEADER_FALLBACK_IMAGES.shyam, bio: "Over 14 years of deep, hands-on experience in rooftop and utility-scale solar projects. He leads operations, project management, engineering, and execution, ensuring every project is delivered with precision, safety, and long-term reliability. His expertise covers techno-commercial evaluation, project costing, system design (grid-connected and battery-based), risk management, and end-to-end project delivery—from site surveys and engineering validation to commissioning and O&M handover. An alumnus of XLRI Jamshedpur's Executive Program in Project Management, Shyam has worked with industry leaders including Areva T&D, Schneider Electric, Atha Group, Onergy Solar, Husk Power, and Anvil Cables & Energy. Known for his structured problem-solving approach and adherence to Total Quality Management (TQM) principles." },
@@ -67,8 +61,6 @@ export default function AboutPage() {
   const leadershipFromDb = useLeadership();
   const heroSlidesFromDb = useAboutHeroSlides();
   const heroContentFromDb = useAboutHeroContent();
-  const provenFromDb = useProvenProjects();
-
   const whatSetsUsApart = useMemo(() => {
     if (setsApartFromDb.data?.length) {
       return setsApartFromDb.data.map((s) => ({ ...s, icon: getIconComponent(s.iconName) }));
@@ -77,7 +69,6 @@ export default function AboutPage() {
   }, [setsApartFromDb.data]);
 
   const leadership = useMemo(() => (leadershipFromDb.data?.length ? leadershipFromDb.data : FALLBACK_LEADERSHIP), [leadershipFromDb.data]);
-  const provenProjects = useMemo(() => (provenFromDb.data?.length ? provenFromDb.data : FALLBACK_PROVEN_PROJECTS), [provenFromDb.data]);
 
   const heroImages = useMemo(() =>
     heroSlidesFromDb.data?.length
@@ -95,7 +86,6 @@ export default function AboutPage() {
 
   const introReveal = useScrollReveal(0.06);
   const purposeReveal = useScrollReveal(0.06);
-  const engineeringReveal = useScrollReveal(0.06);
   const setsApartReveal = useScrollReveal(0.06);
   const futureReveal = useScrollReveal(0.06);
   const leadershipReveal = useScrollReveal(0.06);
@@ -692,72 +682,6 @@ export default function AboutPage() {
           </div>
         </section>
 
-
-        {/* Engineering Where Others Hesitate */}
-        <section
-          ref={engineeringReveal.ref}
-          className="py-12 sm:py-16 lg:py-20 bg-gradient-to-b from-white via-[var(--color-warm-white)] to-white relative overflow-hidden"
-        >
-          <div className="absolute bottom-0 left-0 w-72 h-72 bg-gradient-to-tr from-[var(--color-amber)] to-transparent rounded-full blur-3xl opacity-20" />
-          
-          <div className="container mx-auto px-4 relative z-10">
-            <div className="max-w-5xl mx-auto">
-              <div
-                className={`transition-all duration-1000 ${
-                  engineeringReveal.isInView ? "opacity-100 translate-y-0" : "opacity-0 translate-y-12"
-                }`}
-              >
-                <div className="text-center mb-8">
-                  <div className="flex items-center justify-center gap-2 mb-3">
-                    <div className="h-0.5 w-12 bg-gradient-to-r from-transparent via-[var(--color-sunrise)] to-transparent rounded-full" />
-                    <span className="text-[var(--color-sunrise)] font-bold text-xs tracking-widest uppercase">
-                      Proven Capability
-                    </span>
-                    <div className="h-0.5 w-12 bg-gradient-to-r from-transparent via-[var(--color-sunrise)] to-transparent rounded-full" />
-                  </div>
-                  
-                  <h2 className="text-3xl sm:text-4xl md:text-5xl font-display font-black text-gray-900 mb-4">
-                    Engineering Where Others <span className="text-gradient">Hesitate</span>
-                  </h2>
-                  
-                  <p className="text-gray-600 text-sm sm:text-base max-w-2xl mx-auto">
-                    RaQuadrant Energy is recognised for delivering complex, high-stake solar projects where conventional EPC approaches fall short.
-                  </p>
-                </div>
-                
-                <div className="grid md:grid-cols-2 gap-5 sm:gap-6">
-                  {provenProjects.map((project, index) => (
-                    <div key={project.id ?? index} className="gradient-border rounded-2xl p-5 sm:p-6 card-hover bg-white">
-                      <div className="flex items-center gap-2 mb-4">
-                        <div className={`p-2 rounded-lg shadow-lg ${index % 2 === 0 ? 'bg-gradient-to-br from-[var(--color-sunrise)] to-[var(--color-amber)]' : 'bg-gradient-to-br from-[var(--color-honey)] to-[var(--color-deep-orange)]'}`}>
-                          <MapPin className="h-5 w-5 text-white" />
-                        </div>
-                        <h3 className="font-display font-black text-gray-900 text-base sm:text-lg">
-                          {project.location} <span className="text-[var(--color-sunrise)]">{project.locationHighlight}</span>
-                        </h3>
-                      </div>
-                      <p className="text-gray-700 leading-relaxed text-sm sm:text-base">
-                        {project.description}
-                      </p>
-                      <div className="mt-4 flex items-center gap-2 text-[var(--color-sunrise)] font-semibold text-sm">
-                        <CheckCircle2 className="h-4 w-4" />
-                        <span>{project.highlightLabel}</span>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-                
-                <div className="mt-6 text-center">
-                  <div className="inline-block bg-gradient-to-r from-[var(--color-cream)] to-[var(--color-soft-peach)] rounded-xl p-4 shadow-xl">
-                    <p className="text-gray-700 text-sm sm:text-base font-medium max-w-2xl">
-                      These installations are not just capacity numbers. They are <strong className="text-[var(--color-sunrise)]">testaments to RaQuadrant&apos;s problem-solving capability</strong>, attention to detail, and refusal to compromise on quality—even under technical and commercial pressure.
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
 
         {/* What Sets Us Apart */}
         <section
