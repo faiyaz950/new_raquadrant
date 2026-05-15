@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { contactSchema } from "@/lib/contact-form-schema";
 
 /** Resend API key (server-only). Rotate in Resend if this file is ever exposed. */
-const RESEND_API_KEY = "re_TAMcV9SM_FWsnYTWb1Q4rzfx7JKpfr58m";
+const RESEND_API_KEY = "re_bR2pLcRr_8zACtXGQhKBd3Ai72mSGt62v";
 
 const RESEND_API_URL = "https://api.resend.com/emails";
 
