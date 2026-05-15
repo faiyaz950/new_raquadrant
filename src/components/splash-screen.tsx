@@ -133,14 +133,14 @@ export default function SplashScreen({
 
         {/* ── MAIN CONTENT ── */}
         <div className="relative z-10 flex min-h-0 flex-1 flex-col items-center justify-center px-4 pb-2 pt-[max(1rem,env(safe-area-inset-top))]">
-          <div className="flex w-full max-w-sm flex-col items-center gap-6 sm:max-w-md sm:gap-8 landscape:gap-3">
+          <div className="flex w-full max-w-md flex-col items-center gap-8 sm:max-w-lg sm:gap-10 landscape:gap-3">
 
             {/* Logo zone */}
             <div className="relative flex items-center justify-center">
               {/* Spinning solar rays */}
               <div
                 className="sp-ray-spin pointer-events-none absolute left-1/2 top-1/2"
-                style={{ width: "clamp(220px,55vw,340px)", height: "clamp(220px,55vw,340px)" }}
+                style={{ width: "clamp(280px,65vw,420px)", height: "clamp(280px,65vw,420px)" }}
               >
                 {Array.from({ length: 12 }).map((_, i) => (
                   <div
@@ -148,7 +148,7 @@ export default function SplashScreen({
                     className="absolute left-1/2 top-1/2 origin-bottom"
                     style={{
                       width: "2px",
-                      height: "clamp(40px,10vw,62px)",
+                      height: "clamp(52px,13vw,80px)",
                       marginLeft: "-1px",
                       transform: `rotate(${i * 30}deg) translateY(-100%)`,
                       background: `linear-gradient(to top, rgba(251,146,60,${i % 2 === 0 ? "0.55" : "0.25"}), transparent)`,
@@ -164,8 +164,8 @@ export default function SplashScreen({
                   key={i}
                   className="sp-ring-expand pointer-events-none absolute rounded-full border border-orange-500/30"
                   style={{
-                    width:  "clamp(120px,30vw,180px)",
-                    height: "clamp(120px,30vw,180px)",
+                    width:  "clamp(155px,38vw,230px)",
+                    height: "clamp(155px,38vw,230px)",
                     animationDelay: `${delay}s`,
                   }}
                 />
@@ -175,8 +175,8 @@ export default function SplashScreen({
               <div
                 className="sp-glow-pulse pointer-events-none absolute rounded-full"
                 style={{
-                  width:  "clamp(140px,32vw,200px)",
-                  height: "clamp(140px,32vw,200px)",
+                  width:  "clamp(180px,42vw,260px)",
+                  height: "clamp(180px,42vw,260px)",
                   background: "radial-gradient(circle, rgba(249,115,22,0.35) 0%, rgba(245,158,11,0.15) 50%, transparent 75%)",
                   filter: "blur(20px)",
                 }}
@@ -186,9 +186,9 @@ export default function SplashScreen({
               <div
                 className="sp-logo-rise relative z-10 flex items-center justify-center rounded-[28px] border border-white/10 bg-white/[0.06] backdrop-blur-xl shadow-2xl"
                 style={{
-                  width:  "clamp(130px,32vw,190px)",
-                  height: "clamp(130px,32vw,190px)",
-                  boxShadow: "0 0 60px rgba(249,115,22,0.25), 0 20px 60px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.1)",
+                  width:  "clamp(170px,42vw,250px)",
+                  height: "clamp(170px,42vw,250px)",
+                  boxShadow: "0 0 80px rgba(249,115,22,0.3), 0 24px 70px rgba(0,0,0,0.55), inset 0 1px 0 rgba(255,255,255,0.1)",
                 }}
               >
                 {/* Inner glow */}
@@ -221,7 +221,7 @@ export default function SplashScreen({
               >
                 <span className="h-1.5 w-1.5 rounded-full bg-orange-400 shadow-[0_0_6px_rgba(251,146,60,0.8)]"
                   style={{ animation: "sp-glow-pulse 1.5s ease-in-out infinite" }} />
-                <span className="text-[0.65rem] font-bold uppercase tracking-[0.18em] text-orange-300">
+                <span className="text-xs font-bold uppercase tracking-[0.18em] text-orange-300">
                   Solar EPC Solutions
                 </span>
               </div>
@@ -231,7 +231,7 @@ export default function SplashScreen({
                 className="font-headline font-black leading-none tracking-tight"
                 style={{
                   animation: "sp-text-up 0.9s 0.45s cubic-bezier(0.34,1.4,0.64,1) both",
-                  fontSize: "clamp(1.5rem,6vw,2.6rem)",
+                  fontSize: "clamp(1.75rem,7.5vw,3.2rem)",
                   background: "linear-gradient(135deg, #fb923c 0%, #fbbf24 40%, #f97316 70%, #fcd34d 100%)",
                   WebkitBackgroundClip: "text",
                   WebkitTextFillColor: "transparent",
@@ -244,13 +244,13 @@ export default function SplashScreen({
 
               {/* Divider line */}
               <div
-                className="h-px w-32 rounded-full bg-gradient-to-r from-transparent via-orange-500/60 to-transparent sm:w-44"
+                className="h-px w-44 rounded-full bg-gradient-to-r from-transparent via-orange-500/60 to-transparent sm:w-64"
                 style={{ animation: "sp-line-grow 0.8s 0.85s cubic-bezier(0.65,0,0.35,1) both", transformOrigin: "center" }}
               />
 
               {/* Tagline */}
               <p
-                className="font-body text-sm font-medium text-gray-300/80 sm:text-base landscape:text-xs"
+                className="font-body text-base font-medium text-gray-300/80 sm:text-lg landscape:text-xs"
                 style={{ animation: "sp-text-up 0.8s 0.75s cubic-bezier(0.34,1.4,0.64,1) both" }}
               >
                 Powering a Sustainable Tomorrow
@@ -274,9 +274,9 @@ export default function SplashScreen({
 
         {/* ── PROGRESS BAR ── */}
         <div className="relative z-10 w-full shrink-0 px-6 pb-[max(1.25rem,env(safe-area-inset-bottom))] pt-3 sm:px-8 sm:pb-[max(1.5rem,env(safe-area-inset-bottom))] landscape:pb-[max(0.6rem,env(safe-area-inset-bottom))] landscape:pt-1.5">
-          <div className="mx-auto w-full max-w-xs sm:max-w-sm">
+          <div className="mx-auto w-full max-w-sm sm:max-w-md">
             {/* Track */}
-            <div className="relative h-1 overflow-hidden rounded-full bg-white/[0.07] sm:h-[5px]">
+            <div className="relative h-[5px] overflow-hidden rounded-full bg-white/[0.07] sm:h-[7px]">
               {/* Glow behind bar */}
               <div className="absolute inset-0 rounded-full blur-sm" style={{ background: "rgba(249,115,22,0.2)" }} />
               {/* Fill */}
